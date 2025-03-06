@@ -1,7 +1,7 @@
-import { APIOptions } from '~/shared/api/types';
-import { EitherOrNone } from '~/shared/typeHelpers';
-import { ModelRegistryBody } from '~/app/types';
-import { AUTH_HEADER, MOCK_AUTH } from '~/shared/utilities/const';
+import { APIOptions } from '~/api/types';
+import { EitherOrNone } from '~/types/typeHelpers';
+import { BFFBody } from '~/types';
+import { AUTH_HEADER, MOCK_AUTH } from '~/utilities/const';
 
 export const mergeRequestInit = (
   opts: APIOptions = {},
@@ -177,15 +177,15 @@ export const restDELETE = <T>(
     parseJSON: options?.parseJSON,
   });
 
-export const isModelRegistryResponse = <T>(response: unknown): response is ModelRegistryBody<T> => {
+export const isModelRegistryResponse = <T>(response: unknown): response is BFFBody<T> => {
   if (typeof response === 'object' && response !== null) {
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const modelRegistryBody = response as { data?: T };
-    return modelRegistryBody.data !== undefined;
+    const bffBody = response as { data?: T };
+    return bffBody.data !== undefined;
   }
   return false;
 };
 
-export const assembleModelRegistryBody = <T>(data: T): ModelRegistryBody<T> => ({
+export const assembleBFFBody = <T>(data: T): BFFBody<T> => ({
   data,
 });

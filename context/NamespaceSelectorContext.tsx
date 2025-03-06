@@ -1,7 +1,7 @@
 import * as React from 'react';
-import useNamespaces from '~/shared/hooks/useNamespaces';
-import { Namespace } from '~/shared/types';
-import { isIntegrated } from '~/shared/utilities/const';
+import useNamespaces from '~/hooks/useNamespaces';
+import { Namespace } from '~/types';
+import { isIntegrated } from '~/utilities/const';
 
 export type NamespaceSelectorContextType = {
   namespacesLoaded: boolean;

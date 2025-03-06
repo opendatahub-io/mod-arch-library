@@ -1,22 +1,10 @@
-import { APIOptions } from '~/shared/api/types';
-import { handleRestFailures } from '~/shared/api/errorUtils';
-import { isModelRegistryResponse, restGET } from '~/shared/api/apiUtils';
-import { ModelRegistry } from '~/app/types';
-import { BFF_API_VERSION } from '~/app/const';
-import { URL_PREFIX } from '~/shared/utilities/const';
-import { Namespace, UserSettings } from '~/shared/types';
+import { APIOptions } from '~/api/types';
+import { handleRestFailures } from '~/api/errorUtils';
+import { isModelRegistryResponse, restGET } from '~/api/apiUtils';
+import { BFF_API_VERSION } from '~/utilities/const';
+import { URL_PREFIX } from '~/utilities/const';
+import { Namespace, UserSettings } from '~/types';
 
-export const getListModelRegistries =
-  (hostPath: string, queryParams: Record<string, unknown> = {}) =>
-  (opts: APIOptions): Promise<ModelRegistry[]> =>
-    handleRestFailures(
-      restGET(hostPath, `${URL_PREFIX}/api/${BFF_API_VERSION}/model_registry`, queryParams, opts),
-    ).then((response) => {
-      if (isModelRegistryResponse<ModelRegistry[]>(response)) {
-        return response.data;
-      }
-      throw new Error('Invalid response format');
-    });
 
 export const getUser =
   (hostPath: string) =>

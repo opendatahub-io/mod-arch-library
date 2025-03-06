@@ -1,18 +1,110 @@
-# kubeflow-ui-essentials
+# mod-arch-shared
+
 ## Overview
 
-`kubeflow-ui-essentials` is a library designed to provide common UI components and utilities for the Kubeflow ecosystem. This library follows a modular architecture to ensure reusability and maintainability across various Kubeflow repositories. The library is versioned to facilitate consistent updates and integration.
+`mod-arch-shared` is a shared library providing common UI components and utilities for micro-frontend projects following a modular architecture. This library follows a modular design to ensure reusability and maintainability across various projects. The library is versioned to facilitate consistent updates and integration.
+
+## Installation
+
+```bash
+npm install mod-arch-shared
+```
+
+## Usage
+
+Import components and utilities as needed:
+
+```jsx
+import { DashboardSearchField, useNamespaces, ToastNotification } from 'mod-arch-shared';
+
+const MyComponent = () => {
+  const { namespaces, loading } = useNamespaces();
+  
+  return (
+    <>
+      <DashboardSearchField onChange={handleSearch} />
+      {/* Your component code */}
+      <ToastNotification title="Success" type="success" message="Operation completed" />
+    </>
+  );
+};
+```
+
+## Using Styles and Images
+
+This library exports both style files and image assets that can be imported and used in your application.
+
+### Importing Styles
+
+You can import specific styles or all styles at once:
+
+```javascript
+// Import all styles
+import { style } from 'mod-arch-shared';
+
+// Or import specific style components directly
+import 'mod-arch-shared/style';
+```
+
+### Importing Images
+
+Images can be imported in several ways:
+
+```javascript
+// Import specific images
+import { emptyStateNotebooks, iconRedHatStorage } from 'mod-arch-shared/images';
+
+// Or import all images as a namespace
+import * as Images from 'mod-arch-shared/images';
+
+// Then use them in your components
+<img src={emptyStateNotebooks} alt="Empty state notebooks" />
+```
 
 ## Folder Structure
 
-The repository contains the following files:
+The repository contains the following modules:
 
-- **api**: Contains the API utilities for the Kubeflow UI components.
-- **components**: Contains the reusable UI components for the Kubeflow UI.
-- **hooks**: Contains the custom hooks for the Kubeflow UI components.
-- **utilities**: Contains the utility functions for the Kubeflow UI components.
-- **context**: Contains the context providers for the Kubeflow UI components.
-- **style**: Contains the global styles for the Kubeflow UI components.
+- **api**: API utilities for making service calls and handling errors
+- **components**: Reusable UI components
+- **hooks**: Custom React hooks
+- **utilities**: Utility functions
+- **context**: Context providers
+- **style**: Global styles
+- **types**: TypeScript type definitions
+
+## Development
+
+### Prerequisites
+
+- Node.js >= 20.17
+- npm >= 10.8
+
+### Setup
+
+```bash
+git clone <repository-url>
+cd mod-arch-shared
+npm install
+```
+
+### Building
+
+```bash
+npm run build
+```
+
+### Testing
+
+```bash
+npm test
+```
+
+### Linting
+
+```bash
+npm run lint
+```
 
 ## Contributing
 

@@ -2,10 +2,10 @@ import * as React from 'react';
 import useFetchState, {
   FetchState,
   FetchStateCallbackPromise,
-} from '~/shared/utilities/useFetchState';
-import { Namespace } from '~/shared/types';
-import { AUTH_HEADER, isStandalone, MOCK_AUTH, USERNAME } from '~/shared/utilities/const';
-import { getNamespaces } from '~/shared/api/k8s';
+} from '~/utilities/useFetchState';
+import { Namespace } from '~/types';
+import { AUTH_HEADER, isStandalone, MOCK_AUTH, USERNAME } from '~/utilities/const';
+import { getNamespaces } from '~/api/k8s';
 
 const useNamespaces = (): FetchState<Namespace[]> => {
   const listNamespaces = React.useMemo(() => getNamespaces(''), []);
