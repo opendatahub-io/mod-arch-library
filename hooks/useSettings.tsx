@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { USERNAME, POLL_INTERVAL, AUTH_HEADER, MOCK_AUTH } from '~/shared/utilities/const';
-import { useDeepCompareMemoize } from '~/shared/utilities/useDeepCompareMemoize';
-import { ConfigSettings, UserSettings } from '~/shared/types';
-import useTimeBasedRefresh from '~/shared/hooks/useTimeBasedRefresh';
-import { getNamespaces, getUser } from '~/shared/api/k8s';
+import { USERNAME, POLL_INTERVAL, AUTH_HEADER, MOCK_AUTH } from '~/utilities/const';
+import { useDeepCompareMemoize } from '~/utilities/useDeepCompareMemoize';
+import { ConfigSettings, UserSettings } from '~/types';
+import useTimeBasedRefresh from '~/hooks/useTimeBasedRefresh';
+import { getNamespaces, getUser } from '~/api/k8s';
 
 export const useSettings = (): {
   configSettings: ConfigSettings | null;

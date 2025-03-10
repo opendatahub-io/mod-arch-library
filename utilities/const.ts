@@ -32,6 +32,7 @@ const USERNAME = process.env.USERNAME || 'user@example.com';
 const IMAGE_DIR = process.env.IMAGE_DIR || 'images';
 const LOGO_LIGHT = process.env.LOGO || 'logo-light-theme.svg';
 const URL_PREFIX = DEPLOYMENT_MODE === DeploymentMode.Integrated ? '/model-registry' : '';
+const BFF_API_VERSION = 'v1';
 
 export {
   POLL_INTERVAL,
@@ -43,6 +44,7 @@ export {
   MOCK_AUTH,
   URL_PREFIX,
   PLATFORM_MODE,
+  BFF_API_VERSION
 };
 
 export const FindAdministratorOptions = [
