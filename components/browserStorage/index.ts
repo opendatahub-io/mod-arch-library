@@ -1,1 +1,1 @@
-export { useBrowserStorage } from './BrowserStorageContext';
+export { useBrowserStorage, BrowserStorageContextProvider } from './BrowserStorageContext';

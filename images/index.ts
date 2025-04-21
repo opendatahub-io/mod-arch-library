@@ -8,22 +8,24 @@ import emptyStatePipelines from './empty-state-pipelines.svg';
 import emptyStateProjectOverview from './empty-state-project-overview.svg';
 import emptyStateProjectsColor from './empty-state-projects-color.svg';
 import emptyStateStorageClasses from './empty-state-storage-classes.svg';
-import iconRedHatLayered from './Icon-Red_Hat-Layered_A_Black-RGB.svg';
-import iconRedHatStorage from './Icon-Red_Hat-Storage-A-Black-RGB.svg';
-import iconRedHatSysAdmin from './Icon-Red_Hat-Sys_admin-A-Black-RGB.svg';
+import iconLayered from './Icon-Layered_A_Black-RGB.svg';
+import iconStorage from './Icon-Storage-A-Black-RGB.svg';
+import iconSysAdmin from './Icon-Sys_admin-A-Black-RGB.svg';
 import noModelsModelRegistry from './no-models-model-registry.svg';
 import noVersionsModelRegistry from './no-versions-model-registry.svg';
-import uiIconRedHatBranch from './UI_icon-Red_Hat-Branch-RGB.svg';
-import uiIconRedHatConnected from './UI_icon-Red_Hat-Connected-RGB.svg';
-import uiIconRedHatCubes from './UI_icon-Red_Hat-Cubes-RGB.svg';
-import uiIconRedHatDoubleArrowRight from './UI_icon-Red_Hat-Double_arrow_right-RGB.svg';
-import uiIconRedHatFolder from './UI_icon-Red_Hat-Folder-RGB.svg';
-import uiIconRedHatNotebookImages from './UI_icon-Red_Hat-Notebook-Images-RGB.svg';
-import uiIconRedHatServerUpload from './UI_icon-Red_Hat-Server_upload-RGB.svg';
-import uiIconRedHatServer from './UI_icon-Red_Hat-Server-RGB.svg';
-import uiIconRedHatSharedWorkspace from './UI_icon-Red_Hat-Shared_workspace-RGB.svg';
-import uiIconRedHatStorage from './UI_icon-Red_Hat-Storage-RGB.svg';
-import uiIconRedHatUser from './UI_icon-Red_Hat-User-RGB.svg';
+import uiIconBranch from './UI_icon-Branch-RGB.svg';
+import uiIconConnected from './UI_icon-Connected-RGB.svg';
+import uiIconCubes from './UI_icon-Cubes-RGB.svg';
+import uiIconDoubleArrowRight from './UI_icon-Double_arrow_right-RGB.svg';
+import uiIconFolder from './UI_icon-Folder-RGB.svg';
+import uiIconNotebookImages from './UI_icon-Notebook-Images-RGB.svg';
+import uiIconServerUpload from './UI_icon-Server_upload-RGB.svg';
+import uiIconServer from './UI_icon-Server-RGB.svg';
+import uiIconSharedWorkspace from './UI_icon-Shared_workspace-RGB.svg';
+import uiIconStorage from './UI_icon-Storage-RGB.svg';
+import uiIconUser from './UI_icon-User-RGB.svg';
+import logoDarkThemePath from './logo-dark-theme.svg';
+import logoLightThemePath from './logo-light-theme.svg';
 
 // Export all images
 export {
@@ -36,22 +38,24 @@ export {
   emptyStateProjectOverview,
   emptyStateProjectsColor,
   emptyStateStorageClasses,
-  iconRedHatLayered,
-  iconRedHatStorage,
-  iconRedHatSysAdmin,
+  iconLayered,
+  iconStorage,
+  iconSysAdmin,
   noModelsModelRegistry,
   noVersionsModelRegistry,
-  uiIconRedHatBranch,
-  uiIconRedHatConnected,
-  uiIconRedHatCubes,
-  uiIconRedHatDoubleArrowRight,
-  uiIconRedHatFolder,
-  uiIconRedHatNotebookImages,
-  uiIconRedHatServerUpload,
-  uiIconRedHatServer,
-  uiIconRedHatSharedWorkspace,
-  uiIconRedHatStorage,
-  uiIconRedHatUser,
+  uiIconBranch,
+  uiIconConnected,
+  uiIconCubes,
+  uiIconDoubleArrowRight,
+  uiIconFolder,
+  uiIconNotebookImages,
+  uiIconServerUpload,
+  uiIconServer,
+  uiIconSharedWorkspace,
+  uiIconStorage,
+  uiIconUser,
+  logoDarkThemePath,
+  logoLightThemePath,
 };
 
 // This allows consumers to import images like:

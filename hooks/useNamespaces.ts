@@ -1,10 +1,11 @@
 import * as React from 'react';
-import useFetchState, {
+import {
+  useFetchState,
   FetchState,
   FetchStateCallbackPromise,
 } from '~/utilities/useFetchState';
 import { Namespace } from '~/types';
-import { AUTH_HEADER, isStandalone, MOCK_AUTH, USERNAME } from '~/utilities/const';
+import { AUTH_HEADER, isStandalone, MOCK_AUTH, KUBEFLOW_USERNAME } from '~/utilities/const';
 import { getNamespaces } from '~/api/k8s';
 
 const useNamespaces = (): FetchState<Namespace[]> => {
@@ -14,7 +15,7 @@ const useNamespaces = (): FetchState<Namespace[]> => {
       if (!isStandalone()) {
         return Promise.resolve([]);
       }
-      const headers = MOCK_AUTH ? { [AUTH_HEADER]: USERNAME } : undefined;
+      const headers = MOCK_AUTH ? { [AUTH_HEADER]: KUBEFLOW_USERNAME } : undefined;
       return listNamespaces({
         ...opts,
         headers,

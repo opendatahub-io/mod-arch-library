@@ -2,3 +2,4 @@
 export * from './DashboardScriptLoader';
 export * from './NamespaceSelectorContext';
 export * from './NotificationContext';
+export * from './ThemeContext';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { USERNAME, POLL_INTERVAL, AUTH_HEADER, MOCK_AUTH } from '~/utilities/const';
+import { KUBEFLOW_USERNAME, POLL_INTERVAL, AUTH_HEADER, MOCK_AUTH } from '~/utilities/const';
 import { useDeepCompareMemoize } from '~/utilities/useDeepCompareMemoize';
 import { ConfigSettings, UserSettings } from '~/types';
 import useTimeBasedRefresh from '~/hooks/useTimeBasedRefresh';
@@ -23,7 +23,7 @@ export const useSettings = (): {
     let watchHandle: ReturnType<typeof setTimeout>;
     let cancelled = false;
     const watchConfig = () => {
-      const headers = MOCK_AUTH ? { [AUTH_HEADER]: USERNAME } : undefined;
+      const headers = MOCK_AUTH ? { [AUTH_HEADER]: KUBEFLOW_USERNAME } : undefined;
       Promise.all([fetchConfig(), userRest({ headers })])
         .then(([fetchedConfig, fetchedUser]) => {
           if (cancelled) {

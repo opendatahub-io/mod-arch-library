@@ -16,7 +16,7 @@ const loadScript = (src: string, onLoad: () => void, onError: () => void) => {
 };
 
 /* eslint-disable no-console */
-const DashboardScriptLoader: React.FC<DashboardScriptLoaderProps> = ({ children }) => {
+export const DashboardScriptLoader: React.FC<DashboardScriptLoaderProps> = ({ children }) => {
   const [scriptLoaded, setScriptLoaded] = useState(false);
 
   useEffect(() => {
@@ -53,5 +53,3 @@ const DashboardScriptLoader: React.FC<DashboardScriptLoaderProps> = ({ children 
     <>{children}</>
   );
 };
-
-export default DashboardScriptLoader;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { APIState } from '~/api/types';
 
-const useAPIState = <T>(
+export const useAPIState = <T>(
   hostPath: string | null,
   createAPI: (path: string) => T,
 ): [apiState: APIState<T>, refreshAPIState: () => void] => {
@@ -28,5 +28,3 @@ const useAPIState = <T>(
 
   return [apiState, refreshAPIState];
 };
-
-export default useAPIState;
