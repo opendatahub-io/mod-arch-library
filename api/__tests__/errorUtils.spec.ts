@@ -4,11 +4,12 @@ import { handleRestFailures } from '~/api/errorUtils';
 import { mockGenericResponse } from '~/__tests__/__mocks__/mockGenericResponse';
 import { mockModArchResponse } from '~/utilities';
 
-
 describe('handleRestFailures', () => {
   it('should successfully return registered models', async () => {
     const modelRegistryMock = mockGenericResponse({});
-    const result = await handleRestFailures(Promise.resolve(mockModArchResponse(modelRegistryMock)));
+    const result = await handleRestFailures(
+      Promise.resolve(mockModArchResponse(modelRegistryMock)),
+    );
     expect(result.data).toStrictEqual(modelRegistryMock);
   });
 

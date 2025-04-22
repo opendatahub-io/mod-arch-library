@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  useFetchState,
-  FetchState,
-  FetchStateCallbackPromise,
-} from '~/utilities/useFetchState';
+import { useFetchState, FetchState, FetchStateCallbackPromise } from '~/utilities/useFetchState';
 import { Namespace } from '~/types';
 import { AUTH_HEADER, isStandalone, MOCK_AUTH, KUBEFLOW_USERNAME } from '~/utilities/const';
 import { getNamespaces } from '~/api/k8s';

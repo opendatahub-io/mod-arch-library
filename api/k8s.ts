@@ -1,10 +1,8 @@
 import { APIOptions } from '~/api/types';
 import { handleRestFailures } from '~/api/errorUtils';
 import { isModArchResponse, restGET } from '~/api/apiUtils';
-import { BFF_API_VERSION } from '~/utilities/const';
-import { URL_PREFIX } from '~/utilities/const';
+import { BFF_API_VERSION, URL_PREFIX } from '~/utilities/const';
 import { Namespace, UserSettings } from '~/types';
-
 
 export const getUser =
   (hostPath: string) =>

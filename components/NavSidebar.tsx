@@ -49,13 +49,9 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ navData }) => (
     <PageSidebarBody>
       <Nav id="nav-primary-simple">
         <NavList id="nav-list-simple">
-            <NavItem>
-            <Brand
-              className="kubeflow_brand"
-              src={`/images/${LOGO_LIGHT}`}
-              alt="Kubeflow Logo"
-            />
-            </NavItem>
+          <NavItem>
+            <Brand className="kubeflow_brand" src={`/images/${LOGO_LIGHT}`} alt="Kubeflow Logo" />
+          </NavItem>
           {navData.map((item) =>
             isNavDataGroup(item) ? (
               <NavGroup key={item.label} item={item} />

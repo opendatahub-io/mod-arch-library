@@ -1,4 +1,4 @@
-import { ModArchBody } from "~/types";
+import { ModArchBody } from '~/types';
 
 export enum Theme {
   Default = 'default-theme',

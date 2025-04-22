@@ -9,8 +9,8 @@ import {
 } from '~/context/NamespaceSelectorContext';
 
 // Mock the hooks and utilities
-jest.mock('~/shared/hooks/useNamespaces');
-jest.mock('~/shared/utilities/const');
+jest.mock('~/hooks/useNamespaces');
+jest.mock('~/utilities/const');
 
 const mockNamespaces = [{ name: 'namespace-2' }, { name: 'namespace-3' }, { name: 'namespace-1' }];
 

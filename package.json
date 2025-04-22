@@ -15,14 +15,17 @@
   "scripts": {
     "build": "tsc && tsc-alias && npm run copy-assets",
     "copy-assets": "mkdir -p dist/style dist/images && cp -r style/* dist/style/ && cp -r images/* dist/images/ && find components \\( -name '*.scss' -o -name '*.css' \\) -exec rsync -R {} dist/ \\;",
-    "test": "jest",
-    "lint": "eslint .",
+    "test": "run-s test:lint test:unit",
+    "test:jest": "jest",
+    "test:unit": "npm run test:jest -- --silent",
+    "test:fix": "eslint --ext .js,.ts,.jsx,.tsx . --fix",
+    "test:lint": "eslint --max-warnings 0 --ext .js,.ts,.jsx,.tsx .",
     "prepare": "npm run build",
-    "prepublishOnly": "npm test && npm run lint"
+    "prepublishOnly": "npm run test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/your-organization/mod-arch-shared.git"
+    "url": "git+https://github.com/opendatahub-io/kubeflow-ui-essentials.git"
   },
   "keywords": [
     "modular-architecture",
@@ -56,8 +59,12 @@
     "@types/lodash-es": "^4.17.8",
     "@types/react-dom": "^18.3.1",
     "@types/showdown": "^2.0.3",
+    "core-js": "^3.40.0",
     "eslint": "^8.38.0",
-    "jest": "^29.5.0",
+    "expect": "^29.7.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "ts-jest": "^29.2.6",
     "tsc-alias": "^1.8.15",
     "typescript": "^5.0.4"
   },
@@ -74,11 +81,27 @@
     "dompurify": "^3.2.4",
     "lodash-es": "^4.17.15",
     "npm-run-all": "^4.1.5",
-    "react": "^18",
-    "react-dom": "^18",
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0",
     "react-router": "^7.1.5",
     "react-router-dom": "^7.1.5",
     "sass": "^1.83.0",
     "showdown": "^2.1.0"
+  },
+  "optionalDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.26.1",
+    "@typescript-eslint/parser": "^8.26.1",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-import-resolver-node": "^0.3.7",
+    "eslint-import-resolver-typescript": "^3.8.3",
+    "eslint-plugin-cypress": "^3.3.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-no-only-tests": "^3.1.0",
+    "eslint-plugin-no-relative-import-paths": "^1.6.1",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.2.0"
   }
 }
