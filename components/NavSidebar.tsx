@@ -9,8 +9,9 @@ import {
   PageSidebar,
   PageSidebarBody,
 } from '@patternfly/react-core';
-import { LOGO_LIGHT } from '~/utilities/const';
+import logoLightTheme from '~/images/logo-light-theme.svg';
 import { isNavDataGroup, NavDataHref, NavDataGroup, NavDataItem } from '~/types/common';
+import { useThemeContext } from '~/hooks/useThemeContext';
 
 const NavHref: React.FC<{ item: NavDataHref }> = ({ item }) => (
   <NavItem key={item.label} data-id={item.label} itemId={item.label}>
@@ -44,25 +45,30 @@ export type NavSidebarProps = {
   navData: NavDataItem[];
 };
 
-const NavSidebar: React.FC<NavSidebarProps> = ({ navData }) => (
-  <PageSidebar>
-    <PageSidebarBody>
-      <Nav id="nav-primary-simple">
-        <NavList id="nav-list-simple">
-          <NavItem>
-            <Brand className="kubeflow_brand" src={`/images/${LOGO_LIGHT}`} alt="Kubeflow Logo" />
-          </NavItem>
-          {navData.map((item) =>
-            isNavDataGroup(item) ? (
-              <NavGroup key={item.label} item={item} />
-            ) : (
-              <NavHref key={item.label} item={item} />
-            ),
-          )}
-        </NavList>
-      </Nav>
-    </PageSidebarBody>
-  </PageSidebar>
-);
+const NavSidebar: React.FC<NavSidebarProps> = ({ navData }) => {
+  const { isMUITheme } = useThemeContext();
+  return (
+    <PageSidebar>
+      <PageSidebarBody>
+        <Nav id="nav-primary-simple">
+          <NavList id="nav-list-simple">
+            {isMUITheme ? (
+              <NavItem>
+                <Brand className="kubeflow_brand" src={logoLightTheme} alt="Kubeflow Logo" />
+              </NavItem>
+            ) : null}
+            {navData.map((item) =>
+              isNavDataGroup(item) ? (
+                <NavGroup key={item.label} item={item} />
+              ) : (
+                <NavHref key={item.label} item={item} />
+              ),
+            )}
+          </NavList>
+        </Nav>
+      </PageSidebarBody>
+    </PageSidebar>
+  );
+};
 
 export default NavSidebar;

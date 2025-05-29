@@ -3,7 +3,7 @@
     "rootDir": ".",
     "outDir": "dist",
     "module": "esnext",
-    "target": "es5",
+    "target": "es2021",
     "lib": [
       "es6",
       "dom",

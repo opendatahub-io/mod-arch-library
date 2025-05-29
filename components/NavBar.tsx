@@ -20,9 +20,9 @@ import {
 } from '@patternfly/react-core';
 import { SimpleSelect } from '@patternfly/react-templates';
 import { BarsIcon } from '@patternfly/react-icons';
-import { NamespaceSelectorContext } from '~/context/NamespaceSelectorContext';
+import { useNamespaceSelector } from '~/hooks/useNamespaceSelector';
 import logoDarkTheme from '~/images/logo-dark-theme.svg';
-import { useThemeContext } from '../context/ThemeContext';
+import { useThemeContext } from '~/hooks/useThemeContext';
 
 interface NavBarProps {
   username?: string;
@@ -30,8 +30,7 @@ interface NavBarProps {
 }
 
 const NavBar: React.FC<NavBarProps> = ({ username, onLogout }) => {
-  const { namespaces, preferredNamespace, updatePreferredNamespace } =
-    React.useContext(NamespaceSelectorContext);
+  const { namespaces, preferredNamespace, updatePreferredNamespace } = useNamespaceSelector();
   const { isMUITheme } = useThemeContext();
 
   const [userMenuOpen, setUserMenuOpen] = React.useState(false);
@@ -67,9 +66,7 @@ const NavBar: React.FC<NavBarProps> = ({ username, onLogout }) => {
               <Brand src={logoDarkTheme} alt="Kubeflow" heights={{ default: '36px' }} />
             </MastheadLogo>
           </MastheadBrand>
-        ) : (
-          ''
-        )}
+        ) : null}
       </MastheadMain>
       <MastheadContent>
         <Toolbar>

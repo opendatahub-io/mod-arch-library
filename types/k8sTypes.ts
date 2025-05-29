@@ -24,6 +24,8 @@ export type ModelRegistryKind = K8sResourceCommon & {
   metadata: {
     name: string;
     namespace: string;
+    displayName?: string;
+    description?: string;
   };
   spec: {
     grpc: Record<string, never>; // Empty object at create time, properties here aren't used by the UI

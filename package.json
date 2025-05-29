@@ -1,9 +1,14 @@
 {
   "name": "mod-arch-shared",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "description": "Shared library for modular architecture micro-frontend projects",
   "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "sideEffects": [
+    "*.css",
+    "*.scss"
+  ],
   "engines": {
     "node": ">=20.0.0"
   },
@@ -15,9 +20,10 @@
   "scripts": {
     "build": "tsc && tsc-alias && npm run copy-assets",
     "copy-assets": "mkdir -p dist/style dist/images && cp -r style/* dist/style/ && cp -r images/* dist/images/ && find components \\( -name '*.scss' -o -name '*.css' \\) -exec rsync -R {} dist/ \\;",
-    "test": "run-s test:lint test:unit",
+    "test": "run-s test:lint test:unit test:type-check",
     "test:jest": "jest",
     "test:unit": "npm run test:jest -- --silent",
+    "test:type-check": "tsc --noEmit",
     "test:fix": "eslint --ext .js,.ts,.jsx,.tsx . --fix",
     "test:lint": "eslint --max-warnings 0 --ext .js,.ts,.jsx,.tsx .",
     "prepare": "npm run build",
@@ -71,12 +77,12 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.13.5",
-    "@patternfly/patternfly": "^6.1.0",
-    "@patternfly/react-core": "6.1.0",
-    "@patternfly/react-icons": "6.0.0",
-    "@patternfly/react-styles": "6.0.0",
-    "@patternfly/react-table": "6.1.0",
-    "@patternfly/react-templates": "6.1.0",
+    "@patternfly/patternfly": "^6.2.0",
+    "@patternfly/react-core": "^6.2.0",
+    "@patternfly/react-icons": "^6.2.0",
+    "@patternfly/react-styles": "^6.2.0",
+    "@patternfly/react-table": "^6.2.0",
+    "@patternfly/react-templates": "^6.2.0",
     "classnames": "^2.2.6",
     "dompurify": "^3.2.4",
     "lodash-es": "^4.17.15",

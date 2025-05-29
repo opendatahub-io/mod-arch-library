@@ -2,7 +2,7 @@ import { NotReadyError } from '~/utilities/useFetchState';
 import { APIError } from '~/api/types';
 import { handleRestFailures } from '~/api/errorUtils';
 import { mockGenericResponse } from '~/__tests__/__mocks__/mockGenericResponse';
-import { mockModArchResponse } from '~/utilities';
+import { mockModArchResponse } from '~/api/';
 
 describe('handleRestFailures', () => {
   it('should successfully return registered models', async () => {

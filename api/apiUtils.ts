@@ -1,7 +1,6 @@
 import { APIOptions } from '~/api/types';
 import { EitherOrNone } from '~/types/typeHelpers';
 import { ModArchBody } from '~/types';
-import { AUTH_HEADER, MOCK_AUTH } from '~/utilities/const';
 
 export const mergeRequestInit = (
   opts: APIOptions = {},
@@ -65,14 +64,10 @@ const callRestJSON = <T>(
     requestData = JSON.stringify(data);
   }
 
-  // Workaround if we wanna force in a call to add the AUTH_HEADER
-  const authHeader = Object.keys(otherOptions.headers || {}).some((key) => key === AUTH_HEADER);
-
   return fetch(`${host}${path}${searchParams ? `?${searchParams}` : ''}`, {
     ...otherOptions,
     headers: {
       ...otherOptions.headers,
-      ...(MOCK_AUTH && !authHeader && { [AUTH_HEADER]: localStorage.getItem(AUTH_HEADER) }),
       ...(contentType && { 'Content-Type': contentType }),
     },
     method,

@@ -1,5 +1,13 @@
 import { AlertVariant } from '@patternfly/react-core';
+import { DeploymentMode, PlatformMode } from '~/utilities';
 import { EitherNotBoth } from './typeHelpers';
+
+export type ModularArchConfig = {
+  deploymentMode: DeploymentMode;
+  platformMode: PlatformMode;
+  URL_PREFIX: string;
+  BFF_API_VERSION: string;
+};
 
 export type ModArchBody<T> = {
   data: T;
