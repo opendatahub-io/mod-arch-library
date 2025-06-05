@@ -4,7 +4,6 @@ type MockGenericResponse = {
   description?: string;
 };
 
-
 export const mockGenericResponse = ({
   name = 'test',
   description = 'test',

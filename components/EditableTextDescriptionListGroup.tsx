@@ -4,7 +4,6 @@ import DashboardDescriptionListGroup, {
   DashboardDescriptionListGroupProps,
 } from '~/components/DashboardDescriptionListGroup';
 import FormFieldset from '~/components/FormFieldset';
-import { isMUITheme } from '~/utilities/const';
 
 type EditableTextDescriptionListGroupProps = Pick<
   DashboardDescriptionListGroupProps,
@@ -65,9 +64,7 @@ const EditableTextDescriptionListGroup: React.FC<EditableTextDescriptionListGrou
       editButtonTestId={baseTestId && `${baseTestId}-edit`}
       saveButtonTestId={baseTestId && `${baseTestId}-save`}
       cancelButtonTestId={baseTestId && `${baseTestId}-cancel`}
-      contentWhenEditing={
-        isMUITheme() ? <FormFieldset component={editableTextArea} /> : editableTextArea
-      }
+      contentWhenEditing={<FormFieldset component={editableTextArea} />}
       onEditClick={() => {
         setUnsavedValue(value);
         setIsEditing(true);

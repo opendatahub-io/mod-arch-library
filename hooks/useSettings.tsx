@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { USERNAME, POLL_INTERVAL, AUTH_HEADER, MOCK_AUTH } from '~/utilities/const';
+import { POLL_INTERVAL } from '~/utilities/const';
 import { useDeepCompareMemoize } from '~/utilities/useDeepCompareMemoize';
 import { ConfigSettings, UserSettings } from '~/types';
 import useTimeBasedRefresh from '~/hooks/useTimeBasedRefresh';
 import { getNamespaces, getUser } from '~/api/k8s';
+import { useModularArchContext } from './useModularArchContext';
 
 export const useSettings = (): {
   configSettings: ConfigSettings | null;
@@ -11,20 +12,27 @@ export const useSettings = (): {
   loaded: boolean;
   loadError: Error | undefined;
 } => {
+  const { BFF_API_VERSION, URL_PREFIX } = useModularArchContext();
+  const modArchConfig = React.useMemo(
+    () => ({
+      BFF_API_VERSION,
+      URL_PREFIX,
+    }),
+    [BFF_API_VERSION, URL_PREFIX],
+  );
   const [loaded, setLoaded] = React.useState(false);
   const [loadError, setLoadError] = React.useState<Error>();
   const [config, setConfig] = React.useState<ConfigSettings | null>(null);
   const [user, setUser] = React.useState<UserSettings | null>(null);
-  const userRest = React.useMemo(() => getUser(''), []);
-  const namespaceRest = React.useMemo(() => getNamespaces(''), []);
+  const userRest = React.useMemo(() => getUser('', modArchConfig), [modArchConfig]);
+  const namespaceRest = React.useMemo(() => getNamespaces('', modArchConfig), [modArchConfig]);
   const setRefreshMarker = useTimeBasedRefresh();
 
   React.useEffect(() => {
     let watchHandle: ReturnType<typeof setTimeout>;
     let cancelled = false;
     const watchConfig = () => {
-      const headers = MOCK_AUTH ? { [AUTH_HEADER]: USERNAME } : undefined;
-      Promise.all([fetchConfig(), userRest({ headers })])
+      Promise.all([fetchConfig(), userRest({})])
         .then(([fetchedConfig, fetchedUser]) => {
           if (cancelled) {
             return;

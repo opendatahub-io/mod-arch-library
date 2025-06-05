@@ -1,4 +1,4 @@
-# mod-arch-shared
+# Modular Architecture Shared Library
 
 ## Overview
 

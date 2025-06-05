@@ -109,7 +109,7 @@ export type FetchOptions = {
  *
  * Note: Your callback *should* support the opts property so the call can be cancelled.
  */
-const useFetchState = <Type>(
+export const useFetchState = <Type>(
   /** React.useCallback result. */
   fetchCallbackPromise: FetchStateCallbackPromise<Type | AdHocUpdate<Type>>,
   /**
@@ -254,5 +254,3 @@ const useFetchState = <Type>(
 
   return [result, loaded, loadError, refresh];
 };
-
-export default useFetchState;

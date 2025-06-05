@@ -1,7 +1,6 @@
 import { APIOptions } from '~/api/types';
 import { EitherOrNone } from '~/types/typeHelpers';
-import { BFFBody } from '~/types';
-import { AUTH_HEADER, MOCK_AUTH } from '~/utilities/const';
+import { ModArchBody } from '~/types';
 
 export const mergeRequestInit = (
   opts: APIOptions = {},
@@ -65,14 +64,10 @@ const callRestJSON = <T>(
     requestData = JSON.stringify(data);
   }
 
-  // Workaround if we wanna force in a call to add the AUTH_HEADER
-  const authHeader = Object.keys(otherOptions.headers || {}).some((key) => key === AUTH_HEADER);
-
   return fetch(`${host}${path}${searchParams ? `?${searchParams}` : ''}`, {
     ...otherOptions,
     headers: {
       ...otherOptions.headers,
-      ...(MOCK_AUTH && !authHeader && { [AUTH_HEADER]: localStorage.getItem(AUTH_HEADER) }),
       ...(contentType && { 'Content-Type': contentType }),
     },
     method,
@@ -177,15 +172,15 @@ export const restDELETE = <T>(
     parseJSON: options?.parseJSON,
   });
 
-export const isModelRegistryResponse = <T>(response: unknown): response is BFFBody<T> => {
+export const isModArchResponse = <T>(response: unknown): response is ModArchBody<T> => {
   if (typeof response === 'object' && response !== null) {
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const bffBody = response as { data?: T };
-    return bffBody.data !== undefined;
+    const modArchBody = response as { data?: T };
+    return modArchBody.data !== undefined;
   }
   return false;
 };
 
-export const assembleBFFBody = <T>(data: T): BFFBody<T> => ({
+export const assembleModArchBody = <T>(data: T): ModArchBody<T> => ({
   data,
 });

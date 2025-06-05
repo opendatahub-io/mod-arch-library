@@ -1,8 +1,6 @@
 // Export style files
-import './MUI-theme.scss';
+// Note: MUI theme styles are automatically imported by ThemeContext when needed
+// Other styles are not imported by default to avoid side effects
+// Users should import other styles explicitly when needed
 
-// You can add explicit exports for specific stylesheets if needed
-// For example:
-// export const muiTheme = './MUI-theme.scss';
-
-// This allows users to import from '@your-package/style'
+export {};

@@ -1,4 +1,35 @@
 import { AlertVariant } from '@patternfly/react-core';
+import { DeploymentMode, PlatformMode } from '~/utilities';
+import { EitherNotBoth } from './typeHelpers';
+
+export type ModularArchConfig = {
+  deploymentMode: DeploymentMode;
+  platformMode: PlatformMode;
+  URL_PREFIX: string;
+  BFF_API_VERSION: string;
+};
+
+export type ModArchBody<T> = {
+  data: T;
+  metadata?: Record<string, unknown>;
+};
+
+export const isNavDataGroup = (navItem: NavDataItem): navItem is NavDataGroup =>
+  'children' in navItem;
+
+type NavDataCommon = {
+  label: string;
+};
+
+export type NavDataHref = NavDataCommon & {
+  path: string;
+};
+
+export type NavDataGroup = NavDataCommon & {
+  children: NavDataHref[];
+};
+
+export type NavDataItem = NavDataHref | NavDataGroup;
 
 export type UserSettings = {
   userId: string;
@@ -113,9 +144,60 @@ export type FetchStateObject<T, E = Error> = {
   refresh: () => void;
 };
 
-export type BFFBody<T> = {
-  data: T;
-  metadata?: Record<string, unknown>;
+export type NodeSelector = Record<string, string>;
+
+export enum ContainerResourceAttributes {
+  CPU = 'cpu',
+  MEMORY = 'memory',
+}
+
+export type ContainerResources = {
+  requests?: {
+    [key: string]: number | string | undefined;
+    cpu?: string | number;
+    memory?: string;
+  };
+  limits?: {
+    [key: string]: number | string | undefined;
+    cpu?: string | number;
+    memory?: string;
+  };
+};
+
+export type EnvironmentVariable = EitherNotBoth<
+  { value: string | number },
+  { valueFrom: Record<string, unknown> }
+> & {
+  name: string;
+};
+
+export type PodAffinity = {
+  nodeAffinity?: { [key: string]: unknown };
+};
+
+export type VolumeMount = { mountPath: string; name: string };
+
+export enum TolerationOperator {
+  EXISTS = 'Exists',
+  EQUAL = 'Equal',
+}
+
+export enum TolerationEffect {
+  NO_SCHEDULE = 'NoSchedule',
+  PREFER_NO_SCHEDULE = 'PreferNoSchedule',
+  NO_EXECUTE = 'NoExecute',
+}
+
+export type Volume = {
+  name: string;
+  emptyDir?: Record<string, unknown>;
+  persistentVolumeClaim?: {
+    claimName: string;
+  };
+  secret?: {
+    secretName: string;
+    optional?: boolean;
+  };
 };
 
 export type Notification = {

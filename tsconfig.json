@@ -3,13 +3,15 @@
     "rootDir": ".",
     "outDir": "dist",
     "module": "esnext",
-    "target": "es5",
+    "target": "es2021",
     "lib": [
       "es6",
       "dom",
       "ES2023.Array"
     ],
     "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
     "jsx": "react",
     "moduleResolution": "node",
     "downlevelIteration": true,
