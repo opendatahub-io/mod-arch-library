@@ -3,6 +3,7 @@ export * from './appUtils';
 export * from './const';
 export * from './markdown';
 export * from './time';
+export * from './string';
 export * from './useDebounceCallback';
 export * from './useDeepCompareMemoize';
 export * from './useEventListener';
