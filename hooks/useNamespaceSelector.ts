@@ -1,5 +1,5 @@
 import { Namespace } from '~/types';
-import { useModularArchFullContext } from './useModularArchContext';
+import { useModularArchContext } from './useModularArchContext';
 
 export const useNamespaceSelector = (): {
   namespacesLoaded: boolean;
@@ -9,7 +9,7 @@ export const useNamespaceSelector = (): {
   updatePreferredNamespace: (namespace: Namespace | undefined) => void;
   initializationError?: Error;
 } => {
-  const context = useModularArchFullContext();
+  const context = useModularArchContext();
 
   return {
     namespacesLoaded: context.namespacesLoaded,

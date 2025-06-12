@@ -3,7 +3,7 @@ import React from 'react';
 import { renderHook } from '@testing-library/react';
 import { ModularArchContextProvider } from '~/context/ModularArchContext';
 import { DeploymentMode, PlatformMode } from '~/utilities';
-import { useModularArchContext, useModularArchFullContext } from '../useModularArchContext';
+import { useModularArchContext } from '../useModularArchContext';
 
 // Mock the k8s API module
 jest.mock('~/api/k8s', () => ({
@@ -30,34 +30,19 @@ describe('useModularArchContext', () => {
   afterEach(() => {
     jest.restoreAllMocks();
   });
-  it('should return config from context', () => {
-    const { result } = renderHook(() => useModularArchContext(), { wrapper });
-    expect(result.current).toEqual(mockConfig);
-  });
 
-  it('should throw error when used outside provider', () => {
-    expect(() => renderHook(() => useModularArchContext())).toThrow();
-  });
-});
-
-describe('useModularArchFullContext', () => {
-  beforeEach(() => {
-    // Mock fetch for script loading
-    global.fetch = jest.fn().mockResolvedValue({ ok: false });
-  });
-
-  afterEach(() => {
-    jest.restoreAllMocks();
-  });
   it('should return full context', () => {
-    const { result } = renderHook(() => useModularArchFullContext(), { wrapper });
-    expect(result.current.config).toEqual(mockConfig);
+    const { result } = renderHook(() => useModularArchContext(), { wrapper });
     expect(result.current).toHaveProperty('namespaces');
     expect(result.current).toHaveProperty('namespacesLoaded');
     expect(result.current).toHaveProperty('scriptLoaded');
   });
+  it('should return config from context', () => {
+    const { result } = renderHook(() => useModularArchContext(), { wrapper });
+    expect(result.current.config).toEqual(mockConfig);
+  });
 
   it('should throw error when used outside provider', () => {
-    expect(() => renderHook(() => useModularArchFullContext())).toThrow();
+    expect(() => renderHook(() => useModularArchContext())).toThrow();
   });
 });

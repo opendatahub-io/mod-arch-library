@@ -12,7 +12,8 @@ export const useSettings = (): {
   loaded: boolean;
   loadError: Error | undefined;
 } => {
-  const { BFF_API_VERSION, URL_PREFIX } = useModularArchContext();
+  const { config: modularArchConfig } = useModularArchContext();
+  const { BFF_API_VERSION, URL_PREFIX } = modularArchConfig;
   const modArchConfig = React.useMemo(
     () => ({
       BFF_API_VERSION,

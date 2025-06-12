@@ -21,6 +21,7 @@ import {
 import { SimpleSelect } from '@patternfly/react-templates';
 import { BarsIcon } from '@patternfly/react-icons';
 import { useNamespaceSelector } from '~/hooks/useNamespaceSelector';
+import { useModularArchContext } from '~/hooks/useModularArchContext';
 import logoDarkTheme from '~/images/logo-dark-theme.svg';
 import { useThemeContext } from '~/hooks/useThemeContext';
 
@@ -31,9 +32,13 @@ interface NavBarProps {
 
 const NavBar: React.FC<NavBarProps> = ({ username, onLogout }) => {
   const { namespaces, preferredNamespace, updatePreferredNamespace } = useNamespaceSelector();
+  const { config } = useModularArchContext();
   const { isMUITheme } = useThemeContext();
 
   const [userMenuOpen, setUserMenuOpen] = React.useState(false);
+
+  // Check if mandatory namespace is configured
+  const isMandatoryNamespace = Boolean(config.mandatoryNamespace);
 
   const options = namespaces.map((namespace) => ({
     content: namespace.name,
@@ -75,8 +80,12 @@ const NavBar: React.FC<NavBarProps> = ({ username, onLogout }) => {
               <ToolbarItem className="kubeflow-u-namespace-select">
                 <SimpleSelect
                   initialOptions={options}
+                  isDisabled={isMandatoryNamespace} // Disable selection when mandatory namespace is set
                   onSelect={(_ev, selection) => {
-                    updatePreferredNamespace({ name: String(selection) });
+                    // Only allow selection if not mandatory namespace
+                    if (!isMandatoryNamespace) {
+                      updatePreferredNamespace({ name: String(selection) });
+                    }
                   }}
                 />
               </ToolbarItem>
