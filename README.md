@@ -73,6 +73,45 @@ The repository contains the following modules:
 - **style**: Global styles
 - **types**: TypeScript type definitions
 
+## Configuration
+
+### ModularArchConfig
+
+The library supports various configuration options through the `ModularArchConfig` interface:
+
+```typescript
+interface ModularArchConfig {
+  deploymentMode: DeploymentMode;
+  platformMode: PlatformMode;
+  URL_PREFIX: string;
+  BFF_API_VERSION: string;
+  mandatoryNamespace?: string; // Optional: Force a specific namespace
+}
+```
+
+#### Mandatory Namespace
+
+The `mandatoryNamespace` option allows you to enforce a specific namespace throughout the application:
+
+```typescript
+const config = {
+  deploymentMode: DeploymentMode.Standalone,
+  platformMode: PlatformMode.Default,
+  URL_PREFIX: '/api',
+  BFF_API_VERSION: 'v1',
+  mandatoryNamespace: 'production' // Force the use of 'production' namespace
+};
+```
+
+When `mandatoryNamespace` is set:
+
+- The namespace selector in the UI will be disabled
+- All API calls will be restricted to the specified namespace
+- Users cannot switch to different namespaces
+- The `useNamespaces` hook will only return the mandatory namespace
+
+This is useful for production environments or when you want to restrict users to a specific namespace.
+
 ## Development
 
 ### Prerequisites

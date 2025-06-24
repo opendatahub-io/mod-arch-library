@@ -19,11 +19,13 @@ const mockNamespaces = [{ name: 'namespace-2' }, { name: 'namespace-3' }, { name
 const createMockConfig = (
   deploymentMode: DeploymentMode = DeploymentMode.Standalone,
   platformMode: PlatformMode = PlatformMode.Default,
+  mandatoryNamespace?: string,
 ): ModularArchConfig => ({
   deploymentMode,
   platformMode,
   URL_PREFIX: 'model-registry',
   BFF_API_VERSION: 'v1',
+  ...(mandatoryNamespace && { mandatoryNamespace }),
 });
 
 describe('ModularArchContext', () => {
@@ -359,5 +361,128 @@ describe('ModularArchContext', () => {
 
     render(<TestConsumerWithError />);
     expect(screen.getByText('No context')).toBeInTheDocument();
+  });
+
+  describe('mandatory namespace functionality', () => {
+    it('should use mandatory namespace when provided in config', async () => {
+      const mandatoryNamespace = 'mandatory-namespace';
+      // Mock useFetchState to return only the mandatory namespace
+      mockUseFetchState.mockReturnValue([
+        [{ name: mandatoryNamespace }],
+        true,
+        undefined,
+        jest.fn(),
+      ]);
+
+      const config = createMockConfig(
+        DeploymentMode.Standalone,
+        PlatformMode.Default,
+        mandatoryNamespace,
+      );
+
+      render(
+        <ModularArchContextProvider config={config}>
+          <TestConsumer />
+        </ModularArchContextProvider>,
+      );
+
+      expect(screen.getByTestId('namespaces')).toHaveTextContent(mandatoryNamespace);
+      expect(screen.getByTestId('preferred')).toHaveTextContent(mandatoryNamespace);
+    });
+
+    it('should not fetch namespaces when mandatory namespace is set', async () => {
+      const mandatoryNamespace = 'mandatory-namespace';
+      // Mock useFetchState to return only the mandatory namespace
+      mockUseFetchState.mockReturnValue([
+        [{ name: mandatoryNamespace }],
+        true,
+        undefined,
+        jest.fn(),
+      ]);
+
+      const config = createMockConfig(
+        DeploymentMode.Standalone,
+        PlatformMode.Default,
+        mandatoryNamespace,
+      );
+
+      render(
+        <ModularArchContextProvider config={config}>
+          <TestConsumer />
+        </ModularArchContextProvider>,
+      );
+
+      // Should show the mandatory namespace as loaded
+      expect(screen.getByTestId('loading-state')).toHaveTextContent('true');
+      expect(screen.getByTestId('namespaces')).toHaveTextContent(mandatoryNamespace);
+      expect(screen.getByTestId('preferred')).toHaveTextContent(mandatoryNamespace);
+    });
+
+    it('should not use kubeflow namespace loader when mandatory namespace is set', async () => {
+      const mandatoryNamespace = 'mandatory-namespace';
+      mockUseFetchState.mockReturnValue([
+        [{ name: mandatoryNamespace }],
+        true,
+        undefined,
+        jest.fn(),
+      ]);
+
+      // Mock fetch to resolve successfully for script loading
+      (global.fetch as jest.Mock).mockResolvedValue({ ok: true });
+
+      // Mock script loading
+      const originalCreateElement = document.createElement;
+      const mockScript: Partial<HTMLScriptElement> = {
+        src: '',
+        async: true,
+        onload: null,
+        onerror: null,
+      };
+      document.createElement = jest.fn((tagName: string): HTMLElement | HTMLScriptElement => {
+        if (tagName === 'script') {
+          return mockScript as HTMLScriptElement;
+        }
+        return originalCreateElement.call(document, tagName);
+      });
+
+      const appendChild = jest.spyOn(document.head, 'appendChild').mockImplementation((): Node => {
+        setTimeout(() => {
+          if (mockScript.onload) {
+            (mockScript.onload as (this: HTMLScriptElement, ev: Event) => unknown).call(
+              mockScript as HTMLScriptElement,
+              new Event('load'),
+            );
+          }
+        }, 0);
+        return mockScript as Node;
+      });
+
+      // Mock kubeflow window object
+      global.window.centraldashboard = {
+        CentralDashboardEventHandler: {
+          init: jest.fn(),
+        },
+      };
+
+      const config = createMockConfig(
+        DeploymentMode.Integrated,
+        PlatformMode.Kubeflow,
+        mandatoryNamespace,
+      );
+
+      render(
+        <ModularArchContextProvider config={config}>
+          <TestConsumer />
+        </ModularArchContextProvider>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByTestId('preferred')).toHaveTextContent(mandatoryNamespace);
+      });
+
+      // Cleanup
+      document.createElement = originalCreateElement;
+      appendChild.mockRestore();
+    });
   });
 });

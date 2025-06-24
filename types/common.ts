@@ -7,6 +7,8 @@ export type ModularArchConfig = {
   platformMode: PlatformMode;
   URL_PREFIX: string;
   BFF_API_VERSION: string;
+  // Optional mandatory namespace - when provided, disables namespace listing/selection
+  mandatoryNamespace?: string;
 };
 
 export type ModArchBody<T> = {
