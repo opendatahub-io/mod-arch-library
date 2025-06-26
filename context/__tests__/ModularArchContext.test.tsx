@@ -18,7 +18,7 @@ const mockNamespaces = [{ name: 'namespace-2' }, { name: 'namespace-3' }, { name
 
 const createMockConfig = (
   deploymentMode: DeploymentMode = DeploymentMode.Standalone,
-  platformMode: PlatformMode = PlatformMode.Default,
+  platformMode: PlatformMode = PlatformMode.Federated,
   mandatoryNamespace?: string,
 ): ModularArchConfig => ({
   deploymentMode,
@@ -83,7 +83,7 @@ describe('ModularArchContext', () => {
     );
 
     expect(screen.getByTestId('deployment-mode')).toHaveTextContent('standalone');
-    expect(screen.getByTestId('platform-mode')).toHaveTextContent('default');
+    expect(screen.getByTestId('platform-mode')).toHaveTextContent('federated');
     expect(screen.getByTestId('loading-state')).toHaveTextContent('true');
     expect(screen.getByTestId('error-state')).toHaveTextContent('no-error');
     expect(screen.getByTestId('namespaces')).toHaveTextContent('');
@@ -376,7 +376,7 @@ describe('ModularArchContext', () => {
 
       const config = createMockConfig(
         DeploymentMode.Standalone,
-        PlatformMode.Default,
+        PlatformMode.Federated,
         mandatoryNamespace,
       );
 
@@ -402,7 +402,7 @@ describe('ModularArchContext', () => {
 
       const config = createMockConfig(
         DeploymentMode.Standalone,
-        PlatformMode.Default,
+        PlatformMode.Federated,
         mandatoryNamespace,
       );
 

@@ -12,7 +12,7 @@ jest.mock('~/api/k8s', () => ({
 
 const mockConfig = {
   deploymentMode: DeploymentMode.Standalone,
-  platformMode: PlatformMode.Default,
+  platformMode: PlatformMode.Federated,
   URL_PREFIX: 'test',
   BFF_API_VERSION: 'v1',
 };

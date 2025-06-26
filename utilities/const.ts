@@ -1,5 +1,5 @@
 export enum Theme {
-  Default = 'default-theme',
+  Patternfly = 'patternfly-theme',
   MUI = 'mui-theme',
   // Future themes can be added here
 }
@@ -10,7 +10,7 @@ export enum DeploymentMode {
 }
 
 export enum PlatformMode {
-  Default = 'default',
+  Federated = 'federated',
   Kubeflow = 'kubeflow',
 }
 

@@ -10,11 +10,11 @@ type ThemeProviderProps = {
 };
 
 export const ThemeContext = React.createContext({
-  theme: Theme.Default,
+  theme: Theme.Patternfly,
 });
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({
-  theme = Theme.Default,
+  theme = Theme.Patternfly,
   children,
 }) => {
   const themeValue = React.useMemo(() => ({ theme }), [theme]);

@@ -20,7 +20,7 @@ const mockUseFetchState = useFetchStateModule.useFetchState as jest.MockedFuncti
 const createMockConfig = (
   mandatoryNamespace?: string,
   deploymentMode: DeploymentMode = DeploymentMode.Standalone,
-  platformMode: PlatformMode = PlatformMode.Default,
+  platformMode: PlatformMode = PlatformMode.Federated,
 ): ModularArchConfig => ({
   deploymentMode,
   platformMode,
