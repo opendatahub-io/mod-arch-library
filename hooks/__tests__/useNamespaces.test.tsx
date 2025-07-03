@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { renderHook } from '@testing-library/react';
 import * as useFetchStateModule from '~/utilities/useFetchState';
-import { DeploymentMode, PlatformMode } from '~/utilities';
+import { DeploymentMode } from '~/utilities';
 import { ModularArchConfig } from '~/types';
 import { useNamespacesWithConfig } from '../useNamespaces';
 
@@ -17,11 +17,9 @@ const mockUseFetchState = useFetchStateModule.useFetchState as jest.MockedFuncti
 
 const createMockConfig = (
   mandatoryNamespace?: string,
-  deploymentMode: DeploymentMode = DeploymentMode.Standalone,
-  platformMode: PlatformMode = PlatformMode.Federated,
+  deploymentMode: DeploymentMode = DeploymentMode.Federated,
 ): ModularArchConfig => ({
   deploymentMode,
-  platformMode,
   URL_PREFIX: 'test',
   BFF_API_VERSION: 'v1',
   ...(mandatoryNamespace && { mandatoryNamespace }),
@@ -64,8 +62,8 @@ describe('useNamespacesWithConfig', () => {
     expect(result.current[2]).toBeUndefined(); // error
   });
 
-  it('should return empty array for kubeflow integrated mode when no mandatory namespace', () => {
-    const config = createMockConfig(undefined, DeploymentMode.Integrated, PlatformMode.Kubeflow);
+  it('should return empty array for kubeflow mode when no mandatory namespace', () => {
+    const config = createMockConfig(undefined, DeploymentMode.Kubeflow);
 
     mockUseFetchState.mockReturnValue([[], true, undefined, jest.fn()]);
 
@@ -76,13 +74,9 @@ describe('useNamespacesWithConfig', () => {
     expect(result.current[2]).toBeUndefined(); // error
   });
 
-  it('should return mandatory namespace even in kubeflow integrated mode', () => {
+  it('should return mandatory namespace even in kubeflow mode', () => {
     const mandatoryNamespace = 'mandatory-namespace';
-    const config = createMockConfig(
-      mandatoryNamespace,
-      DeploymentMode.Integrated,
-      PlatformMode.Kubeflow,
-    );
+    const config = createMockConfig(mandatoryNamespace, DeploymentMode.Kubeflow);
 
     mockUseFetchState.mockReturnValue([[{ name: mandatoryNamespace }], true, undefined, jest.fn()]);
 

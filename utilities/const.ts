@@ -6,10 +6,6 @@ export enum Theme {
 
 export enum DeploymentMode {
   Standalone = 'standalone',
-  Integrated = 'integrated',
-}
-
-export enum PlatformMode {
   Federated = 'federated',
   Kubeflow = 'kubeflow',
 }

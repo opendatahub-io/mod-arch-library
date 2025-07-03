@@ -1,4 +1,4 @@
-import { DeploymentMode, PlatformMode } from '~/utilities';
+import { DeploymentMode } from '~/utilities';
 
 declare global {
   interface Window {
@@ -26,27 +26,22 @@ export const isEnumMember = <T extends object>(
 };
 
 /**
- * Utility function to load the Kubeflow dashboard script for integrated deployments
+ * Utility function to load the Kubeflow dashboard script for kubeflow deployments
  * @param deploymentMode - The current deployment mode
- * @param platformMode - The current platform mode
  * @param onSuccess - Callback function to execute when script loads successfully
  * @param onError - Callback function to execute when script fails to load
  */
 export const kubeflowScriptLoader = (
   deploymentMode: DeploymentMode,
-  platformMode: PlatformMode,
   onSuccess: () => void,
   onError?: (error?: Error) => void,
 ): void => {
   const scriptUrl = '/dashboard_lib.bundle.js';
 
-  // Only load script for integrated Kubeflow deployments
-  if (
-    !(deploymentMode === DeploymentMode.Integrated) ||
-    !(platformMode === PlatformMode.Kubeflow)
-  ) {
+  // Only load script for Kubeflow deployments
+  if (deploymentMode !== DeploymentMode.Kubeflow) {
     // eslint-disable-next-line no-console
-    console.warn('kubeflowScriptLoader: Script not loaded, only needed for kubeflow integration');
+    console.warn('kubeflowScriptLoader: Script not loaded, only needed for kubeflow deployments');
     onSuccess();
     return;
   }
@@ -87,7 +82,6 @@ export const kubeflowScriptLoader = (
 /**
  * Utility function to initialize Kubeflow namespace selection integration
  * @param deploymentMode - The current deployment mode
- * @param platformMode - The current platform mode
  * @param scriptLoaded - Whether the Kubeflow dashboard script is loaded
  * @param onNamespaceSelected - Callback function when a namespace is selected
  * @param onError - Callback function to execute when initialization fails
@@ -96,18 +90,13 @@ export const kubeflowScriptLoader = (
  */
 export const kubeflowNamespaceLoader = (
   deploymentMode: DeploymentMode,
-  platformMode: PlatformMode,
   scriptLoaded: boolean,
   onNamespaceSelected: (namespace: string) => void,
   onError?: (error: Error) => void,
   mandatoryNamespace?: string,
 ): boolean => {
   // Only initialize for integrated Kubeflow deployments with loaded script
-  if (
-    !(deploymentMode === DeploymentMode.Integrated) ||
-    !(platformMode === PlatformMode.Kubeflow) ||
-    !scriptLoaded
-  ) {
+  if (deploymentMode !== DeploymentMode.Kubeflow || !scriptLoaded) {
     return false;
   }
 

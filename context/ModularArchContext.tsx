@@ -28,7 +28,7 @@ export const ModularArchContextProvider: React.FC<ModularArchContextProviderProp
   children,
   config,
 }) => {
-  const { deploymentMode, platformMode, mandatoryNamespace } = config;
+  const { deploymentMode, mandatoryNamespace } = config;
 
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const [preferredNamespace, setPreferredNamespace] = useState<Namespace | undefined>(undefined);
@@ -55,7 +55,6 @@ export const ModularArchContextProvider: React.FC<ModularArchContextProviderProp
   useEffect(() => {
     kubeflowScriptLoader(
       deploymentMode,
-      platformMode,
       () => setScriptLoaded(true),
       (scriptError) => {
         // eslint-disable-next-line no-console
@@ -63,7 +62,7 @@ export const ModularArchContextProvider: React.FC<ModularArchContextProviderProp
         setScriptLoaded(true); // Still set to true to not block the UI
       },
     );
-  }, [deploymentMode, platformMode]);
+  }, [deploymentMode]);
 
   // Namespace selector for kubeflow integration
   useEffect(() => {
@@ -74,7 +73,6 @@ export const ModularArchContextProvider: React.FC<ModularArchContextProviderProp
 
     kubeflowNamespaceLoader(
       deploymentMode,
-      platformMode,
       scriptLoaded,
       (newNamespace: string) => {
         setPreferredNamespace({ name: newNamespace });
@@ -84,7 +82,7 @@ export const ModularArchContextProvider: React.FC<ModularArchContextProviderProp
       },
       mandatoryNamespace,
     );
-  }, [deploymentMode, platformMode, scriptLoaded, mandatoryNamespace]);
+  }, [deploymentMode, scriptLoaded, mandatoryNamespace]);
 
   const contextValue = React.useMemo(
     () => ({
