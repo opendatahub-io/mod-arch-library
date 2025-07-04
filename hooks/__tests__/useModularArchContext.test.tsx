@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import React from 'react';
 import { renderHook } from '@testing-library/react';
 import { ModularArchContextProvider } from '~/context/ModularArchContext';
-import { DeploymentMode, PlatformMode } from '~/utilities';
+import { DeploymentMode } from '~/utilities';
 import { useModularArchContext } from '../useModularArchContext';
 
 // Mock the k8s API module
@@ -12,7 +12,6 @@ jest.mock('~/api/k8s', () => ({
 
 const mockConfig = {
   deploymentMode: DeploymentMode.Standalone,
-  platformMode: PlatformMode.Default,
   URL_PREFIX: 'test',
   BFF_API_VERSION: 'v1',
 };

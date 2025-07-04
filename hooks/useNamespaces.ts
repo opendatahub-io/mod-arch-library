@@ -2,12 +2,12 @@ import * as React from 'react';
 import { useFetchState, FetchState, FetchStateCallbackPromise } from '~/utilities/useFetchState';
 import { Namespace, ModularArchConfig } from '~/types';
 import { getNamespaces } from '~/api/k8s';
-import { DeploymentMode, PlatformMode } from '~/utilities';
+import { DeploymentMode } from '~/utilities';
 import { useModularArchContext } from './useModularArchContext';
 
 // Create a version that accepts config directly (for use in context provider)
 export const useNamespacesWithConfig = (config: ModularArchConfig): FetchState<Namespace[]> => {
-  const { BFF_API_VERSION, URL_PREFIX, deploymentMode, platformMode, mandatoryNamespace } = config;
+  const { BFF_API_VERSION, URL_PREFIX, deploymentMode, mandatoryNamespace } = config;
   const modArchConfig = React.useMemo(
     () => ({
       BFF_API_VERSION,
@@ -23,14 +23,14 @@ export const useNamespacesWithConfig = (config: ModularArchConfig): FetchState<N
         return Promise.resolve([{ name: mandatoryNamespace }]);
       }
 
-      if (deploymentMode !== DeploymentMode.Standalone && platformMode === PlatformMode.Kubeflow) {
+      if (deploymentMode === DeploymentMode.Kubeflow) {
         return Promise.resolve([]);
       }
       return listNamespaces({
         ...opts,
       });
     },
-    [deploymentMode, platformMode, listNamespaces, mandatoryNamespace],
+    [deploymentMode, listNamespaces, mandatoryNamespace],
   );
   return useFetchState(callback, [], { initialPromisePurity: true });
 };

@@ -3,7 +3,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import * as useFetchStateModule from '~/utilities/useFetchState';
 import { ModularArchContextProvider } from '~/context/ModularArchContext';
-import { DeploymentMode, PlatformMode } from '~/utilities';
+import { DeploymentMode } from '~/utilities';
 import { ModularArchConfig } from '~/types';
 import NavBar from '../NavBar';
 
@@ -20,10 +20,8 @@ const mockUseFetchState = useFetchStateModule.useFetchState as jest.MockedFuncti
 const createMockConfig = (
   mandatoryNamespace?: string,
   deploymentMode: DeploymentMode = DeploymentMode.Standalone,
-  platformMode: PlatformMode = PlatformMode.Default,
 ): ModularArchConfig => ({
   deploymentMode,
-  platformMode,
   URL_PREFIX: 'test',
   BFF_API_VERSION: 'v1',
   ...(mandatoryNamespace && { mandatoryNamespace }),

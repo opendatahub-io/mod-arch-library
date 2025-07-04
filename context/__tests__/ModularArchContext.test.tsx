@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import * as React from 'react';
 import { render, screen, act, waitFor } from '@testing-library/react';
 import { ModularArchContext, ModularArchContextProvider } from '~/context/ModularArchContext';
-import { DeploymentMode, PlatformMode } from '~/utilities';
+import { DeploymentMode } from '~/utilities';
 import { ModularArchConfig } from '~/types';
 import * as useFetchStateModule from '~/utilities/useFetchState';
 
@@ -18,11 +18,9 @@ const mockNamespaces = [{ name: 'namespace-2' }, { name: 'namespace-3' }, { name
 
 const createMockConfig = (
   deploymentMode: DeploymentMode = DeploymentMode.Standalone,
-  platformMode: PlatformMode = PlatformMode.Default,
   mandatoryNamespace?: string,
 ): ModularArchConfig => ({
   deploymentMode,
-  platformMode,
   URL_PREFIX: 'model-registry',
   BFF_API_VERSION: 'v1',
   ...(mandatoryNamespace && { mandatoryNamespace }),
@@ -48,7 +46,6 @@ describe('ModularArchContext', () => {
     return (
       <div>
         <div data-testid="deployment-mode">{config.deploymentMode}</div>
-        <div data-testid="platform-mode">{config.platformMode}</div>
         <div data-testid="loading-state">{namespacesLoaded.toString()}</div>
         <div data-testid="error-state">{namespacesLoadError?.message || 'no-error'}</div>
         <div data-testid="init-error">{initializationError?.message || 'no-init-error'}</div>
@@ -83,7 +80,6 @@ describe('ModularArchContext', () => {
     );
 
     expect(screen.getByTestId('deployment-mode')).toHaveTextContent('standalone');
-    expect(screen.getByTestId('platform-mode')).toHaveTextContent('default');
     expect(screen.getByTestId('loading-state')).toHaveTextContent('true');
     expect(screen.getByTestId('error-state')).toHaveTextContent('no-error');
     expect(screen.getByTestId('namespaces')).toHaveTextContent('');
@@ -128,7 +124,7 @@ describe('ModularArchContext', () => {
     expect(screen.getByTestId('preferred')).toHaveTextContent('none');
   });
 
-  it('should initialize central dashboard client when integrated', async () => {
+  it('should initialize central dashboard client when kubeflow', async () => {
     mockUseFetchState.mockReturnValue([mockNamespaces, true, undefined, jest.fn()]);
 
     // Mock fetch to resolve successfully for script loading
@@ -174,7 +170,7 @@ describe('ModularArchContext', () => {
       return mockScript as Node;
     });
 
-    const config = createMockConfig(DeploymentMode.Integrated, PlatformMode.Kubeflow);
+    const config = createMockConfig(DeploymentMode.Kubeflow);
 
     render(
       <ModularArchContextProvider config={config}>
@@ -265,7 +261,7 @@ describe('ModularArchContext', () => {
       return mockScript as HTMLScriptElement;
     });
 
-    const config = createMockConfig(DeploymentMode.Integrated, PlatformMode.Kubeflow);
+    const config = createMockConfig(DeploymentMode.Kubeflow);
 
     render(
       <ModularArchContextProvider config={config}>
@@ -335,7 +331,7 @@ describe('ModularArchContext', () => {
     });
     (global.fetch as jest.Mock).mockReturnValue(promise);
 
-    const config = createMockConfig(DeploymentMode.Integrated, PlatformMode.Kubeflow);
+    const config = createMockConfig(DeploymentMode.Kubeflow);
 
     render(
       <ModularArchContextProvider config={config}>
@@ -374,11 +370,7 @@ describe('ModularArchContext', () => {
         jest.fn(),
       ]);
 
-      const config = createMockConfig(
-        DeploymentMode.Standalone,
-        PlatformMode.Default,
-        mandatoryNamespace,
-      );
+      const config = createMockConfig(DeploymentMode.Federated);
 
       render(
         <ModularArchContextProvider config={config}>
@@ -400,11 +392,7 @@ describe('ModularArchContext', () => {
         jest.fn(),
       ]);
 
-      const config = createMockConfig(
-        DeploymentMode.Standalone,
-        PlatformMode.Default,
-        mandatoryNamespace,
-      );
+      const config = createMockConfig(DeploymentMode.Federated, mandatoryNamespace);
 
       render(
         <ModularArchContextProvider config={config}>
@@ -464,11 +452,7 @@ describe('ModularArchContext', () => {
         },
       };
 
-      const config = createMockConfig(
-        DeploymentMode.Integrated,
-        PlatformMode.Kubeflow,
-        mandatoryNamespace,
-      );
+      const config = createMockConfig(DeploymentMode.Kubeflow, mandatoryNamespace);
 
       render(
         <ModularArchContextProvider config={config}>

@@ -73,6 +73,114 @@ The repository contains the following modules:
 - **style**: Global styles
 - **types**: TypeScript type definitions
 
+## Provider Setup
+
+The Modular Architecture library requires proper context setup to function correctly. The library provides two essential providers that must be configured at the root of your application:
+
+### ModularArchContextProvider
+
+The `ModularArchContextProvider` is **mandatory** for using this library. It provides essential configuration and state management for:
+
+- **Deployment mode configuration** (Standalone, Federated, or Kubeflow)
+- **Namespace management** and selection
+- **API endpoint configuration**
+- **Script loading state** for Kubeflow integration
+- **Mandatory namespace enforcement** when required
+
+### ThemeProvider
+
+The `ThemeProvider` manages UI theming and supports:
+
+- **PatternFly theme** (default)
+- **Material-UI theme** with CSS variables support
+- **Dynamic theme switching** at runtime
+
+### Complete Setup Example
+
+Here's how to properly set up your application root with both providers:
+
+```typescript
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { 
+  ModularArchContextProvider, 
+  ThemeProvider,
+  BrowserStorageContextProvider,
+  NotificationContextProvider,
+  DeploymentMode,
+  Theme
+} from 'mod-arch-shared';
+
+// Define your configuration
+const modularArchConfig: ModularArchConfig = {
+  deploymentMode: DeploymentMode.Standalone, // or Federated, Kubeflow
+  URL_PREFIX: '/api',
+  BFF_API_VERSION: 'v1',
+  // Optional: Force a specific namespace
+  // mandatoryNamespace: 'production'
+};
+
+const container = document.getElementById('root');
+const root = createRoot(container!);
+
+root.render(
+  <React.StrictMode>
+    <Router>
+      <ModularArchContextProvider config={modularArchConfig}>
+        <ThemeProvider theme={Theme.Patternfly}>
+          <BrowserStorageContextProvider>
+            <NotificationContextProvider>
+              <App />
+            </NotificationContextProvider>
+          </BrowserStorageContextProvider>
+        </ThemeProvider>
+      </ModularArchContextProvider>
+    </Router>
+  </React.StrictMode>,
+);
+```
+
+### Configuration Options
+
+#### Deployment Modes
+
+- **`DeploymentMode.Standalone`**: For single-application deployments
+- **`DeploymentMode.Federated`**: For micro-frontend architectures
+- **`DeploymentMode.Kubeflow`**: For integration with Kubeflow environments
+
+#### Theme Options
+
+- **`Theme.Patternfly`**: Red Hat PatternFly design system (default)
+- **`Theme.MUI`**: Material-UI design system with CSS variables
+
+### Using the Context in Components
+
+Once providers are set up, you can access the configuration and state throughout your application:
+
+```typescript
+import { useModularArchContext, useThemeContext } from 'mod-arch-shared';
+
+const MyComponent = () => {
+  const { 
+    config, 
+    namespaces, 
+    preferredNamespace, 
+    updatePreferredNamespace 
+  } = useModularArchContext();
+  
+  const { theme } = useThemeContext();
+  
+  return (
+    <div>
+      <p>Current deployment mode: {config.deploymentMode}</p>
+      <p>Available namespaces: {namespaces.length}</p>
+      <p>Current theme: {theme}</p>
+    </div>
+  );
+};
+```
+
 ## Configuration
 
 ### ModularArchConfig
@@ -82,7 +190,6 @@ The library supports various configuration options through the `ModularArchConfi
 ```typescript
 interface ModularArchConfig {
   deploymentMode: DeploymentMode;
-  platformMode: PlatformMode;
   URL_PREFIX: string;
   BFF_API_VERSION: string;
   mandatoryNamespace?: string; // Optional: Force a specific namespace
@@ -96,7 +203,6 @@ The `mandatoryNamespace` option allows you to enforce a specific namespace throu
 ```typescript
 const config = {
   deploymentMode: DeploymentMode.Standalone,
-  platformMode: PlatformMode.Default,
   URL_PREFIX: '/api',
   BFF_API_VERSION: 'v1',
   mandatoryNamespace: 'production' // Force the use of 'production' namespace
