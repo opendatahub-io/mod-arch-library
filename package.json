@@ -43,7 +43,21 @@
   "license": "Apache-2.0",
   "peerDependencies": {
     "react": ">=16.8.0",
-    "react-dom": ">=16.8.0"
+    "react-dom": ">=16.8.0",
+    "@mui/icons-material": "^6.0.0",
+    "@mui/material": "^6.0.0",
+    "@mui/types": "^7.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@mui/icons-material": {
+      "optional": true
+    },
+    "@mui/material": {
+      "optional": true
+    },
+    "@mui/types": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@babel/preset-env": "^7.21.5",
