@@ -15,7 +15,9 @@
   "files": [
     "dist",
     "style",
-    "images"
+    "images",
+    "OPTIONAL_MUI.md",
+    "EXAMPLE_USAGE.md"
   ],
   "scripts": {
     "build": "tsc && tsc-alias && npm run copy-assets",

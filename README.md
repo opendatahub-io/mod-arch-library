@@ -152,7 +152,26 @@ root.render(
 #### Theme Options
 
 - **`Theme.Patternfly`**: Red Hat PatternFly design system (default)
-- **`Theme.MUI`**: Material-UI design system with CSS variables
+- **`Theme.MUI`**: Material-UI design system with CSS variables (requires optional MUI dependencies)
+
+#### MUI Dependencies (Optional)
+
+The library supports both PatternFly and MUI themes. MUI dependencies are **optional**:
+
+**For PatternFly-only projects** (no additional dependencies needed):
+```bash
+npm install mod-arch-shared
+```
+
+**For projects using MUI theme** (install optional MUI dependencies):
+```bash
+npm install mod-arch-shared @mui/material @emotion/react @emotion/styled
+```
+
+If you request `Theme.MUI` without installing MUI dependencies, the library will:
+- Log a warning message
+- Automatically fall back to PatternFly theme
+- Continue working without errors
 
 ### Using the Context in Components
 
@@ -217,6 +236,28 @@ When `mandatoryNamespace` is set:
 - The `useNamespaces` hook will only return the mandatory namespace
 
 This is useful for production environments or when you want to restrict users to a specific namespace.
+
+## Migration Guide
+
+### Upgrading to Optional MUI Support
+
+If you're upgrading from a version where MUI was a required dependency:
+
+**No changes needed** if you're using MUI theme:
+- Your existing code will continue to work
+- MUI dependencies that were previously required are now optional but still detected
+
+**To reduce bundle size** if you're only using PatternFly theme:
+```bash
+# You can now safely remove MUI dependencies
+npm uninstall @mui/material @emotion/react @emotion/styled
+```
+
+**For new projects**:
+- Use `Theme.Patternfly` (default) - no additional dependencies needed
+- Use `Theme.MUI` - install the optional MUI packages first
+
+The library will automatically detect which theme system is available and behave accordingly.
 
 ## Development
 
