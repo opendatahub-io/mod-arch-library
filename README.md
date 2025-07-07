@@ -7,18 +7,10 @@
 ## Installation
 
 ```bash
-npm install mod-arch-shared
+npm install mod-arch-shared @mui/material @mui/icons-material @mui/types
 ```
 
-### MUI Theme Support (Optional)
-
-If you plan to use the MUI theme option, you need to install the required MUI peer dependencies:
-
-```bash
-npm install @mui/material @mui/icons-material @mui/types
-```
-
-These dependencies are optional and only required if you use `Theme.MUI` in your application. The library defaults to PatternFly theme which has no additional peer dependency requirements.
+The library requires MUI peer dependencies to be installed alongside the main package. These dependencies are required for both PatternFly and MUI theme support.
 
 ## Usage
 
@@ -164,11 +156,7 @@ root.render(
 - **`Theme.Patternfly`**: Red Hat PatternFly design system (default)
 - **`Theme.MUI`**: Material-UI design system with CSS variables
 
-> **Note**: When using `Theme.MUI`, you must install the required MUI peer dependencies:
-> ```bash
-> npm install @mui/material @mui/icons-material @mui/types
-> ```
-> These dependencies are optional and only required for MUI theme support.
+Both themes require the MUI peer dependencies to be installed.
 
 ### Using the Context in Components
 

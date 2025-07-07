@@ -48,17 +48,6 @@
     "@mui/material": "^6.0.0",
     "@mui/types": "^7.0.0"
   },
-  "peerDependenciesMeta": {
-    "@mui/icons-material": {
-      "optional": true
-    },
-    "@mui/material": {
-      "optional": true
-    },
-    "@mui/types": {
-      "optional": true
-    }
-  },
   "devDependencies": {
     "@babel/preset-env": "^7.21.5",
     "@babel/preset-react": "^7.18.6",
