@@ -58,6 +58,10 @@ const Table = <T,>({
         setPage(newPage);
       }}
       getColumnSort={sort.getColumnSort}
+      rowRenderer={(rowData, rowIndex) => {
+        // Default row renderer - can be overridden by props
+        return <div key={rowIndex}>Default row {rowIndex}</div>;
+      }}
       {...props}
     />
   );

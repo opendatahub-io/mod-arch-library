@@ -76,7 +76,7 @@ const SimpleSelect: React.FC<SimpleSelectProps> = ({
 
   const groupedOptionsFlat = React.useMemo(
     () =>
-      groupedOptions?.reduce<SimpleSelectOption[]>((acc, group) => [...acc, ...group.options], []),
+      groupedOptions?.reduce((acc: SimpleSelectOption[], group) => [...acc, ...group.options], [] as SimpleSelectOption[]),
     [groupedOptions],
   );
 

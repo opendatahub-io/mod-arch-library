@@ -1,4 +1,5 @@
 import { AlertVariant } from '@patternfly/react-core';
+import * as React from 'react';
 import { DeploymentMode } from '~/utilities';
 import { EitherNotBoth } from './typeHelpers';
 

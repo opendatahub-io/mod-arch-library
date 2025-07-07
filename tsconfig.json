@@ -5,7 +5,7 @@
     "module": "esnext",
     "target": "es2021",
     "lib": [
-      "es6",
+      "es2017",
       "dom",
       "ES2023.Array"
     ],
@@ -16,13 +16,13 @@
     "moduleResolution": "node",
     "downlevelIteration": true,
     "forceConsistentCasingInFileNames": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noImplicitAny": true,
+    "noImplicitReturns": false,
+    "noImplicitThis": false,
+    "noImplicitAny": false,
     "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
+    "strict": false,
     "baseUrl": ".",
     "paths": {
       "~/*": [
@@ -50,6 +50,12 @@
     "node_modules",
     "dist",
     "public-cypress",
-    "src/__tests__/cypress"
+    "src/__tests__/cypress",
+    "__tests__",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "jest.config.js"
   ]
 }

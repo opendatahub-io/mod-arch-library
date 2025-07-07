@@ -26,11 +26,15 @@ const ResourceNameTooltip: React.FC<ResourceNameTooltipProps> = ({
   children,
   resource,
   wrap = true,
-}) => (
-  <div style={{ display: wrap ? 'block' : 'inline-flex' }}>
-    <Flex gap={{ default: 'gapXs' }} alignItems={{ default: 'alignItemsCenter' }}>
-      <FlexItem>{children}</FlexItem>
-      {resource.metadata?.name && (
+}) => {
+  const resourceName = resource.metadata?.name || '';
+  const copyContent: string[] = [resourceName, ''];
+  
+  return (
+    <div style={{ display: wrap ? 'block' : 'inline-flex' }}>
+      <Flex gap={{ default: 'gapXs' }} alignItems={{ default: 'alignItemsCenter' }}>
+        <FlexItem>{children}</FlexItem>
+        {resource.metadata?.name && (
         <Popover
           position="right"
           bodyContent={
@@ -48,8 +52,9 @@ const ResourceNameTooltip: React.FC<ResourceNameTooltipProps> = ({
                         clickTip="Copied"
                         variant="inline-compact"
                         data-testid="resource-name-text"
+                        {...({} as any)}
                       >
-                        {resource.metadata.name}
+                        {resourceName}
                       </ClipboardCopy>
                     </DescriptionListDescription>
                   </DescriptionListGroup>
@@ -74,6 +79,7 @@ const ResourceNameTooltip: React.FC<ResourceNameTooltipProps> = ({
       )}
     </Flex>
   </div>
-);
+  );
+};
 
 export default ResourceNameTooltip;

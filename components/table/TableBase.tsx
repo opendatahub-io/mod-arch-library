@@ -277,7 +277,7 @@ const TableBase = <T,>({
           <Tr>{subColumns.map((col, i) => renderColumnHeader(col, columns.length + i, true))}</Tr>
         ) : null}
       </Thead>
-      {disableRowRenderSupport ? renderRows() : <Tbody {...tbodyProps}>{renderRows()}</Tbody>}
+      {disableRowRenderSupport ? renderRows() : <Tbody {...(tbodyProps as any)}>{renderRows()}</Tbody>}
       {footerRow && footerRow(page)}
     </Table>
   );

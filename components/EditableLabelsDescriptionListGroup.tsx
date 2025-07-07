@@ -235,7 +235,7 @@ export const EditableLabelsDescriptionListGroup: React.FC<EditableLabelsProps> =
       <LabelGroup
         data-testid="display-label-group"
         defaultIsOpen={hasSavedEdits}
-        key={String(hasSavedEdits)} // Force this to fully remount when we change defaultIsOpen
+        // Force this to fully remount when we change defaultIsOpen
       >
         {labels.map((label) => (
           <Label key={label} color="blue" data-testid="label">

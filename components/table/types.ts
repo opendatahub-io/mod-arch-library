@@ -1,4 +1,5 @@
 import { ThProps } from '@patternfly/react-table';
+import * as React from 'react';
 
 export type GetColumnSort = (columnIndex: number) => ThProps['sort'];
 
