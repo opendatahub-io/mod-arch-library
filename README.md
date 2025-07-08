@@ -7,10 +7,38 @@
 ## Installation
 
 ```bash
-npm install mod-arch-shared @mui/material @mui/icons-material @mui/types
+npm install mod-arch-shared @mui/material @mui/icons-material @mui/types sass sass-loader
 ```
 
-The library requires MUI peer dependencies to be installed alongside the main package. These dependencies are required for both PatternFly and MUI theme support.
+The library requires peer dependencies to be installed alongside the main package:
+- **MUI dependencies** (`@mui/material`, `@mui/icons-material`, `@mui/types`) are required for both PatternFly and MUI theme support
+- **SASS dependencies** (`sass`, `sass-loader`) are required to process SCSS files used by the library components
+
+### SASS/SCSS Processing Requirements
+
+This library contains SCSS files that need to be processed by your application's build system. You must:
+
+1. **Install the required dependencies:**
+   ```bash
+   npm install sass sass-loader
+   ```
+
+2. **Configure your webpack to handle SCSS files** by adding this rule to your webpack configuration:
+   ```js
+   {
+     test: /\.s[ac]ss$/i,
+     use: [
+       // Creates `style` nodes from JS strings
+       'style-loader',
+       // Translates CSS into CommonJS
+       'css-loader',
+       // Compiles Sass to CSS
+       'sass-loader',
+     ],
+   }
+   ```
+
+If you're using Create React App, Vite, or similar build tools, SCSS support is typically included by default when you install the `sass` package.
 
 ## Usage
 
