@@ -1,114 +1,154 @@
 # Contributing to mod-arch-shared
 
-We love your input! We want to make contributing to mod-arch-shared as easy and transparent as possible, whether it's:
+Welcome! We're excited that you want to contribute to the Modular Architecture Shared Library. This guide will help you get started with contributing to this TypeScript-based shared component library.
 
-- Reporting a bug
-- Discussing the current state of the code
-- Submitting a fix
-- Proposing new features
-- Becoming a maintainer
+## 🎯 Overview
 
-## Development Process
+The `mod-arch-shared` library is the cornerstone of our modular architecture initiative, providing common UI components, utilities, and context management for micro-frontend applications. Your contributions help improve the foundation that many projects depend on.
 
-We use GitHub to host code, to track issues and feature requests, as well as accept pull requests.
+## 🚀 Quick Start
 
-### Pull Requests
+### Development Setup
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. **Fork and clone the repository**
 
-### Pull Request Process
-
-1. Update the README.md or documentation with details of changes if applicable
-2. Update the CHANGELOG.md with details of changes
-3. The PR must pass all CI tests before being merged
-4. At least one maintainer must review and approve the changes
-
-## Development Workflow
-
-### Setting Up Development Environment
-
-1. Clone the repository
-   ```
-   git clone https://github.com/your-organization/mod-arch-shared.git
-   cd mod-arch-shared
+   ```bash
+   git clone https://github.com/your-username/kubeflow-ui-essentials.git
+   cd kubeflow-ui-essentials
    ```
 
-2. Install dependencies
-   ```
+2. **Install dependencies**
+
+   ```bash
    npm install
    ```
 
-3. Build the library
+3. **Build and test**
+
+   ```bash
+   npm run build
+   npm test
+   npm run lint
    ```
+
+### Making Changes
+
+1. **Create a feature branch**
+
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+2. **Make your changes** following our [coding standards](#-coding-standards)
+
+3. **Test your changes**
+
+   ```bash
+   npm test
    npm run build
    ```
 
-### Local Testing
+4. **Commit and push**
 
-To test your changes locally without publishing to npm:
-
-1. In your library directory, run:
-   ```
-   npm link
+   ```bash
+   git commit -m "feat: add new component for..."
+   git push origin feature/your-feature-name
    ```
 
-2. In your consuming project, run:
-   ```
-   npm link mod-arch-shared
-   ```
+5. **Open a Pull Request** with a clear description of your changes
 
-3. After you're done testing, you can unlink by running:
-   ```
-   npm unlink --no-save mod-arch-shared
-   ```
-   in your consuming project, and:
-   ```
-   npm unlink
-   ```
-   in your library directory.
+## 📝 What Can You Contribute?
 
-## Adding New Components
+### 🐛 Bug Fixes
 
-When adding new components to the library, please follow these guidelines:
+- Report bugs using GitHub issues
+- Include steps to reproduce and expected behavior
+- Submit fixes with tests when possible
 
-1. Create your component in the appropriate directory (e.g., `/components`)
-2. Include proper TypeScript typings
-3. Add unit tests in the `__tests__` directory
-4. Export your component in the appropriate barrel file (e.g., `components/index.ts`)
-5. Consider adding documentation and usage examples
+### ✨ New Features
 
-## Code Style
+- Propose new components or utilities
+- Ensure they align with modular architecture principles
+- Include documentation and tests
 
-- We use ESLint for linting
-- We follow TypeScript best practices
-- Components should be functional with React hooks
-- Use meaningful variable and function names
-- Include JSDoc comments for better documentation
+### 📖 Documentation
 
-## Versioning
+- Improve existing documentation
+- Add examples and use cases
+- Update type definitions
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your-organization/mod-arch-shared/tags).
+### 🧪 Testing
 
-- **MAJOR** version when you make incompatible API changes
-- **MINOR** version when you add functionality in a backwards compatible manner
-- **PATCH** version when you make backwards compatible bug fixes
+- Add missing test coverage
+- Improve existing tests
+- Add integration tests
 
-## Commit Messages
+## 🔧 Coding Standards
 
-We follow the [Conventional Commits](https://www.conventionalcommits.org/) specification:
+### TypeScript Guidelines
 
-- `feat:` - A new feature
-- `fix:` - A bug fix
-- `docs:` - Documentation only changes
-- `style:` - Changes that do not affect the meaning of the code
-- `refactor:` - A code change that neither fixes a bug nor adds a feature
-- `test:` - Adding missing tests or correcting existing tests
-- `chore:` - Changes to the build process or auxiliary tools and libraries
+- Use strict TypeScript configuration
+- Provide proper type definitions for all exports
+- Follow existing naming conventions
 
-## License
+### Component Guidelines
+
+- Create reusable, modular components
+- Follow React best practices (hooks, functional components)
+- Ensure accessibility (ARIA labels, keyboard navigation)
+- Support both PatternFly and MUI theming
+
+### Testing Requirements
+
+- Write unit tests for new functionality
+- Maintain or improve test coverage
+- Test components in different deployment modes
+- Include integration tests for context providers
+
+## 📋 Pull Request Process
+
+1. **Pre-submission checklist:**
+   - [ ] Tests pass (`npm test`)
+   - [ ] Build succeeds (`npm run build`)
+   - [ ] Linting passes (`npm run lint`)
+   - [ ] Documentation updated if needed
+   - [ ] Types are properly defined
+
+2. **Review process:**
+   - At least one maintainer review required
+   - All CI checks must pass
+   - Address feedback promptly
+   - Squash commits before merge
+
+## 🌟 Recognition
+
+Contributors are recognized in:
+
+- Project README
+- Release notes
+- Community discussions
+
+## 🤝 Community
+
+- Join our community discussions
+- Participate in code reviews
+- Help other contributors
+- Share feedback and ideas
+
+## 📚 Additional Resources
+
+- [Shared Library Guide](./docs/12-shared-library-guide.md) - Complete technical reference
+- [Component Library](./docs/14-component-library.md) - UI component documentation
+- [Development Workflow](./docs/08-development-workflow.md) - Upstream-first development practices
+
+## 📞 Getting Help
+
+- **GitHub Issues**: For bugs and feature requests
+- **GitHub Discussions**: For questions and community discussion
+- **Documentation**: Check the comprehensive guides in `/docs`
+
+## 📄 License
 
 By contributing, you agree that your contributions will be licensed under the project's [Apache License 2.0](LICENSE).
+
+Thank you for contributing to the modular architecture initiative! 🎉

@@ -1,6 +1,6 @@
-# Architecture Overview
+# Architecture Overview and Core Patterns
 
-This document introduces the fundamental concepts and principles of our modular architecture approach.
+This document introduces the fundamental concepts, principles, and patterns of our modular architecture approach.
 
 ## What is Modular Architecture?
 
@@ -37,6 +37,80 @@ Modules can be reused across different projects and contexts. This reusability d
 - **Reduced Duplication**: Shared components eliminate redundant development
 - **Community Benefits**: Modules can be shared with the broader ecosystem
 
+## Architectural Patterns
+
+Our modular architecture is built on three foundational patterns that work together to create a scalable and maintainable system.
+
+### 1. Micro-Frontend Architecture
+
+**Micro-frontends** are the building blocks of our new architecture. Each micro-frontend represents a distinct business domain or feature set.
+
+#### Key Characteristics
+
+- **Self-Contained**: Each micro-frontend is a complete web application with its own components, state management, and data-fetching logic
+- **Domain-Focused**: Aligned with specific business capabilities (e.g., Model Registry, Experiment Tracking)
+- **Technology Flexibility**: While we recommend standard technologies, teams can choose different approaches when justified
+- **Independent Lifecycle**: Development, testing, and deployment happen independently
+
+#### Examples of Micro-Frontends
+
+- **Model Registry Module**: Manages model artifacts and metadata
+- **Experiment Tracking Module**: Handles ML experiment lifecycle
+- **Serving Dashboards Module**: Monitors and manages model serving infrastructure
+- **Data Management Module**: Handles dataset operations and versioning
+
+#### Implementation Approaches
+
+**Standalone Applications**: Each micro-frontend is a complete, independently deployable application
+
+**Module Federation**: Runtime composition of micro-frontends within a host application
+
+#### Micro-Frontend Benefits
+
+- **Independent Development**: Teams can work autonomously without coordination overhead
+- **Technology Diversity**: Different modules can use different technologies when appropriate
+- **Deployment Flexibility**: Modules can be deployed independently and at different frequencies
+- **Fault Isolation**: Issues in one module don't affect others
+
+### 2. Backend-for-Frontend (BFF) Pattern
+
+Each micro-frontend is supported by its own **Backend-for-Frontend (BFF)** - a dedicated server-side component tailored to the specific needs of its corresponding frontend.
+
+#### Primary Functions
+
+- **API Aggregation**: Combines data from multiple backend services into optimized frontend-specific APIs
+- **Authentication Handling**: Manages authentication flows and token validation
+- **Data Transformation**: Converts backend data formats into frontend-optimized structures
+- **Business Logic**: Contains domain-specific logic that doesn't belong in the frontend
+- **Caching and Performance**: Implements caching strategies to improve frontend performance
+
+#### Key Advantages
+
+- **Optimized APIs**: Each BFF provides APIs specifically tailored to its frontend's needs
+- **Reduced Complexity**: Frontend complexity is reduced by abstracting backend integration details
+- **Performance**: Optimized data fetching and caching strategies
+- **Security**: Centralized authentication and authorization handling
+- **Evolution**: BFF can evolve independently to serve changing frontend requirements
+
+### 3. Shared Library Pattern
+
+The **mod-arch-shared** library provides common functionality, components, and patterns used across all micro-frontends.
+
+#### Core Components
+
+- **Context Providers**: Centralized state management for configuration, theming, and notifications
+- **UI Components**: Reusable components optimized for micro-frontend architectures
+- **API Utilities**: Common patterns for REST and Kubernetes API integration
+- **Hooks**: Custom React hooks for common functionality
+- **Types**: Shared TypeScript definitions
+
+#### Benefits
+
+- **Consistency**: Common components ensure consistent user experience
+- **Efficiency**: Reduces development time through reusable components
+- **Maintainability**: Centralized updates benefit all applications
+- **Standards**: Enforces common patterns and best practices
+
 ## The Big Picture
 
 ```text
@@ -48,17 +122,57 @@ Modules can be reused across different projects and contexts. This reusability d
 │  │  Model      │  │ Experiment  │  │   Serving   │    ...     │
 │  │ Registry    │  │  Tracking   │  │ Dashboards  │            │
 │  │   Module    │  │   Module    │  │   Module    │            │
+│  │             │  │             │  │             │            │
+│  │ ┌─────────┐ │  │ ┌─────────┐ │  │ ┌─────────┐ │            │
+│  │ │Frontend │ │  │ │Frontend │ │  │ │Frontend │ │            │
+│  │ └─────────┘ │  │ └─────────┘ │  │ └─────────┘ │            │
+│  │ ┌─────────┐ │  │ ┌─────────┐ │  │ ┌─────────┐ │            │
+│  │ │   BFF   │ │  │ │   BFF   │ │  │ │   BFF   │ │            │
+│  │ └─────────┘ │  │ └─────────┘ │  │ └─────────┘ │            │
 │  └─────────────┘  └─────────────┘  └─────────────┘            │
 │                                                                 │
-├─────────────────────────────────────────────────────────────────┤
-│               Shared UI Essentials Library                     │
-│         (Components, Themes, Utilities, Common Logic)          │
+│                    Shared Library Foundation                    │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-## Key Architectural Concepts
+Each module consists of:
 
-### Domain-Driven Design
+- **Frontend**: React application using shared library
+- **BFF**: Go-based backend providing optimized APIs
+- **Independent Deployment**: Own repository and deployment pipeline
+
+## Integration Patterns
+
+### Deployment Modes
+
+Our architecture supports three distinct deployment modes:
+
+- **Standalone Mode**: Complete independent applications
+- **Federated Mode**: Runtime composition using Module Federation
+- **Kubeflow Mode**: Integration with existing Kubeflow dashboard
+
+### Configuration System
+
+All modules use a common configuration interface that adapts to different deployment contexts while maintaining consistent behavior patterns.
+
+## Next Steps
+
+For detailed implementation guidance, see:
+
+- [Implementation Approaches](./05-implementation-approaches.md)
+- [Getting Started Guide](./10-getting-started.md)
+- [Shared Library Guide](./12-shared-library-guide.md)
+│  └─────────────┘  └─────────────┘  └─────────────┘            │
+│                                                                 │
+│                    Shared Library Foundation                    │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+Each module consists of:
+
+- **Frontend**: React application using shared library
+- **BFF**: Go-based backend providing optimized APIs
+- **Independent Deployment**: Own repository and deployment pipeline
 
 Our modules are organized around business domains rather than technical layers:
 

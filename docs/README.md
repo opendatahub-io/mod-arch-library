@@ -24,34 +24,31 @@ This documentation incorporates insights from our platform team planning session
 |----------|-------------|
 | [**Executive Summary**](./01-executive-summary.md) | High-level overview, goals, and strategic vision |
 | [**Current State Analysis**](./02-current-state-analysis.md) | Analysis of existing monolithic challenges and pain points |
-| [**Architecture Overview**](./03-architecture-overview.md) | Introduction to modular architecture concepts and principles |
-| [**Core Patterns**](./04-core-patterns.md) | Deep dive into micro-frontends, BFF, and shared libraries |
-| [**Implementation Approaches**](./05-implementation-approaches.md) | Standalone, Module Federation, and Hybrid strategies |
+| [**Architecture Overview**](./03-architecture-overview.md) | Comprehensive guide to modular architecture concepts, principles, and core patterns |
+| [**Implementation Approaches**](./05-implementation-approaches.md) | Overview of standalone, federated, and hybrid strategies |
+| [**Benefits and Value**](./06-benefits-and-value.md) | Key benefits for teams, organizations, and users |
 
 ### 🎯 Implementation Guides
 
 | Document | Description |
 |----------|-------------|
-| [**Benefits and Value**](./06-benefits-and-value.md) | Detailed benefits for teams, organizations, and users |
-| [**Technology Standards**](./07-technology-standards.md) | Recommended tech stack and development standards |
-| [**Development Workflow**](./08-development-workflow.md) | Upstream-first workflow and development modes |
-| [**Migration Strategy**](./09-migration-strategy.md) | Step-by-step approach for migrating existing applications |
-| [**Getting Started**](./10-getting-started.md) | Practical guide for new and existing projects |
+| [**Technology Standards**](./07-technology-standards.md) | Required tech stack, shared library integration, and development standards |
+| [**Developer Implementation Guide**](./08-developer-implementation-guide.md) | Complete implementation guide covering development workflow, migration strategy, and team onboarding |
+| [**Getting Started**](./10-getting-started.md) | Quick start guide for new and existing projects |
 | [**Roadmap**](./11-roadmap.md) | Strategic roadmap, priorities, and implementation timeline |
 
-### 📚 Advanced Guides
+### 📚 Technical References
 
 | Document | Description |
 |----------|-------------|
-| [**Shared Library Guide**](./12-shared-library-guide.md) | Comprehensive guide to the mod-arch-shared library |
-| [**API Integration**](./13-api-integration.md) | REST and Kubernetes API integration patterns |
-| [**Component Library**](./14-component-library.md) | Complete reference for UI components |
-| [**Advanced Patterns**](./15-advanced-patterns.md) | Sophisticated development patterns and best practices |
-| [**Model Registry Case Study**](./16-model-registry-case-study.md) | Real-world implementation example with detailed patterns |
+| [**Technical Reference**](./technical-reference.md) | Comprehensive technical documentation covering shared library, API integration, component library, and advanced patterns |
+| [**Integration Examples**](./integration-examples.md) | Real-world implementation examples including Model Registry case study and Module Federation integration |
 | [**Module Federation Integration**](./17-module-federation-integration.md) | Comprehensive guide to Webpack Module Federation implementation |
 | [**Golden Path Team Onboarding**](./18-golden-path-team-onboarding.md) | Step-by-step onboarding guide for new teams adopting modular architecture |
 
 ### 📋 Supporting Templates
+
+### 🔧 Supporting Resources
 
 | Document | Description |
 |----------|-------------|
@@ -63,7 +60,7 @@ This documentation incorporates insights from our platform team planning session
 
 **🎯 New to modular architecture?** Start here:
 
-1. Follow our [Golden Path Team Onboarding](./18-golden-path-team-onboarding.md) - a comprehensive 4-week program that takes teams from zero to production-ready modular applications
+1. Follow our [Developer Implementation Guide](./08-developer-implementation-guide.md) - includes the Golden Path team onboarding process, development workflow, and migration strategy
 2. This guide provides step-by-step guidance, reduces decision paralysis, and ensures teams adopt proven patterns
 3. Includes all tools, templates, and support needed for successful adoption
 
@@ -75,28 +72,28 @@ This documentation incorporates insights from our platform team planning session
 
 ### For New Projects
 
-1. **Start with the Golden Path**: Follow our [Golden Path Team Onboarding](./18-golden-path-team-onboarding.md) guide for a structured 4-week onboarding experience
+1. **Start with the Developer Implementation Guide**: Follow our [Developer Implementation Guide](./08-developer-implementation-guide.md) for comprehensive implementation guidance
 2. Review the [Executive Summary](./01-executive-summary.md) for strategic context
-3. Understand [Core Patterns](./04-core-patterns.md) and [Implementation Approaches](./05-implementation-approaches.md)
-4. Follow the [Getting Started Guide](./10-getting-started.md) for new projects (including feature flags setup)
-5. Explore the [Shared Library Guide](./12-shared-library-guide.md) for foundational components
-6. Reference the [Component Library](./14-component-library.md) and [API Integration](./13-api-integration.md) guides
-7. Adopt [Technology Standards](./07-technology-standards.md) and [Development Workflow](./08-development-workflow.md)
+3. Understand [Architecture Overview](./03-architecture-overview.md) and [Implementation Approaches](./05-implementation-approaches.md)
+4. Follow the [Getting Started Guide](./10-getting-started.md) for quick project setup
+5. Explore the [Technical Reference](./technical-reference.md) for detailed technical documentation
+6. Review [Integration Examples](./integration-examples.md) for real-world patterns
+7. Adopt [Technology Standards](./07-technology-standards.md)
 
 ### For Existing Projects
 
 1. Start with [Current State Analysis](./02-current-state-analysis.md) to understand the challenges
-2. Review the [Migration Strategy](./09-migration-strategy.md) for a phased approach
+2. Review the migration strategy in the [Developer Implementation Guide](./08-developer-implementation-guide.md)
 3. Follow the [Getting Started Guide](./10-getting-started.md) for existing projects
-4. Integrate the [Shared Library](./12-shared-library-guide.md) components gradually
-5. Implement changes following our [Development Workflow](./08-development-workflow.md)
+4. Use the [Technical Reference](./technical-reference.md) for shared library integration
+5. Implement changes following established patterns
 
 ### For Advanced Development
 
-1. Master [Advanced Patterns](./15-advanced-patterns.md) for sophisticated architectures
-2. Implement [API Integration](./13-api-integration.md) best practices
-3. Leverage the full [Component Library](./14-component-library.md) capabilities
-4. Follow performance optimization and testing patterns
+1. Master patterns in the [Technical Reference](./technical-reference.md)
+2. Study real-world implementations in [Integration Examples](./integration-examples.md)
+3. Follow advanced patterns and best practices for sophisticated architectures
+4. Leverage performance optimization and testing patterns
 
 ## Key Resources
 
