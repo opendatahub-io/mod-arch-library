@@ -1,12 +1,10 @@
-# Modular Architecture Initiative Documentation
+# Modular Architecture Documentation
 
 Welcome to the comprehensive documentation for our Modular Architecture Initiative - a transformative approach to building scalable, reusable, and maintainable AI platform interfaces.
 
-## Overview
+## Introduction
 
 The Modular Architecture Initiative represents a fundamental shift from monolithic frontend applications to a modular, micro-frontend based approach. This initiative addresses key challenges in scalability, maintainability, and developer productivity while enabling upstream-first development practices.
-
-This documentation incorporates insights from our platform team planning sessions, including specific goals for team autonomy (Inverse Conway Maneuver), Golden Path development, and cross-platform component reuse across RHOAI, upstream projects, and various UI contexts. The advanced guides include comprehensive information from the kubeflow-ui-essentials shared library documentation.
 
 ### Key Benefits
 
@@ -22,82 +20,98 @@ This documentation incorporates insights from our platform team planning session
 
 | Document | Description |
 |----------|-------------|
-| [**Executive Summary**](./01-executive-summary.md) | High-level overview, goals, and strategic vision |
-| [**Current State Analysis**](./02-current-state-analysis.md) | Analysis of existing monolithic challenges and pain points |
-| [**Architecture Overview**](./03-architecture-overview.md) | Comprehensive guide to modular architecture concepts, principles, and core patterns |
-| [**Implementation Approaches**](./05-implementation-approaches.md) | Overview of standalone, federated, and hybrid strategies |
-| [**Benefits and Value**](./06-benefits-and-value.md) | Key benefits for teams, organizations, and users |
+| [**Overview**](./overview.md) | Introduction to modular architecture, current challenges, and strategic goals |
+| [**Deployment Modes**](./deployment-modes.md) | Kubeflow, Federated (ODH/RHOAI), and Standalone deployment approaches |
+| [**Architecture**](./architecture.md) | Frontend, BFF, and OpenAPI specification patterns |
 
-### 🎯 Implementation Guides
+### 🎯 Getting Started
 
 | Document | Description |
 |----------|-------------|
-| [**Technology Standards**](./07-technology-standards.md) | Required tech stack, shared library integration, and development standards |
-| [**Developer Implementation Guide**](./08-developer-implementation-guide.md) | Complete implementation guide covering development workflow, migration strategy, and team onboarding |
-| [**Getting Started**](./10-getting-started.md) | Quick start guide for new and existing projects |
-| [**Roadmap**](./11-roadmap.md) | Strategic roadmap, priorities, and implementation timeline |
+| [**Onboarding**](./onboarding.md) | **Most important** - Primary entry point for new team members with federated and Kubeflow onboarding paths |
+| [**Development Flow**](./development-flow.md) | Common patterns, upstream/downstream development, and feature flagging |
+| [**Golden Path**](./golden-path.md) | Proven workflows for developing new features and migrating existing ones |
 
-### 📚 Technical References
-
-| Document | Description |
-|----------|-------------|
-| [**Technical Reference**](./technical-reference.md) | Comprehensive technical documentation covering shared library, API integration, component library, and advanced patterns |
-| [**Integration Examples**](./integration-examples.md) | Real-world implementation examples including Model Registry case study and Module Federation integration |
-| [**Module Federation Integration**](./17-module-federation-integration.md) | Comprehensive guide to Webpack Module Federation implementation |
-| [**Golden Path Team Onboarding**](./18-golden-path-team-onboarding.md) | Step-by-step onboarding guide for new teams adopting modular architecture |
-
-### 📋 Supporting Templates
-
-### 🔧 Supporting Resources
+### � Technical Implementation
 
 | Document | Description |
 |----------|-------------|
-| [**Team Assessment Template**](./team-assessment-template.md) | Comprehensive assessment tool for teams starting their modular architecture journey |
+| [**Module Federation**](./module-federation.md) | Configuration, shared libraries, API exposure, and TypeScript type sharing |
+| [**Extensibility**](./extensibility.md) | ODH Dashboard extensibility system with plugins and extensions |
+| [**Testing**](./testing.md) | Unit testing, integration testing, and E2E testing strategies *(Work in Progress)* |
 
-## Quick Start
+### � Deployment & Operations
 
-### For Team Onboarding
+| Document | Description |
+|----------|-------------|
+| [**Deployment**](./deployment.md) | Kubeflow, ODH/RHOAI deployment strategies and configurations |
 
-**🎯 New to modular architecture?** Start here:
+## Quick Start Paths
 
-1. Follow our [Developer Implementation Guide](./08-developer-implementation-guide.md) - includes the Golden Path team onboarding process, development workflow, and migration strategy
-2. This guide provides step-by-step guidance, reduces decision paralysis, and ensures teams adopt proven patterns
-3. Includes all tools, templates, and support needed for successful adoption
+### 🎯 For New Team Members
 
-### For Strategic Planning
+**Start here if you're new to modular architecture:**
 
-1. Review the [Executive Summary](./01-executive-summary.md) for goals and strategic vision
-2. Check the [Roadmap](./11-roadmap.md) for current priorities and implementation timeline
-3. Understand team-specific goals and upcoming deliverables
+1. **[Onboarding](./onboarding.md)** - Most important entry point with comprehensive guidance
+2. **[Overview](./overview.md)** - Understand the architecture vision and goals
+3. **[Deployment Modes](./deployment-modes.md)** - Choose your target platform
+4. **[Golden Path](./golden-path.md)** - Follow proven development workflows
 
-### For New Projects
+### 🔄 For Feature Development
 
-1. **Start with the Developer Implementation Guide**: Follow our [Developer Implementation Guide](./08-developer-implementation-guide.md) for comprehensive implementation guidance
-2. Review the [Executive Summary](./01-executive-summary.md) for strategic context
-3. Understand [Architecture Overview](./03-architecture-overview.md) and [Implementation Approaches](./05-implementation-approaches.md)
-4. Follow the [Getting Started Guide](./10-getting-started.md) for quick project setup
-5. Explore the [Technical Reference](./technical-reference.md) for detailed technical documentation
-6. Review [Integration Examples](./integration-examples.md) for real-world patterns
-7. Adopt [Technology Standards](./07-technology-standards.md)
+**Building new features:**
 
-### For Existing Projects
+1. **[Golden Path](./golden-path.md)** - Choose your development scenario
+2. **[Development Flow](./development-flow.md)** - Follow common development patterns
+3. **[Architecture](./architecture.md)** - Implement frontend, BFF, and API patterns
+4. **[Module Federation](./module-federation.md)** - Configure module integration
 
-1. Start with [Current State Analysis](./02-current-state-analysis.md) to understand the challenges
-2. Review the migration strategy in the [Developer Implementation Guide](./08-developer-implementation-guide.md)
-3. Follow the [Getting Started Guide](./10-getting-started.md) for existing projects
-4. Use the [Technical Reference](./technical-reference.md) for shared library integration
-5. Implement changes following established patterns
+### 🛠️ For Technical Implementation
 
-### For Advanced Development
+**Deep technical guidance:**
 
-1. Master patterns in the [Technical Reference](./technical-reference.md)
-2. Study real-world implementations in [Integration Examples](./integration-examples.md)
-3. Follow advanced patterns and best practices for sophisticated architectures
-4. Leverage performance optimization and testing patterns
+1. **[Architecture](./architecture.md)** - Comprehensive technical patterns
+2. **[Module Federation](./module-federation.md)** - Advanced module configuration
+3. **[Extensibility](./extensibility.md)** - Plugin and extension development
+4. **[Deployment](./deployment.md)** - Production deployment strategies
+
+### 🚀 For Platform Operations
+
+**Deployment and operations:**
+
+1. **[Deployment Modes](./deployment-modes.md)** - Understand platform options
+2. **[Deployment](./deployment.md)** - Platform-specific deployment guides
+3. **[Testing](./testing.md)** - Testing strategies and automation
+
+## Development Scenarios
+
+### Golden Path Scenarios
+
+Choose your development path based on your team's needs:
+
+- **New RHOAI Feature**: [Golden Path - New RHOAI Feature](./golden-path.md#we-are-a-team-that-wants-to-develop-a-new-rhoai-feature)
+- **Migrate RHOAI Feature**: [Golden Path - Migration](./golden-path.md#we-are-a-team-that-wants-to-migrate-a-feature-already-in-rhoai-to-modular-architecture)
+- **New Kubeflow Feature**: [Golden Path - Kubeflow](./golden-path.md#we-are-a-team-that-wants-to-develop-a-new-feature-into-kubeflow-work-in-progress) *(Work in Progress)*
+- **Migrate to Kubeflow**: [Golden Path - Kubeflow Migration](./golden-path.md#we-are-a-team-that-wants-to-migrate-a-feature-into-kubeflow-work-in-progress) *(Work in Progress)*
+
+### Development Approaches
+
+- **Federated Development**: For ODH/RHOAI teams using monorepo structure with Module Federation
+- **Upstream Development**: For Kubeflow contributions using standalone mode
+- **Downstream Development**: For enterprise-specific features in ODH/RHOAI
 
 ## Key Resources
 
-- **Shared UI Essentials**: [kubeflow-ui-essentials repository](https://github.com/opendatahub-io/kubeflow-ui-essentials)
+- **Primary Repository**: [kubeflow-ui-essentials](https://github.com/opendatahub-io/kubeflow-ui-essentials)
+- **ODH Dashboard**: [odh-dashboard](https://github.com/opendatahub-io/odh-dashboard)
+- **Community**: Join our Slack channels and team meetings for support
+
+## Support
+
+- **Documentation Issues**: Create issues in the repository
+- **Development Questions**: Join our community channels
+- **Architecture Discussions**: Participate in weekly architecture reviews
+- **Training**: Regular workshops and onboarding sessions available
 - **Reference Implementation**: [Model Registry module](https://github.com/kubeflow/model-registry)
 - **Community Support**: Join Kubeflow Slack and community meetings
 
