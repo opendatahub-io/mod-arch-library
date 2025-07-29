@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Label, LabelGroup, Alert, AlertVariant } from '@patternfly/react-core';
+import { Label, LabelGroup, Alert, AlertVariant, LabelProps } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import DashboardDescriptionListGroup from '~/components/DashboardDescriptionListGroup';
 
@@ -10,6 +10,9 @@ interface EditableLabelsProps {
   title?: string;
   contentWhenEmpty?: string;
   allExistingKeys: string[];
+  labelProps?: LabelProps;
+  overflowCount?: number; // if isCollapsible is true, this is the number of labels to show before collapsing
+  isCollapsible?: boolean;
 }
 
 export const EditableLabelsDescriptionListGroup: React.FC<EditableLabelsProps> = ({
@@ -19,6 +22,9 @@ export const EditableLabelsDescriptionListGroup: React.FC<EditableLabelsProps> =
   onLabelsChange,
   isArchive,
   allExistingKeys,
+  labelProps = {},
+  isCollapsible = true,
+  overflowCount,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isSavingEdits, setIsSavingEdits] = useState(false);
@@ -90,11 +96,11 @@ export const EditableLabelsDescriptionListGroup: React.FC<EditableLabelsProps> =
     });
   };
 
-  const removeUnsavedLabel = (text: string) => {
+  const removeUnsavedLabel = (index: number) => {
     if (isSavingEdits) {
       return;
     }
-    setUnsavedLabels(unsavedLabels.filter((label) => label !== text));
+    setUnsavedLabels(unsavedLabels.filter((_, i) => i !== index));
   };
 
   const addNewLabel = () => {
@@ -117,7 +123,7 @@ export const EditableLabelsDescriptionListGroup: React.FC<EditableLabelsProps> =
   };
 
   const labelErrors = validateLabels();
-  const shouldBeRed = (label: string, index: number): boolean => {
+  const hasDuplicate = (label: string, index: number): boolean => {
     const firstIndex = unsavedLabels.findIndex((l) => l === label);
 
     if (firstIndex !== index) {
@@ -167,9 +173,8 @@ export const EditableLabelsDescriptionListGroup: React.FC<EditableLabelsProps> =
               <Label
                 data-testid={`editable-label-${label}`}
                 key={label + index}
-                color={shouldBeRed(label, index) ? 'red' : 'blue'}
                 isEditable={!isSavingEdits}
-                onClose={() => removeUnsavedLabel(label)}
+                onClose={() => removeUnsavedLabel(index)}
                 closeBtnProps={{
                   isDisabled: isSavingEdits,
                   'data-testid': `remove-label-${label}`,
@@ -180,6 +185,9 @@ export const EditableLabelsDescriptionListGroup: React.FC<EditableLabelsProps> =
                   'aria-label': 'Edit label',
                   'data-testid': `edit-label-input-${label}`,
                 }}
+                {...labelProps}
+                color={hasDuplicate(label, index) ? 'red' : (labelProps.color ?? 'blue')}
+                variant={hasDuplicate(label, index) ? 'filled' : labelProps.variant}
               >
                 {label}
               </Label>
@@ -236,9 +244,10 @@ export const EditableLabelsDescriptionListGroup: React.FC<EditableLabelsProps> =
         data-testid="display-label-group"
         defaultIsOpen={hasSavedEdits}
         key={String(hasSavedEdits)} // Force this to fully remount when we change defaultIsOpen
+        numLabels={isCollapsible ? overflowCount : labels.length}
       >
         {labels.map((label) => (
-          <Label key={label} color="blue" data-testid="label">
+          <Label key={label} color="blue" data-testid="label" {...labelProps}>
             {label}
           </Label>
         ))}
