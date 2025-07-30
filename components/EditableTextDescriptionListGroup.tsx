@@ -14,6 +14,7 @@ type EditableTextDescriptionListGroupProps = Pick<
   baseTestId?: string;
   isArchive?: boolean;
   editableVariant: 'TextInput' | 'TextArea';
+  truncateMaxLines?: number;
 };
 
 const EditableTextDescriptionListGroup: React.FC<EditableTextDescriptionListGroupProps> = ({
@@ -24,6 +25,7 @@ const EditableTextDescriptionListGroup: React.FC<EditableTextDescriptionListGrou
   saveEditedValue,
   baseTestId,
   editableVariant,
+  truncateMaxLines = 12,
 }) => {
   const [isEditing, setIsEditing] = React.useState(false);
   const [unsavedValue, setUnsavedValue] = React.useState(value);
@@ -86,7 +88,7 @@ const EditableTextDescriptionListGroup: React.FC<EditableTextDescriptionListGrou
       <ExpandableSection
         data-testid={baseTestId}
         variant="truncate"
-        truncateMaxLines={12}
+        truncateMaxLines={truncateMaxLines}
         toggleText={isTextExpanded ? 'Show less' : 'Show more'}
         onToggle={(_event, isExpanded) => setIsTextExpanded(isExpanded)}
         isExpanded={isTextExpanded}
