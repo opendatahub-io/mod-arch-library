@@ -98,8 +98,6 @@
   --mui-tabs__item--m-current__link--after--BorderWidth: 2px;
   --mui-tabs__link--FontSize: 0.875rem;
 
-  --mui-text-transform: uppercase;
-
   --mui-spacing-4px: calc(0.5 * var(--mui-spacing));
   --mui-spacing-8px: var(--mui-spacing);
   --mui-spacing-12px: calc(1.5 * var(--mui-spacing));
@@ -160,7 +158,6 @@
   --pf-v6-c-button--LineHeight: var(--mui-button--LineHeight);
   --pf-v6-c-button--m-plain--BorderRadius: 50%;
 
-  text-transform: var(--mui-text-transform);
   letter-spacing: 0.02857em;
 }
 
@@ -520,7 +517,6 @@
   --pf-v6-c-menu-toggle--disabled__toggle-icon--Color: var(--mui-palette-action-disabled);
 
   border-radius: var(--mui-shape-borderRadius);
-  text-transform: var(--mui-text-transform);
   font-weight: var(--mui-button-FontWeight);
   letter-spacing: 0.02857em;
 }
@@ -559,7 +555,6 @@
 }
 
 .mui-theme .pf-v6-c-menu-toggle__button {
-  text-transform: var(--mui-text-transform);
   font-weight: var(--mui-button-FontWeight);
   letter-spacing: 0.02857em;
   align-self: stretch;
@@ -805,7 +800,6 @@
 }
 
 .mui-theme .pf-v6-c-tabs__link {
-  text-transform: var(--mui-text-transform);
   font-weight: var(--mui-button-FontWeight);
   line-height: var(--mui-button-line-height);
   letter-spacing: 0.02857em;
