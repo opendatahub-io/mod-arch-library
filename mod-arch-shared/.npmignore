@@ -1,0 +1,45 @@
+# Development files
+.git
+.github
+.vscode
+.idea
+.DS_Store
+
+# Source files (since we publish the dist folder)
+api/
+components/
+context/
+hooks/
+images/
+style/
+types/
+utilities/
+
+# CI and config files
+.eslintrc
+.eslintignore
+.prettierrc
+.prettierignore
+.npmrc
+.babelrc
+jest.config.js
+tsconfig.json
+
+# Development files
+__tests__/
+**/__tests__/
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+**/*.stories.tsx
+
+# Documentation
+docs/
+examples/
+
+# Build artifacts
+coverage/
+node_modules/
+npm-debug.log
+yarn-error.log
