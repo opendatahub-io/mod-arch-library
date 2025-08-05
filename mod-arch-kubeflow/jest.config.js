@@ -17,9 +17,9 @@ module.exports = {
 
   // A map from regular expressions to module names that allow to stub out resources with a single module
   moduleNameMapper: {
-    '\\.(css|less|sass|scss)$': '<rootDir>/config/transform.style.js',
+    '\\.(css|less|sass|scss)$': 'identity-obj-proxy',
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
-      '<rootDir>/config/transform.file.js',
+      'jest-transform-stub',
     '~/(.*)': '<rootDir>/$1',
   },
 
@@ -36,8 +36,6 @@ module.exports = {
 
   // A list of paths to snapshot serializer modules Jest should use for snapshot testing
   snapshotSerializers: [],
-
-  setupFilesAfterEnv: ['<rootDir>/__tests__/unit/jest.setup.ts'],
 
   coverageDirectory: 'jest-coverage',
 

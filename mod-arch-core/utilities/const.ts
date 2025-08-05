@@ -1,9 +1,3 @@
-export enum Theme {
-  Patternfly = 'patternfly-theme',
-  MUI = 'mui-theme',
-  // Future themes can be added here
-}
-
 export enum DeploymentMode {
   Standalone = 'standalone',
   Federated = 'federated',
