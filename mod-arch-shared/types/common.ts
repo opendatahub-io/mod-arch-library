@@ -1,24 +1,5 @@
 import { AlertVariant } from '@patternfly/react-core';
-import { DeploymentMode } from '~/utilities';
 import { EitherNotBoth } from './typeHelpers';
-
-
-export const isNavDataGroup = (navItem: NavDataItem): navItem is NavDataGroup =>
-  'children' in navItem;
-
-type NavDataCommon = {
-  label: string;
-};
-
-export type NavDataHref = NavDataCommon & {
-  path: string;
-};
-
-export type NavDataGroup = NavDataCommon & {
-  children: NavDataHref[];
-};
-
-export type NavDataItem = NavDataHref | NavDataGroup;
 
 export declare type K8sResourceIdentifier = {
   apiGroup?: string;

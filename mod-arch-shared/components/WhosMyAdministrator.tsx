@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Button, Popover, PopoverPosition } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import PopoverListContent from '~/components/PopoverListContent';
-import { FindAdministratorOptions } from '~/utilities/const';
 
 type Props = {
   buttonLabel?: string;
@@ -13,6 +12,12 @@ type Props = {
   linkTestId?: string;
   popoverPosition?: PopoverPosition;
 };
+
+const FindAdministratorOptions = [
+  'The person who gave you your username, or who helped you to log in for the first time',
+  'Someone in your IT department or help desk',
+  'A project manager or developer',
+];
 
 const WhosMyAdministrator: React.FC<Props> = ({
   buttonLabel = "Who's my administrator?",

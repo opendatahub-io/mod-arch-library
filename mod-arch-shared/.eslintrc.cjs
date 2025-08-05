@@ -263,25 +263,6 @@ module.exports = {
           }
         ]
       }
-    },
-    {
-      "files": ["src/__tests__/cypress/**"],
-      "rules": {
-        "@typescript-eslint/consistent-type-imports": "error",
-        "no-restricted-imports": [
-          "error",
-          {
-            "patterns": [
-              {
-                "group": [
-                  "@patternfly/**"
-                ],
-                "message": "Cypress tests should only import mocks and types from outside the Cypress test directory."
-              }
-            ]
-          }
-        ]
-      }
     }
   ]
 }

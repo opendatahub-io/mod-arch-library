@@ -1,9 +1,9 @@
 // Export images for easy consumption by library users
-import logoDarkThemePath from './logo-kubeflow-dark-theme.svg';
-import logoLightThemePath from './logo-kubeflow-light-theme.svg';
+import logoKubeflowDark from './logo-kubeflow-dark-theme.svg';
+import logoKubeflowLight from './logo-kubeflow-light-theme.svg';
 
 // Export all images
-export { logoDarkThemePath, logoLightThemePath };
+export { logoKubeflowDark, logoKubeflowLight };
 
 // This allows consumers to import images like:
-// import { emptyStateNotebooks } from 'your-package-name/images';
+// import { logoKubeflowDark } from 'your-package-name/images';
