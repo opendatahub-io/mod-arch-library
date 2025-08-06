@@ -1,0 +1,67 @@
+name: Publish Packages
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      package:
+        description: 'Package to publish (all, core, shared, kubeflow)'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - core
+          - shared
+          - kubeflow
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Build packages
+        run: npm run build
+
+      - name: Publish all packages
+        if: github.event_name == 'release' || github.event.inputs.package == 'all'
+        run: npm run publish:all
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish core package
+        if: github.event.inputs.package == 'core'
+        run: npm run publish:core
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish shared package
+        if: github.event.inputs.package == 'shared'
+        run: npm run publish:shared
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish kubeflow package
+        if: github.event.inputs.package == 'kubeflow'
+        run: npm run publish:kubeflow
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

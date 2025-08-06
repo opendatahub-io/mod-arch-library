@@ -1,0 +1,59 @@
+{
+  "name": "mod-arch-library",
+  "version": "1.0.0",
+  "description": "Modular Architecture Essentials - A monorepo containing libraries for building scalable micro-frontend applications",
+  "private": true,
+  "workspaces": [
+    "mod-arch-core",
+    "mod-arch-shared", 
+    "mod-arch-kubeflow"
+  ],
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "build:core": "npm run build --workspace=mod-arch-core",
+    "build:shared": "npm run build --workspace=mod-arch-shared",
+    "build:kubeflow": "npm run build --workspace=mod-arch-kubeflow",
+    "test": "npm run test --workspaces --if-present",
+    "test:core": "npm run test --workspace=mod-arch-core",
+    "test:shared": "npm run test --workspace=mod-arch-shared",
+    "test:kubeflow": "npm run test:type-check --workspace=mod-arch-kubeflow",
+    "lint": "npm run test:lint --workspaces --if-present",
+    "lint:fix": "npm run test:fix --workspaces --if-present",
+    "clean": "rm -rf */dist */node_modules node_modules",
+    "version:patch": "npm version patch --workspaces",
+    "version:minor": "npm version minor --workspaces", 
+    "version:major": "npm version major --workspaces",
+    "publish:all": "npm run build && npm publish --workspaces",
+    "publish:core": "npm run build:core && npm publish --workspace=mod-arch-core",
+    "publish:shared": "npm run build:shared && npm publish --workspace=mod-arch-shared",
+    "publish:kubeflow": "npm run build:kubeflow && npm publish --workspace=mod-arch-kubeflow",
+    "prepublish:all": "npm run test",
+    "postversion": "git add . && git commit -m \"chore: bump version to v$npm_package_version\" && git tag v$npm_package_version"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/opendatahub-io/mod-arch-library.git"
+  },
+  "homepage": "https://github.com/opendatahub-io/mod-arch-library#readme",
+  "bugs": {
+    "url": "https://github.com/opendatahub-io/mod-arch-library/issues"
+  },
+  "keywords": [
+    "modular-architecture",
+    "micro-frontend",
+    "monorepo",
+    "react",
+    "typescript",
+    "ui-library",
+    "kubeflow"
+  ],
+  "author": "OpenDataHub.io",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "npm-run-all2": "^7.0.1"
+  }
+}

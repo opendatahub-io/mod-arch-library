@@ -1,7 +1,7 @@
 {
   "name": "mod-arch-shared",
-  "version": "0.1.9",
-  "description": "Shared library for modular architecture micro-frontend projects",
+  "version": "1.0.0",
+  "description": "Shared UI components and utilities for modular architecture micro-frontend projects",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,8 +14,8 @@
   },
   "files": [
     "dist",
-    "style",
-    "images"
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsc && tsc-alias && npm run copy-assets",
@@ -31,15 +31,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/opendatahub-io/mod-arch-shared.git"
+    "url": "git+https://github.com/opendatahub-io/mod-arch-library.git",
+    "directory": "mod-arch-shared"
+  },
+  "homepage": "https://github.com/opendatahub-io/mod-arch-library/tree/main/mod-arch-shared#readme",
+  "bugs": {
+    "url": "https://github.com/opendatahub-io/mod-arch-library/issues"
   },
   "keywords": [
     "modular-architecture",
     "micro-frontend",
     "shared-components",
+    "ui-components",
+    "react-components",
     "ui-library"
   ],
-  "author": "",
+  "author": "OpenDataHub.io",
   "license": "Apache-2.0",
   "peerDependencies": {
     "react": ">=16.8.0",

@@ -1,6 +1,6 @@
 {
   "name": "mod-arch-kubeflow",
-  "version": "0.1.9",
+  "version": "1.0.0",
   "description": "Kubeflow-specific theme and UI components for modular architecture micro-frontend projects",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -14,8 +14,8 @@
   },
   "files": [
     "dist",
-    "style",
-    "images"
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsc && tsc-alias && npm run copy-assets",
@@ -25,16 +25,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/opendatahub-io/kubeflow-ui-essentials.git"
+    "url": "git+https://github.com/opendatahub-io/mod-arch-library.git",
+    "directory": "mod-arch-kubeflow"
+  },
+  "homepage": "https://github.com/opendatahub-io/mod-arch-library/tree/main/mod-arch-kubeflow#readme",
+  "bugs": {
+    "url": "https://github.com/opendatahub-io/mod-arch-library/issues"
   },
   "keywords": [
     "kubeflow",
     "theme",
     "modular-architecture",
     "micro-frontend",
+    "mui-theme",
     "ui-library"
   ],
-  "author": "",
+  "author": "OpenDataHub.io",
   "license": "Apache-2.0",
   "peerDependencies": {
     "react": ">=16.8.0",
