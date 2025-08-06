@@ -275,7 +275,7 @@ import {
   DeploymentMode,
   type ModularArchConfig
 } from 'mod-arch-core';
-import { ThemeProvider } from 'mod-arch-kubeflow';
+import { ThemeProvider, Theme } from 'mod-arch-kubeflow';
 import App from './App';
 
 // Define your configuration
@@ -294,7 +294,7 @@ root.render(
   <React.StrictMode>
     <Router>
       <ModularArchContextProvider config={modularArchConfig}>
-        <ThemeProvider theme="mui-theme">
+        <ThemeProvider theme={Theme.MUI}>
           <BrowserStorageContextProvider>
             <NotificationContextProvider>
               <App />

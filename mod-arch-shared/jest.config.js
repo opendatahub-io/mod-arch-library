@@ -6,6 +6,7 @@ module.exports = {
   testMatch: [
     '**/__tests__/unit/**/?(*.)+(spec|test).ts?(x)',
     '**/__tests__/?(*.)+(spec|test).ts?(x)',
+    '**/utilities/__tests__/?(*.)+(spec|test).ts?(x)',
   ],
   testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/dist/'],
   modulePathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/dist/'],
@@ -21,6 +22,7 @@ module.exports = {
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
       '<rootDir>/config/transform.file.js',
     '~/(.*)': '<rootDir>/$1',
+    '#~/(.*)': '<rootDir>/$1',
   },
 
   // The test environment that will be used for testing.

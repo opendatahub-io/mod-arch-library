@@ -20,11 +20,12 @@ import {
   ThemeProvider,
   useThemeContext,
   style,
-  images
+  images,
+  Theme
 } from 'mod-arch-kubeflow';
 
 // In your app root
-<ThemeProvider theme="mui-theme">
+<ThemeProvider theme={Theme.MUI}>
   <App />
 </ThemeProvider>
 ```

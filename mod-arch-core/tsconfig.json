@@ -45,7 +45,7 @@
     "images/**/*.png",
     "images/**/*.jpg",
     "images/**/*.jpeg"
-, "../mod-arch-shared/components/browserStorage/BrowserStorageContext.tsx"  ],
+  ],
   "exclude": [
     "node_modules",
     "dist",

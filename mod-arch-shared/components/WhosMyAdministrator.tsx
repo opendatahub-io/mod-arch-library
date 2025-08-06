@@ -13,12 +13,6 @@ type Props = {
   popoverPosition?: PopoverPosition;
 };
 
-const FindAdministratorOptions = [
-  'The person who gave you your username, or who helped you to log in for the first time',
-  'Someone in your IT department or help desk',
-  'A project manager or developer',
-];
-
 const WhosMyAdministrator: React.FC<Props> = ({
   buttonLabel = "Who's my administrator?",
   headerContent,
@@ -39,7 +33,11 @@ const WhosMyAdministrator: React.FC<Props> = ({
         data-testid={contentTestId}
         leadText={leadText}
         listHeading={headerContent ? 'Your administrator might be:' : undefined}
-        listItems={FindAdministratorOptions}
+        listItems={[
+          'The person who gave you your username, or who helped you to log in for the first time',
+          'Someone in your IT department or help desk',
+          'A project manager or developer',
+        ]}
       />
     }
   >
