@@ -1,0 +1,57 @@
+{
+  "name": "mod-arch-kubeflow",
+  "version": "1.0.0",
+  "description": "Kubeflow-specific theme and UI components for modular architecture micro-frontend projects",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "sideEffects": [
+    "*.css",
+    "*.scss"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc && tsc-alias && npm run copy-assets",
+    "copy-assets": "mkdir -p dist/style dist/images && cp -r style/* dist/style/ && cp -r images/* dist/images/",
+    "test:type-check": "tsc --noEmit",
+    "prepare": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/opendatahub-io/mod-arch-library.git",
+    "directory": "mod-arch-kubeflow"
+  },
+  "homepage": "https://github.com/opendatahub-io/mod-arch-library/tree/main/mod-arch-kubeflow#readme",
+  "bugs": {
+    "url": "https://github.com/opendatahub-io/mod-arch-library/issues"
+  },
+  "keywords": [
+    "kubeflow",
+    "theme",
+    "modular-architecture",
+    "micro-frontend",
+    "mui-theme",
+    "ui-library"
+  ],
+  "author": "OpenDataHub.io",
+  "license": "Apache-2.0",
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "@mui/material": "^6.0.0"
+  },
+  "devDependencies": {
+    "@mui/material": "^6.1.7",
+    "@types/react": "^18.3.1",
+    "react": "^18.3.1",
+    "sass": "^1.83.0",
+    "tsc-alias": "^1.8.15",
+    "typescript": "^5.0.4"
+  }
+}

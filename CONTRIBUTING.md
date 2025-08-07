@@ -1,6 +1,6 @@
-# Contributing to mod-arch-shared
+# Contributing to mod-arch-library
 
-We love your input! We want to make contributing to mod-arch-shared as easy and transparent as possible, whether it's:
+We love your input! We want to make contributing to mod-arch-library as easy and transparent as possible, whether it's:
 
 - Reporting a bug
 - Discussing the current state of the code
@@ -33,8 +33,8 @@ We use GitHub to host code, to track issues and feature requests, as well as acc
 
 1. Clone the repository
    ```
-   git clone https://github.com/your-organization/mod-arch-shared.git
-   cd mod-arch-shared
+   git clone https://github.com/your-organization/mod-arch-library.git
+   cd mod-arch-library
    ```
 
 2. Install dependencies
@@ -58,12 +58,12 @@ To test your changes locally without publishing to npm:
 
 2. In your consuming project, run:
    ```
-   npm link mod-arch-shared
+   npm link mod-arch-library
    ```
 
 3. After you're done testing, you can unlink by running:
    ```
-   npm unlink --no-save mod-arch-shared
+   npm unlink --no-save mod-arch-library
    ```
    in your consuming project, and:
    ```
@@ -91,7 +91,7 @@ When adding new components to the library, please follow these guidelines:
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your-organization/mod-arch-shared/tags).
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your-organization/mod-arch-library/tags).
 
 - **MAJOR** version when you make incompatible API changes
 - **MINOR** version when you add functionality in a backwards compatible manner

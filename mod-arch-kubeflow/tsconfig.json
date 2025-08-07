@@ -1,0 +1,55 @@
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "dist",
+    "module": "esnext",
+    "target": "es2021",
+    "lib": [
+      "es6",
+      "dom",
+      "ES2023.Array"
+    ],
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "jsx": "react",
+    "moduleResolution": "node",
+    "downlevelIteration": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": [
+        "*"
+      ]
+    },
+    "importHelpers": true,
+    "skipLibCheck": true,
+    "noErrorTruncation": true,
+    "resolveJsonModule": true
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.jsx",
+    "**/*.js",
+    "**/*.scss",
+    "**/*.css",
+    "images/**/*.svg",
+    "images/**/*.png",
+    "images/**/*.jpg",
+    "images/**/*.jpeg"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "public-cypress",
+    "src/__tests__/cypress"
+  ]
+}
