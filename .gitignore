@@ -6,3 +6,4 @@ stats.json
 coverage
 .idea
 public-cypress
+**/jest-coverage
