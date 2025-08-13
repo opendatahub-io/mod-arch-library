@@ -1,9 +1,17 @@
 import * as React from 'react';
-import { ExpandableSection, TextArea, TextInput } from '@patternfly/react-core';
+import {
+  Alert,
+  AlertVariant,
+  ExpandableSection,
+  TextArea,
+  TextInput,
+} from '@patternfly/react-core';
+import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import DashboardDescriptionListGroup, {
   DashboardDescriptionListGroupProps,
 } from '~/components/DashboardDescriptionListGroup';
 import FormFieldset from '~/components/FormFieldset';
+import { ModelDetailsCardContext } from '~/context/ModelDetailsCardContext';
 
 type EditableTextDescriptionListGroupProps = Pick<
   DashboardDescriptionListGroupProps,
@@ -15,6 +23,7 @@ type EditableTextDescriptionListGroupProps = Pick<
   isArchive?: boolean;
   editableVariant: 'TextInput' | 'TextArea';
   truncateMaxLines?: number;
+  showAlertWhenEditing?: boolean;
 };
 
 const EditableTextDescriptionListGroup: React.FC<EditableTextDescriptionListGroupProps> = ({
@@ -26,13 +35,17 @@ const EditableTextDescriptionListGroup: React.FC<EditableTextDescriptionListGrou
   baseTestId,
   editableVariant,
   truncateMaxLines = 12,
+  showAlertWhenEditing = false,
 }) => {
-  const [isEditing, setIsEditing] = React.useState(false);
   const [unsavedValue, setUnsavedValue] = React.useState(value);
   const [isSavingEdits, setIsSavingEdits] = React.useState(false);
   const [isTextExpanded, setIsTextExpanded] = React.useState(false);
+  const {
+    editingState: { isEditingDescription: isEditing },
+    setIsEditingDescription: setIsEditing,
+  } = React.useContext(ModelDetailsCardContext);
 
-  const editableTextArea =
+  const editableTextArea = 
     editableVariant === 'TextInput' ? (
       <TextInput
         autoFocus
@@ -53,7 +66,8 @@ const EditableTextDescriptionListGroup: React.FC<EditableTextDescriptionListGrou
         rows={24}
         resizeOrientation="vertical"
       />
-    );
+  );
+
   return (
     <DashboardDescriptionListGroup
       title={title}
@@ -66,7 +80,23 @@ const EditableTextDescriptionListGroup: React.FC<EditableTextDescriptionListGrou
       editButtonTestId={baseTestId && `${baseTestId}-edit`}
       saveButtonTestId={baseTestId && `${baseTestId}-save`}
       cancelButtonTestId={baseTestId && `${baseTestId}-cancel`}
-      contentWhenEditing={<FormFieldset component={editableTextArea} />}
+      contentWhenEditing={
+        <>
+          <FormFieldset component={editableTextArea} />
+          <div className={spacing.mtMd} />
+          {showAlertWhenEditing && isEditing && (
+            <Alert
+              data-testid="editing-description-alert"
+              variant={AlertVariant.info}
+              isInline
+              title="Changes affect all model versions"
+              aria-live="polite"
+              isPlain
+              tabIndex={-1}
+            />
+          )}
+        </>
+      }
       onEditClick={() => {
         setUnsavedValue(value);
         setIsEditing(true);

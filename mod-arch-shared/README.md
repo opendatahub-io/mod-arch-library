@@ -30,6 +30,7 @@ import {
 ## What's Included
 
 - **Components**: Common UI components like search fields, modals, tables, and form elements
+- **Context providers**: Context providers for UI components
 - **Utilities**: Shared utility functions for UI interactions
 - **Images**: Common image assets and icons
 - **Types**: Shared TypeScript type definitions
