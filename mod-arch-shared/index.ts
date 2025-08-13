@@ -1,6 +1,9 @@
 // Export components
 export * from './components';
 
+// Export context providers
+export * from './context';
+
 // Export utilities
 export * from './utilities';
 

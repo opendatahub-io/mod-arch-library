@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Label, LabelGroup, Alert, AlertVariant, LabelProps } from '@patternfly/react-core';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import DashboardDescriptionListGroup from '~/components/DashboardDescriptionListGroup';
+import { ModelDetailsCardContext } from '~/context/ModelDetailsCardContext';
 
 interface EditableLabelsProps {
   labels: string[];
@@ -13,6 +14,7 @@ interface EditableLabelsProps {
   labelProps?: LabelProps;
   overflowCount?: number; // if isCollapsible is true, this is the number of labels to show before collapsing
   isCollapsible?: boolean;
+  showAlertWhenEditing?: boolean;
 }
 
 export const EditableLabelsDescriptionListGroup: React.FC<EditableLabelsProps> = ({
@@ -25,11 +27,15 @@ export const EditableLabelsDescriptionListGroup: React.FC<EditableLabelsProps> =
   labelProps = {},
   isCollapsible = true,
   overflowCount,
+  showAlertWhenEditing = false,
 }) => {
-  const [isEditing, setIsEditing] = useState(false);
   const [isSavingEdits, setIsSavingEdits] = useState(false);
   const [hasSavedEdits, setHasSavedEdits] = useState(false);
   const [unsavedLabels, setUnsavedLabels] = useState(labels);
+  const {
+    editingState: { isEditingLabels: isEditing },
+    setIsEditingLabels: setIsEditing,
+  } = React.useContext(ModelDetailsCardContext);
 
   const validateLabels = (): string[] => {
     const errors: string[] = [];
@@ -137,9 +143,6 @@ export const EditableLabelsDescriptionListGroup: React.FC<EditableLabelsProps> =
     return false;
   };
 
-  // Add a ref for the alert
-  const alertRef = React.useRef<HTMLDivElement>(null);
-
   return (
     <DashboardDescriptionListGroup
       editButtonTestId="editable-labels-group-edit"
@@ -193,28 +196,32 @@ export const EditableLabelsDescriptionListGroup: React.FC<EditableLabelsProps> =
               </Label>
             ))}
           </LabelGroup>
-          {labelErrors.length > 0 && (
+          <div className={spacing.mtMd} />
+          {labelErrors.length > 0 &&
+            labelErrors.map((error, index) => (
+              <Alert
+                key={index}
+                data-testid="label-error-alert"
+                variant={AlertVariant.danger}
+                isInline
+                title={error
+                  .split('**')
+                  .map((part, i) => (i % 2 === 0 ? part : <strong key={i}>{part}</strong>))}
+                aria-live="polite"
+                isPlain
+                tabIndex={-1}
+              />
+            ))}
+          {showAlertWhenEditing && isEditing && (
             <Alert
-              ref={alertRef}
-              data-testid="label-error-alert"
-              variant={AlertVariant.danger}
+              data-testid="editing-labels-alert"
+              variant={AlertVariant.info}
               isInline
-              title="Label validation errors:"
+              title="Changes affect all model versions"
               aria-live="polite"
               isPlain
               tabIndex={-1}
-              className={spacing.mtMd}
-            >
-              <ul>
-                {labelErrors.map((error, index) => (
-                  <li key={index}>
-                    {error
-                      .split('**')
-                      .map((part, i) => (i % 2 === 0 ? part : <strong key={i}>{part}</strong>))}
-                  </li>
-                ))}
-              </ul>
-            </Alert>
+            />
           )}
         </>
       }
