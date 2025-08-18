@@ -87,18 +87,16 @@ const EditableTextDescriptionListGroup: React.FC<EditableTextDescriptionListGrou
         <>
           <FormFieldset component={editableTextArea} />
           {showAlertWhenEditing && isEditing && (
-            <>
-              <div className={spacing.mtMd} />
-              <Alert
-                data-testid="editing-description-alert"
-                variant={AlertVariant.info}
-                isInline
-                title="Changes affect all model versions"
-                aria-live="polite"
-                isPlain
-                tabIndex={-1}
-              />
-            </>
+            <Alert
+              data-testid="editing-description-alert"
+              className={spacing.mtMd}
+              variant={AlertVariant.info}
+              isInline
+              title="Changes affect all model versions"
+              aria-live="polite"
+              isPlain
+              tabIndex={-1}
+            />
           )}
         </>
       }

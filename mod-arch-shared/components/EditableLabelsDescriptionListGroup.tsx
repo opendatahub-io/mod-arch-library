@@ -174,6 +174,7 @@ export const EditableLabelsDescriptionListGroup: React.FC<EditableLabelsProps> =
                 </Label>
               ) : undefined
             }
+            className={spacing.mbMd}
           >
             {unsavedLabels.map((label, index) => (
               <Label
@@ -199,7 +200,6 @@ export const EditableLabelsDescriptionListGroup: React.FC<EditableLabelsProps> =
               </Label>
             ))}
           </LabelGroup>
-          <div className={spacing.mtMd} />
           {labelErrors.length > 0 &&
             labelErrors.map((error, index) => (
               <Alert
