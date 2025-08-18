@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { ExpandableSection, TextArea, TextInput } from '@patternfly/react-core';
+import {
+  Alert,
+  AlertVariant,
+  ExpandableSection,
+  TextArea,
+  TextInput,
+} from '@patternfly/react-core';
+import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 import DashboardDescriptionListGroup, {
   DashboardDescriptionListGroupProps,
 } from '~/components/DashboardDescriptionListGroup';
@@ -15,6 +22,8 @@ type EditableTextDescriptionListGroupProps = Pick<
   isArchive?: boolean;
   editableVariant: 'TextInput' | 'TextArea';
   truncateMaxLines?: number;
+  onEditingChange?: (isEditing: boolean) => void;
+  showAlertWhenEditing?: boolean;
 };
 
 const EditableTextDescriptionListGroup: React.FC<EditableTextDescriptionListGroupProps> = ({
@@ -26,11 +35,18 @@ const EditableTextDescriptionListGroup: React.FC<EditableTextDescriptionListGrou
   baseTestId,
   editableVariant,
   truncateMaxLines = 12,
+  onEditingChange,
+  showAlertWhenEditing = false,
 }) => {
   const [isEditing, setIsEditing] = React.useState(false);
   const [unsavedValue, setUnsavedValue] = React.useState(value);
   const [isSavingEdits, setIsSavingEdits] = React.useState(false);
   const [isTextExpanded, setIsTextExpanded] = React.useState(false);
+
+  const handleEditingStateChange = (isEditing: boolean) => {
+    setIsEditing(isEditing);
+    onEditingChange?.(isEditing);
+  };
 
   const editableTextArea =
     editableVariant === 'TextInput' ? (
@@ -54,6 +70,7 @@ const EditableTextDescriptionListGroup: React.FC<EditableTextDescriptionListGrou
         resizeOrientation="vertical"
       />
     );
+
   return (
     <DashboardDescriptionListGroup
       title={title}
@@ -66,10 +83,28 @@ const EditableTextDescriptionListGroup: React.FC<EditableTextDescriptionListGrou
       editButtonTestId={baseTestId && `${baseTestId}-edit`}
       saveButtonTestId={baseTestId && `${baseTestId}-save`}
       cancelButtonTestId={baseTestId && `${baseTestId}-cancel`}
-      contentWhenEditing={<FormFieldset component={editableTextArea} />}
+      contentWhenEditing={
+        <>
+          <FormFieldset component={editableTextArea} />
+          {showAlertWhenEditing && isEditing && (
+            <>
+              <div className={spacing.mtMd} />
+              <Alert
+                data-testid="editing-description-alert"
+                variant={AlertVariant.info}
+                isInline
+                title="Changes affect all model versions"
+                aria-live="polite"
+                isPlain
+                tabIndex={-1}
+              />
+            </>
+          )}
+        </>
+      }
       onEditClick={() => {
         setUnsavedValue(value);
-        setIsEditing(true);
+        handleEditingStateChange(true);
       }}
       onSaveEditsClick={async () => {
         setIsSavingEdits(true);
@@ -78,11 +113,11 @@ const EditableTextDescriptionListGroup: React.FC<EditableTextDescriptionListGrou
         } finally {
           setIsSavingEdits(false);
         }
-        setIsEditing(false);
+        handleEditingStateChange(false);
       }}
       onDiscardEditsClick={() => {
         setUnsavedValue(value);
-        setIsEditing(false);
+        handleEditingStateChange(false);
       }}
     >
       <ExpandableSection
