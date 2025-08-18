@@ -22,7 +22,7 @@ type EditableTextDescriptionListGroupProps = Pick<
   isArchive?: boolean;
   editableVariant: 'TextInput' | 'TextArea';
   truncateMaxLines?: number;
-  onEditingChange?: (isEditing: boolean) => void;
+  onEditingChange?: (editingState: boolean) => void;
   showAlertWhenEditing?: boolean;
 };
 
@@ -43,9 +43,9 @@ const EditableTextDescriptionListGroup: React.FC<EditableTextDescriptionListGrou
   const [isSavingEdits, setIsSavingEdits] = React.useState(false);
   const [isTextExpanded, setIsTextExpanded] = React.useState(false);
 
-  const handleEditingStateChange = (isEditing: boolean) => {
-    setIsEditing(isEditing);
-    onEditingChange?.(isEditing);
+  const handleEditingStateChange = (editingState: boolean) => {
+    setIsEditing(editingState);
+    onEditingChange?.(editingState);
   };
 
   const editableTextArea =

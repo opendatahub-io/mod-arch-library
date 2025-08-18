@@ -13,7 +13,7 @@ interface EditableLabelsProps {
   labelProps?: LabelProps;
   overflowCount?: number; // if isCollapsible is true, this is the number of labels to show before collapsing
   isCollapsible?: boolean;
-  onEditingChange?: (isEditing: boolean) => void;
+  onEditingChange?: (editingState: boolean) => void;
   showAlertWhenEditing?: boolean;
 }
 
@@ -35,9 +35,9 @@ export const EditableLabelsDescriptionListGroup: React.FC<EditableLabelsProps> =
   const [unsavedLabels, setUnsavedLabels] = useState(labels);
   const [isEditing, setIsEditing] = React.useState(false);
 
-  const handleEditingStateChange = (isEditing: boolean) => {
-    setIsEditing(isEditing);
-    onEditingChange?.(isEditing);
+  const handleEditingStateChange = (editingState: boolean) => {
+    setIsEditing(editingState);
+    onEditingChange?.(editingState);
   };
 
   const validateLabels = (): string[] => {
