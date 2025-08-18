@@ -14,7 +14,6 @@ interface EditableLabelsProps {
   overflowCount?: number; // if isCollapsible is true, this is the number of labels to show before collapsing
   isCollapsible?: boolean;
   onEditingChange?: (editingState: boolean) => void;
-  showAlertWhenEditing?: boolean;
 }
 
 export const EditableLabelsDescriptionListGroup: React.FC<EditableLabelsProps> = ({
@@ -28,7 +27,6 @@ export const EditableLabelsDescriptionListGroup: React.FC<EditableLabelsProps> =
   isCollapsible = true,
   overflowCount,
   onEditingChange,
-  showAlertWhenEditing = false,
 }) => {
   const [isSavingEdits, setIsSavingEdits] = useState(false);
   const [hasSavedEdits, setHasSavedEdits] = useState(false);
@@ -215,7 +213,7 @@ export const EditableLabelsDescriptionListGroup: React.FC<EditableLabelsProps> =
                 tabIndex={-1}
               />
             ))}
-          {showAlertWhenEditing && isEditing && (
+          {onEditingChange && isEditing && (
             <Alert
               data-testid="editing-labels-alert"
               variant={AlertVariant.info}

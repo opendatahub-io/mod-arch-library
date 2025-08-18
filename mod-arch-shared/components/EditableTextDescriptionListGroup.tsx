@@ -23,7 +23,6 @@ type EditableTextDescriptionListGroupProps = Pick<
   editableVariant: 'TextInput' | 'TextArea';
   truncateMaxLines?: number;
   onEditingChange?: (editingState: boolean) => void;
-  showAlertWhenEditing?: boolean;
 };
 
 const EditableTextDescriptionListGroup: React.FC<EditableTextDescriptionListGroupProps> = ({
@@ -36,7 +35,6 @@ const EditableTextDescriptionListGroup: React.FC<EditableTextDescriptionListGrou
   editableVariant,
   truncateMaxLines = 12,
   onEditingChange,
-  showAlertWhenEditing = false,
 }) => {
   const [isEditing, setIsEditing] = React.useState(false);
   const [unsavedValue, setUnsavedValue] = React.useState(value);
@@ -86,7 +84,7 @@ const EditableTextDescriptionListGroup: React.FC<EditableTextDescriptionListGrou
       contentWhenEditing={
         <>
           <FormFieldset component={editableTextArea} />
-          {showAlertWhenEditing && isEditing && (
+          {onEditingChange && isEditing && (
             <Alert
               data-testid="editing-description-alert"
               className={spacing.mtMd}
