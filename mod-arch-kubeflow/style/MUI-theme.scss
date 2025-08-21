@@ -124,8 +124,8 @@
 }
 
 .mui-theme .pf-v6-c-action-list__item .pf-v6-c-button {
-  --pf-v6-c-button--PaddingInlineStart: none;
-  --pf-v6-c-button--PaddingInlineEnd: none;
+  --pf-v6-c-button--PaddingInlineStart: 0;
+  --pf-v6-c-button--PaddingInlineEnd: 0;
   border-radius: var(--mui-shape-borderRadius);
 }
 
@@ -167,7 +167,6 @@
   --pf-v6-c-button--PaddingInlineStart: var(--mui-button--PaddingInlineStart);
   --pf-v6-c-button--PaddingInlineEnd: var(--mui-button--PaddingInlineEnd);
   --pf-v6-c-button--LineHeight: var(--mui-button--LineHeight);
-  --pf-v6-c-button--m-plain--BorderRadius: 50%;
 
   letter-spacing: 0.02857em;
 }
@@ -212,12 +211,12 @@
 
 .mui-theme .pf-v6-c-card.pf-m-selected {
   --pf-v6-c-card--BackgroundColor: var(--mui-palette-grey-200);
-  --pf-v6-c-card--m-selectable--m-selected--BorderColor: none;
+  --pf-v6-c-card--m-selectable--m-selected--BorderColor: transparent;
 }
 
 .mui-theme .pf-v6-c-card.pf-m-selected:hover {
   --pf-v6-c-card--BackgroundColor: var(--mui-palette-grey-300);
-  --pf-v6-c-card--m-selectable--m-selected--BorderColor: none;
+  --pf-v6-c-card--m-selectable--m-selected--BorderColor: transparent;
 }
 
 .mui-theme .pf-v6-c-description-list__term {
@@ -235,7 +234,7 @@
 }
 
 .mui-theme .pf-v6-c-form {
-  --pf-v6-c-form--GridGap: none;
+  --pf-v6-c-form--GridGap: 0;
 }
 
 .mui-theme .pf-v6-c-form__group {
@@ -380,7 +379,7 @@
 }
 
 .mui-theme .pf-v6-c-form-control > :is(input, select, textarea):focus {
-  --pf-v6-c-form-control--OutlineOffset: none;
+  --pf-v6-c-form-control--OutlineOffset: 0;
   outline: none;
 }
 
@@ -751,7 +750,7 @@
 }
 
 .mui-theme .pf-v6-c-nav__list {
-  row-gap: none;
+  row-gap: 0;
 }
 
 .mui-theme .pf-v6-c-page__sidebar {
@@ -1104,12 +1103,6 @@ left: 0;
 .mui-theme .pf-v6-c-expandable-section .pf-v6-c-expandable-section__content {
   margin-block-end: var(--mui-spacing-16px);
 }
-
-.mui-theme .pf-v6-c-button.pf-m-plain {
-  --pf-v6-c-button--BorderRadius: 50%;
-}
-
-
 
 .mui-theme .pf-v6-c-form__group-control .pf-v6-c-menu-toggle.pf-m-full-width.pf-m-typeahead {
   position: relative;
