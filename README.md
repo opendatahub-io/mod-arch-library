@@ -384,6 +384,66 @@ When `mandatoryNamespace` is set:
 
 This is useful for production environments or when you want to restrict users to a specific namespace.
 
+## Releases
+
+This project uses automated GitHub Actions workflows for version management and publishing to npm.
+
+### Creating a New Release
+
+To create a new release, follow these steps in order:
+
+1. **Run the Version Bump Workflow**:
+   - Go to the [Actions tab](../../actions) in the GitHub repository
+   - Select "Version Bump" workflow
+   - Click "Run workflow"
+   - Choose the version bump type:
+     - `patch` - for bug fixes (1.0.0 → 1.0.1)
+     - `minor` - for new features (1.0.0 → 1.1.0)
+     - `major` - for breaking changes (1.0.0 → 2.0.0)
+   - Click "Run workflow"
+
+2. **Create a GitHub Release**:
+   - Once the version bump workflow completes, go to the [Releases page](../../releases)
+   - Click "Create a new release"
+   - Choose or create a new tag that matches the version (e.g., `v1.1.0`)
+   - Set the target branch to `main`
+   - Fill in the release title and description
+   - Click "Publish release"
+
+3. **Automated Publishing**:
+   - When you create the release, the "Release and Publish" workflow will automatically trigger
+   - This workflow will:
+     - Create a new release branch from `main`
+     - Install dependencies and run tests
+     - Build all packages
+     - Publish all packages to npm
+
+### Release Workflow Details
+
+The automated release process includes:
+
+- **Quality Assurance**: All tests must pass before publishing
+- **Build Verification**: All packages are built and verified
+- **npm Publishing**: Packages are published to npm registry with proper versioning
+- **Branch Management**: A dedicated release branch is created and merged back
+- **Pull Request**: An automated PR is created for transparency and review
+
+### Prerequisites for Publishing
+
+To enable the automated publishing workflow, ensure the following secrets are configured in the repository:
+
+- `NPM_TOKEN`: npm authentication token with publish permissions for the packages
+
+### Version Synchronization
+
+All packages in this monorepo are versioned together and published simultaneously:
+
+- `mod-arch-core`
+- `mod-arch-shared`
+- `mod-arch-kubeflow`
+
+When you run the version bump workflow, all three packages will be updated to the same version number.
+
 ## Development
 
 ### Prerequisites

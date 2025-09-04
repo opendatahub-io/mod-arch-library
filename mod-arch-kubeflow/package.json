@@ -1,6 +1,6 @@
 {
   "name": "mod-arch-kubeflow",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Kubeflow-specific theme and UI components for modular architecture micro-frontend projects",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -20,7 +20,12 @@
   "scripts": {
     "build": "tsc && tsc-alias && npm run copy-assets",
     "copy-assets": "mkdir -p dist/style dist/images && cp -r style/* dist/style/ && cp -r images/* dist/images/",
+    "test": "run-s test:lint test:unit test:type-check",
+    "test:jest": "jest --passWithNoTests",
+    "test:unit": "npm run test:jest -- --silent",
     "test:type-check": "tsc --noEmit",
+    "test:fix": "eslint --ext .js,.ts,.jsx,.tsx . --fix",
+    "test:lint": "eslint --max-warnings 0 --ext .js,.ts,.jsx,.tsx .",
     "prepare": "npm run build"
   },
   "repository": {
@@ -42,6 +47,9 @@
   ],
   "author": "OpenDataHub.io",
   "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "peerDependencies": {
     "react": ">=16.8.0",
     "@mui/material": "^6.0.0"
@@ -49,9 +57,26 @@
   "devDependencies": {
     "@mui/material": "^6.1.7",
     "@types/react": "^18.3.1",
+    "npm-run-all2": "^7.0.1",
     "react": "^18.3.1",
     "sass": "^1.83.0",
     "tsc-alias": "^1.8.15",
     "typescript": "^5.0.4"
+  },
+  "optionalDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.26.1",
+    "@typescript-eslint/parser": "^8.26.1",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-import-resolver-node": "^0.3.7",
+    "eslint-import-resolver-typescript": "^3.8.3",
+    "eslint-plugin-cypress": "^3.3.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-no-only-tests": "^3.1.0",
+    "eslint-plugin-no-relative-import-paths": "^1.6.1",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.2.0"
   }
 }
