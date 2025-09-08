@@ -4,11 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/kubeflow/model-registry/ui/bff/internal/config"
-	"github.com/kubeflow/model-registry/ui/bff/internal/constants"
 	"log/slog"
 	"net/http"
 	"strings"
+
+	"github.com/kubeflow/mod-arch/ui/bff/internal/config"
+	"github.com/kubeflow/mod-arch/ui/bff/internal/constants"
 )
 
 func NewKubernetesClientFactory(cfg config.EnvConfig, logger *slog.Logger) (KubernetesClientFactory, error) {

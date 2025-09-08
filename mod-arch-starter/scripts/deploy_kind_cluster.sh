@@ -24,22 +24,10 @@ else
     echo "Creating kubeflow namespace..."
     kubectl create namespace kubeflow
 fi
-# Step 3: Deploy Model Registry to cluster
-echo "Deploying Model Registry to cluster..."
-kubectl apply -k "https://github.com/kubeflow/model-registry/manifests/kustomize/overlays/db"
-
-# Wait for deployment to be available
-echo "Waiting for Model Registry deployment to be available..."
-kubectl wait --for=condition=available -n kubeflow deployment/model-registry-deployment --timeout=1m
-
-# Verify deployment
-echo "Verifying deployment..."
-kubectl get pods -n kubeflow
-
-# Step 4: Deploy model registry UI
+# Step 4: Deploy modular architecture UI
 echo "Editing kustomize image..."
-pushd  ../../manifests/kustomize/options/ui/base
-kustomize edit set image model-registry-ui=${IMG_UI_STANDALONE}
+pushd  ./manifests/base
+kustomize edit set image mod-arch-ui=${IMG_UI_STANDALONE}
 
 pushd  ../overlays/standalone
 
@@ -48,10 +36,10 @@ kustomize edit set namespace kubeflow
 kubectl apply -n kubeflow -k .
 
 # Wait for deployment to be available
-echo "Waiting Model Registry UI to be available..."
-kubectl wait --for=condition=available -n kubeflow deployment/model-registry-ui --timeout=1m
+echo "Waiting Mod Arch UI to be available..."
+kubectl wait --for=condition=available -n kubeflow deployment/mod-arch-ui --timeout=1m
 
 # Step 5: Port-forward the service
-echo "Port-forwarding Model Registry UI..."
+echo "Port-forwarding Mod Arch UI..."
 echo -e "\033[32mDashboard available in http://localhost:8080\033[0m"
-kubectl port-forward svc/model-registry-ui-service -n kubeflow 8080:8080
+kubectl port-forward svc/mod-arch-ui-service -n kubeflow 8080:8080

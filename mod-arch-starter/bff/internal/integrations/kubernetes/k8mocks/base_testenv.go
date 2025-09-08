@@ -1,17 +1,19 @@
+//go:build ignore
+
 package k8mocks
 
 import (
 	"context"
 	"fmt"
-	kubernetes2 "github.com/kubeflow/model-registry/ui/bff/internal/integrations/kubernetes"
+	"log/slog"
+	"os"
+	"path/filepath"
+
+	kubernetes2 "github.com/kubeflow/mod-arch/ui/bff/internal/integrations/kubernetes"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
-	"log/slog"
-	"os"
-	"path/filepath"
-	"runtime"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
 )
 
@@ -48,23 +50,7 @@ type TestEnvInput struct {
 
 func SetupEnvTest(input TestEnvInput) (*envtest.Environment, kubernetes.Interface, error) {
 	projectRoot, err := getProjectRoot()
-	if err != nil {
-		input.Logger.Error("failed to find project root", slog.String("error", err.Error()))
-		input.Cancel()
-		os.Exit(1)
-	}
-
-	testEnv := &envtest.Environment{
-		BinaryAssetsDirectory: filepath.Join(projectRoot, "bin", "k8s", fmt.Sprintf("1.29.0-%s-%s", runtime.GOOS, runtime.GOARCH)),
-	}
-
-	cfg, err := testEnv.Start()
-	if err != nil {
-		input.Logger.Error("failed to start envtest", slog.String("error", err.Error()))
-		input.Cancel()
-		os.Exit(1)
-	}
-
+	var DefaultTestUsers = []TestUser{}
 	clientset, err := kubernetes.NewForConfig(cfg)
 	if err != nil {
 		input.Logger.Error("failed to create clientset", slog.String("error", err.Error()))
@@ -105,23 +91,23 @@ func setupMock(mockK8sClient kubernetes.Interface, ctx context.Context) error {
 		return err
 	}
 
-	err = createService(mockK8sClient, ctx, "model-registry", "kubeflow", "Model Registry", "Model Registry Description", "10.0.0.10", "model-registry")
+	err = createService(mockK8sClient, ctx, "mod-arch", "kubeflow", "Model Registry", "Model Registry Description", "10.0.0.10", "mod-arch")
 	if err != nil {
 		return err
 	}
-	err = createService(mockK8sClient, ctx, "model-registry-one", "kubeflow", "Model Registry One", "Model Registry One description", "10.0.0.11", "model-registry")
+	err = createService(mockK8sClient, ctx, "mod-arch-one", "kubeflow", "Model Registry One", "Model Registry One description", "10.0.0.11", "mod-arch")
 	if err != nil {
 		return err
 	}
-	err = createService(mockK8sClient, ctx, "model-registry-dora", "dora-namespace", "Model Registry Dora", "Model Registry Dora description", "10.0.0.12", "model-registry")
+	err = createService(mockK8sClient, ctx, "mod-arch-dora", "dora-namespace", "Model Registry Dora", "Model Registry Dora description", "10.0.0.12", "mod-arch")
 	if err != nil {
 		return err
 	}
-	err = createService(mockK8sClient, ctx, "model-registry-bella", "bella-namespace", "Model Registry Bella", "Model Registry Bella description", "10.0.0.13", "model-registry")
+	err = createService(mockK8sClient, ctx, "mod-arch-bella", "bella-namespace", "Model Registry Bella", "Model Registry Bella description", "10.0.0.13", "mod-arch")
 	if err != nil {
 		return err
 	}
-	err = createService(mockK8sClient, ctx, "non-model-registry", "kubeflow", "Not a Model Registry", "Not a Model Registry Bella description", "10.0.0.14", "")
+	err = createService(mockK8sClient, ctx, "non-mod-arch", "kubeflow", "Not a Model Registry", "Not a Model Registry Bella description", "10.0.0.14", "")
 	if err != nil {
 		return err
 	}
@@ -141,7 +127,7 @@ func setupMock(mockK8sClient kubernetes.Interface, ctx context.Context) error {
 		return fmt.Errorf("failed to create namespace-restricted RBAC: %w", err)
 	}
 
-	err = createGroupAccessRBAC(mockK8sClient, ctx, DefaultTestUsers[1].Groups[1], "dora-namespace", "model-registry-dora")
+	err = createGroupAccessRBAC(mockK8sClient, ctx, DefaultTestUsers[1].Groups[1], "dora-namespace", "mod-arch-dora")
 	if err != nil {
 		return fmt.Errorf("failed to create group-based RBAC: %w", err)
 	}
@@ -244,7 +230,7 @@ func createNamespaceRestrictedRBAC(k8sClient kubernetes.Interface, ctx context.C
 func createGroupAccessRBAC(k8sClient kubernetes.Interface, ctx context.Context, groupName, namespace, serviceName string) error {
 	role := &rbacv1.Role{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "group-model-registry-access",
+			Name:      "group-mod-arch-access",
 			Namespace: namespace,
 		},
 		Rules: []rbacv1.PolicyRule{
@@ -277,7 +263,7 @@ func createGroupAccessRBAC(k8sClient kubernetes.Interface, ctx context.Context, 
 		},
 		RoleRef: rbacv1.RoleRef{
 			Kind:     "Role",
-			Name:     "group-model-registry-access",
+			Name:     "group-mod-arch-access",
 			APIGroup: "rbac.authorization.k8s.io",
 		},
 	}

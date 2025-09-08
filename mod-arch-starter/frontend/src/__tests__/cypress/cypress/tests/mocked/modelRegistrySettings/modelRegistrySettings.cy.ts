@@ -19,56 +19,56 @@ const roleBindingsMock = {
       },
       {
         metadata: {
-          name: 'model-registry-permissions',
+          name: 'mod-arch-permissions',
           creationTimestamp: null,
           labels: {
-            app: 'model-registry',
-            'app.kubernetes.io/component': 'model-registry',
-            'app.kubernetes.io/name': 'model-registry',
-            'app.kubernetes.io/part-of': 'model-registry',
+            app: 'mod-arch',
+            'app.kubernetes.io/component': 'mod-arch',
+            'app.kubernetes.io/name': 'mod-arch',
+            'app.kubernetes.io/part-of': 'mod-arch',
           },
         },
         subjects: [{ kind: 'User', apiGroup: 'rbac.authorization.k8s.io', name: 'admin-user' }],
         roleRef: {
           apiGroup: 'rbac.authorization.k8s.io',
           kind: 'Role',
-          name: 'registry-user-model-registry',
+          name: 'registry-user-mod-arch',
         },
       },
       {
         metadata: {
-          name: 'model-registry-dora-permissions',
+          name: 'mod-arch-dora-permissions',
           creationTimestamp: null,
           labels: {
-            app: 'model-registry-dora',
-            'app.kubernetes.io/component': 'model-registry',
-            'app.kubernetes.io/name': 'model-registry-dora',
-            'app.kubernetes.io/part-of': 'model-registry',
+            app: 'mod-arch-dora',
+            'app.kubernetes.io/component': 'mod-arch',
+            'app.kubernetes.io/name': 'mod-arch-dora',
+            'app.kubernetes.io/part-of': 'mod-arch',
           },
         },
         subjects: [{ kind: 'User', apiGroup: 'rbac.authorization.k8s.io', name: 'dora-user' }],
         roleRef: {
           apiGroup: 'rbac.authorization.k8s.io',
           kind: 'Role',
-          name: 'registry-user-model-registry-dora',
+          name: 'registry-user-mod-arch-dora',
         },
       },
       {
         metadata: {
-          name: 'model-registry-bella-permissions',
+          name: 'mod-arch-bella-permissions',
           creationTimestamp: null,
           labels: {
-            app: 'model-registry-bella',
-            'app.kubernetes.io/component': 'model-registry',
-            'app.kubernetes.io/name': 'model-registry-bella',
-            'app.kubernetes.io/part-of': 'model-registry',
+            app: 'mod-arch-bella',
+            'app.kubernetes.io/component': 'mod-arch',
+            'app.kubernetes.io/name': 'mod-arch-bella',
+            'app.kubernetes.io/part-of': 'mod-arch',
           },
         },
         subjects: [{ kind: 'Group', apiGroup: 'rbac.authorization.k8s.io', name: 'bella-team' }],
         roleRef: {
           apiGroup: 'rbac.authorization.k8s.io',
           kind: 'Role',
-          name: 'registry-user-model-registry-bella',
+          name: 'registry-user-mod-arch-bella',
         },
       },
     ],
@@ -83,17 +83,17 @@ const userMock = {
 };
 
 const modelRegistryMock = mockModelRegistryKind({
-  name: 'model-registry',
+  name: 'mod-arch',
   displayName: 'Model Registry',
   description: 'Main registry',
 });
 const modelRegistryMockDora = mockModelRegistryKind({
-  name: 'model-registry-dora',
+  name: 'mod-arch-dora',
   displayName: 'Dora Registry',
   description: 'Dora registry',
 });
 const modelRegistryMockBella = mockModelRegistryKind({
-  name: 'model-registry-bella',
+  name: 'mod-arch-bella',
   displayName: 'Bella Registry',
   description: 'Bella registry',
 });
@@ -105,12 +105,12 @@ const setupModelRegistryMocks = (
     modelRegistryMockBella,
   ],
 ) => {
-  cy.intercept('GET', '/model-registry/api/v1/namespaces', {
+  cy.intercept('GET', '/mod-arch/api/v1/namespaces', {
     data: [{ metadata: { name: NAMESPACE } }],
   });
-  cy.intercept('GET', '/model-registry/api/v1/user', userMock);
-  cy.intercept('GET', '/model-registry/api/v1/settings/model_registry*', { data: registries });
-  cy.intercept('GET', '/model-registry/api/v1/settings/role_bindings*', roleBindingsMock);
+  cy.intercept('GET', '/mod-arch/api/v1/user', userMock);
+  cy.intercept('GET', '/mod-arch/api/v1/settings/model_registry*', { data: registries });
+  cy.intercept('GET', '/mod-arch/api/v1/settings/role_bindings*', roleBindingsMock);
 };
 
 function selectNamespaceIfPresent() {
@@ -168,11 +168,11 @@ describe('Model Registry Settings', () => {
 
   describe('ManagePermissions', () => {
     it('should show the Manage permissions button for a model registry row', () => {
-      setupModelRegistryMocks([mockModelRegistryKind({ name: 'model-registry' })]);
+      setupModelRegistryMocks([mockModelRegistryKind({ name: 'mod-arch' })]);
       modelRegistrySettings.visit();
       selectNamespaceIfPresent();
       modelRegistrySettings
-        .findModelRegistryRow('model-registry')
+        .findModelRegistryRow('mod-arch')
         .findByText('Manage permissions')
         .should('be.visible');
     });
@@ -180,11 +180,11 @@ describe('Model Registry Settings', () => {
 
   describe('DeleteModelRegistryModal', () => {
     beforeEach(() => {
-      setupModelRegistryMocks([mockModelRegistryKind({ name: 'model-registry' })]);
+      setupModelRegistryMocks([mockModelRegistryKind({ name: 'mod-arch' })]);
       modelRegistrySettings.visit();
       selectNamespaceIfPresent();
       modelRegistrySettings
-        .findModelRegistryRow('model-registry')
+        .findModelRegistryRow('mod-arch')
         .findKebabAction('Delete model registry')
         .click();
     });
@@ -194,7 +194,7 @@ describe('Model Registry Settings', () => {
     });
 
     it('enables confirm button after name is typed', () => {
-      modelRegistrySettings.findConfirmDeleteNameInput().type('model-registry');
+      modelRegistrySettings.findConfirmDeleteNameInput().type('mod-arch');
       modelRegistrySettings.findSubmitButton().should('be.enabled');
     });
   });

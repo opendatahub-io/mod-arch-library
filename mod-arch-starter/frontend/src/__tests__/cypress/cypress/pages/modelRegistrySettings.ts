@@ -28,7 +28,7 @@ export enum DatabaseDetailsTestId {
 
 class ModelRegistrySettings {
   visit(wait = true) {
-    cy.visit('/model-registry-settings');
+    cy.visit('/mod-arch-settings');
     if (wait) {
       this.wait();
     }

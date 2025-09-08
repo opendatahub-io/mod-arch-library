@@ -1,66 +1,37 @@
 package main
 
 import (
-	. "github.com/onsi/ginkgo/v2"
-	. "github.com/onsi/gomega"
 	"testing"
 )
 
-var _ = Describe("newOriginParser helper function", func() {
-	var originParser func(s string) error
-	var allowList []string
+func TestNewOriginParser(t *testing.T) {
+	cases := []struct {
+		name     string
+		input    string
+		expected []string
+	}{
+		{"one item", "https://test.com", []string{"https://test.com"}},
+		{"two items", "https://test.com,https://test2.com", []string{"https://test.com", "https://test2.com"}},
+		{"two items spaced", "https://test.com,    https://test2.com", []string{"https://test.com", "https://test2.com"}},
+		{"empty", "", []string{}},
+		{"wildcard", "*", []string{"*"}},
+	}
 
-	BeforeEach(func() {
-		allowList = []string{}
-		originParser = newOriginParser(&allowList, "")
-	})
-
-	It("should parse a valid string list with 1 item", func() {
-		expected := []string{"https://test.com"}
-
-		err := originParser("https://test.com")
-
-		Expect(err).NotTo(HaveOccurred())
-		Expect(allowList).To(Equal(expected))
-	})
-
-	It("should parse a valid string list with 2 items", func() {
-		expected := []string{"https://test.com", "https://test2.com"}
-
-		err := originParser("https://test.com,https://test2.com")
-
-		Expect(err).NotTo(HaveOccurred())
-		Expect(allowList).To(Equal(expected))
-	})
-
-	It("should parse a valid string list with 2 items and extra spaces", func() {
-		expected := []string{"https://test.com", "https://test2.com"}
-
-		err := originParser("https://test.com,    https://test2.com")
-
-		Expect(err).NotTo(HaveOccurred())
-		Expect(allowList).To(Equal(expected))
-	})
-
-	It("should parse an empty string", func() {
-		err := originParser("")
-
-		Expect(err).NotTo(HaveOccurred())
-		Expect(allowList).To(BeEmpty())
-	})
-
-	It("should parse the wildcard string", func() {
-		expected := []string{"*"}
-
-		err := originParser("*")
-
-		Expect(err).NotTo(HaveOccurred())
-		Expect(allowList).To(Equal(expected))
-	})
-
-})
-
-func TestMainHelpers(t *testing.T) {
-	RegisterFailHandler(Fail)
-	RunSpecs(t, "Main helpers suite")
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			var allowList []string
+			parser := newOriginParser(&allowList, "")
+			if err := parser(tc.input); err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if len(allowList) != len(tc.expected) {
+				t.Fatalf("expected len=%d got=%d", len(tc.expected), len(allowList))
+			}
+			for i := range allowList {
+				if allowList[i] != tc.expected[i] {
+					t.Fatalf("expected %v got %v", tc.expected, allowList)
+				}
+			}
+		})
+	}
 }

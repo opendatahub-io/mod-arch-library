@@ -16,9 +16,9 @@
 ```javascript
         proxy: {
             ...
-            '/model-registry': {
+            '/mod-arch': {
                 target: 'http://localhost:9000',
-                pathRewrite: {'^/model-registry': ''},
+                pathRewrite: {'^/mod-arch': ''},
                 changeOrigin: true,
                 ws: true,
                 secure: false,
@@ -45,7 +45,7 @@ make dev-start-kubeflow
 You need to have a kubeflow cluster up and running, to get the Model Registry working you'll need to port-forward these two services:
 
 ```shell
-kubectl port-forward service/model-registry-service 8085:8080 -n <targeted-namespace-of-the-mr-service>
+kubectl port-forward service/mod-arch-service 8085:8080 -n <targeted-namespace-of-the-mr-service>
 ```
 
 ```shell

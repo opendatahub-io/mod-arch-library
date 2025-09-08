@@ -3,8 +3,9 @@ package repositories
 import (
 	"context"
 	"fmt"
-	k8s "github.com/kubeflow/model-registry/ui/bff/internal/integrations/kubernetes"
-	"github.com/kubeflow/model-registry/ui/bff/internal/models"
+
+	k8s "github.com/kubeflow/mod-arch/ui/bff/internal/integrations/kubernetes"
+	"github.com/kubeflow/mod-arch/ui/bff/internal/models"
 )
 
 type NamespaceRepository struct{}

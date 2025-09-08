@@ -1,9 +1,9 @@
 {
-  "name": "model-registry-ui",
+  "name": "mod-arch-ui",
   "version": "1.0.0",
-  "description": "An user interface for Kubeflow Model Registry project",
-  "repository": "https://github.com/kubeflow/model-registry.git",
-  "homepage": "https://github.com/kubeflow/model-registry",
+  "description": "An user interface for Mod Arch projects",
+  "repository": "https://github.com/opendatahub-io/mod-arch-library.git",
+  "homepage": "https://github.com/opendatahub-io/mod-arch-library",
   "license": "Apache-2.0",
   "private": true,
   "engines": {

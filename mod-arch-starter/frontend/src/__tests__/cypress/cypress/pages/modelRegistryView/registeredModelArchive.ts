@@ -60,31 +60,31 @@ class ModelArchive {
 
   visit() {
     const preferredModelRegistry = 'modelregistry-sample';
-    cy.visit(`/model-registry/${preferredModelRegistry}/registeredModels/archive`);
+    cy.visit(`/mod-arch/${preferredModelRegistry}/registeredModels/archive`);
     this.wait();
   }
 
   visitArchiveModelDetail() {
     const rmId = '2';
     const preferredModelRegistry = 'modelregistry-sample';
-    cy.visit(`/model-registry/${preferredModelRegistry}/registeredModels/archive/${rmId}`);
+    cy.visit(`/mod-arch/${preferredModelRegistry}/registeredModels/archive/${rmId}`);
   }
 
   visitArchiveModelVersionList() {
     const rmId = '2';
     const preferredModelRegistry = 'modelregistry-sample';
-    cy.visit(`/model-registry/${preferredModelRegistry}/registeredModels/archive/${rmId}/versions`);
+    cy.visit(`/mod-arch/${preferredModelRegistry}/registeredModels/archive/${rmId}/versions`);
   }
 
   visitModelList() {
-    cy.visit('/model-registry/modelregistry-sample');
+    cy.visit('/mod-arch/modelregistry-sample');
     this.wait();
   }
 
   visitModelDetails() {
     const rmId = '2';
     const preferredModelRegistry = 'modelregistry-sample';
-    cy.visit(`/model-registry/${preferredModelRegistry}/registeredModels/${rmId}`);
+    cy.visit(`/mod-arch/${preferredModelRegistry}/registeredModels/${rmId}`);
     this.wait();
   }
 

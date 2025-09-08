@@ -16,7 +16,7 @@ You can check the [contributing guidelines] for more information on how to contr
 ## OpenAPI Specification
 
 You can find the OpenAPI specification for the Model Registry UI in the [openapi](./api/openapi) directory.
-A live version of the OpenAPI specification can be found [here](https://editor.swagger.io/?url=https://raw.githubusercontent.com/kubeflow/model-registry/main/clients/ui/api/openapi/mod-arch.yaml).
+A live version of the OpenAPI specification can be found [here](https://editor.swagger.io/?url=https://raw.githubusercontent.com/kubeflow/mod-arch/main/clients/ui/api/openapi/mod-arch.yaml).
 
 ## Targeted environments
 
@@ -40,20 +40,20 @@ The following environment variables are used to configure the deployment and dev
 ### `IMG_UI`
 
 * **Description**: Specifies the image name and tag for the UI (with BFF).
-* **Default Value**: `ghcr.io/kubeflow/model-registry/ui:latest`
-* **Example**: `IMG_UI=ghcr.io/kubeflow/model-registry/ui:latest`
+* **Default Value**: `ghcr.io/kubeflow/mod-arch/ui:latest`
+* **Example**: `IMG_UI=ghcr.io/kubeflow/mod-arch/ui:latest`
 
 ### `IMG_UI_STANDALONE`
 
 * **Description**: Specifies the image name and tag for the UI (with BFF) in **standalone mode**, used for local kind deployment.
-* **Default Value**: `ghcr.io/kubeflow/model-registry/ui-standalone:latest`
-* **Example**: `IMG_UI_STANDALONE=ghcr.io/kubeflow/model-registry/ui-standalone:latest`
+* **Default Value**: `ghcr.io/kubeflow/mod-arch/ui-standalone:latest`
+* **Example**: `IMG_UI_STANDALONE=ghcr.io/kubeflow/mod-arch/ui-standalone:latest`
 
 ### `IMG_UI_FEDERATED`
 
 * **Description**: Specifies the image name and tag for the UI (with BFF) in **federated mode**, used for federated mode outside kubeflow.
-* **Default Value**: `ghcr.io/kubeflow/model-registry/ui-federated:latest`
-* **Example**: `IMG_UI_FEDERATED=ghcr.io/kubeflow/model-registry/ui-federated:latest`
+* **Default Value**: `ghcr.io/kubeflow/mod-arch/ui-federated:latest`
+* **Example**: `IMG_UI_FEDERATED=ghcr.io/kubeflow/mod-arch/ui-federated:latest`
 
 ### `PLATFORM`
 
@@ -82,8 +82,8 @@ Here is an example of what your `.env.local` file might look like:
 
 ```shell
 CONTAINER_TOOL=docker
-IMG_UI=quay.io/<personal-registry>/model-registry-ui:latest
-IMG_UI_STANDALONE=quay.io/<personal-registry>/model-registry-ui-standalone:latest
+IMG_UI=quay.io/<personal-registry>/mod-arch-ui:latest
+IMG_UI_STANDALONE=quay.io/<personal-registry>/mod-arch-ui-standalone:latest
 PLATFORM=linux/amd64
 ```
 

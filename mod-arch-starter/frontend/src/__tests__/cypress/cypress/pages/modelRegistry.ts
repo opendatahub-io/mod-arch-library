@@ -63,7 +63,7 @@ class ModelRegistry {
   }
 
   visit() {
-    cy.visit(`/model-registry`);
+    cy.visit(`/mod-arch`);
     this.wait();
   }
 
@@ -104,11 +104,11 @@ class ModelRegistry {
   }
 
   findHelpContentButton() {
-    return cy.findByTestId('model-registry-help-button');
+    return cy.findByTestId('mod-arch-help-button');
   }
 
   findHelpContentPopover() {
-    return cy.findByTestId('model-registry-help-content');
+    return cy.findByTestId('mod-arch-help-content');
   }
 
   shouldModelVersionsEmpty() {
@@ -120,7 +120,7 @@ class ModelRegistry {
   }
 
   shouldModelRegistrySelectorExist() {
-    cy.findByTestId('model-registry-selector-dropdown').should('exist');
+    cy.findByTestId('mod-arch-selector-dropdown').should('exist');
   }
 
   shouldtableToolbarExist() {
@@ -173,7 +173,7 @@ class ModelRegistry {
   }
 
   findModelRegistry() {
-    return cy.findByTestId('model-registry-selector-dropdown');
+    return cy.findByTestId('mod-arch-selector-dropdown');
   }
 
   findModelVersionsTableHeaderButton(name: string) {

@@ -13,13 +13,13 @@ This project requires the following tools to be installed on your system:
 1. Clone the repository
 
       ``` bash
-      git clone https://github.com/kubeflow/model-registry
+      git clone https://github.com/kubeflow/mod-arch
       ```
 
 2. Within the repo context, install project dependencies
 
      ```bash
-     cd model-registry/clients/ui/frontend && npm install
+     cd mod-arch/clients/ui/frontend && npm install
      ```
 
 ### Build project

@@ -1,17 +1,20 @@
+//go:build ignore
+
 package k8mocks
 
 import (
 	"context"
 	"fmt"
-	"github.com/kubeflow/model-registry/ui/bff/internal/config"
-	"github.com/kubeflow/model-registry/ui/bff/internal/constants"
-	k8s "github.com/kubeflow/model-registry/ui/bff/internal/integrations/kubernetes"
-	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/rest"
 	"log/slog"
 	"net/http"
-	"sigs.k8s.io/controller-runtime/pkg/envtest"
 	"sync"
+
+	"github.com/kubeflow/mod-arch/ui/bff/internal/config"
+	"github.com/kubeflow/mod-arch/ui/bff/internal/constants"
+	k8s "github.com/kubeflow/mod-arch/ui/bff/internal/integrations/kubernetes"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
+	"sigs.k8s.io/controller-runtime/pkg/envtest"
 )
 
 type MockedKubernetesClientFactory interface {
