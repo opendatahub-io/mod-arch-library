@@ -4,11 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/kubeflow/model-registry/ui/bff/internal/config"
-	"github.com/kubeflow/model-registry/ui/bff/internal/constants"
 	"log/slog"
 	"net/http"
 	"strings"
+
+	"github.com/opendatahub-io/mod-arch-library/bff/internal/config"
+	"github.com/opendatahub-io/mod-arch-library/bff/internal/constants"
 )
 
 func NewKubernetesClientFactory(cfg config.EnvConfig, logger *slog.Logger) (KubernetesClientFactory, error) {
@@ -70,7 +71,7 @@ func (f *StaticClientFactory) ExtractRequestIdentity(httpHeader http.Header) (*R
 
 	userGroupsHeader := httpHeader.Get(constants.KubeflowUserGroupsIdHeader)
 	// Note: The functionality for `kubeflow-groups` is not fully operational at Kubeflow platform at this time
-	// but it's supported on Model Registry BFF
+	// but it's supported on Mod Arch BFF
 	//`kubeflow-groups`: Holds a comma-separated list of user groups.
 	groups := []string{}
 	if userGroupsHeader != "" {

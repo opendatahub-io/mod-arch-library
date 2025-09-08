@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- mod-arch-ui-role.yaml
+- mod-arch-ui-service.yaml
+- mod-arch-ui-deployment.yaml
+- mod-arch-ui-service-account.yaml
+
+images:
+- name: mod-arch-ui
+  newName: ghcr.io/opendatahub-io/mod-arch-ui
+  newTag: latest

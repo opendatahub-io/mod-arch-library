@@ -10,7 +10,7 @@ const KUBEFLOW_USERNAME = process.env.KUBEFLOW_USERNAME || 'user@example.com';
 const IMAGE_DIR = process.env.IMAGE_DIR || 'images';
 const LOGO_LIGHT = process.env.LOGO || 'logo-light-theme.svg';
 const MANDATORY_NAMESPACE = process.env.MANDATORY_NAMESPACE || undefined;
-const URL_PREFIX = '/model-registry';
+const URL_PREFIX = '/mod-arch';
 const BFF_API_VERSION = 'v1';
 const COMPANY_URI = process.env.COMPANY_URI || 'oci://kubeflow.io';
 

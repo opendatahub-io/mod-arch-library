@@ -3,16 +3,17 @@ package kubernetes
 import (
 	"context"
 	"fmt"
-	helper "github.com/kubeflow/model-registry/ui/bff/internal/helpers"
+	"log/slog"
+	"strings"
+	"time"
+
+	helper "github.com/opendatahub-io/mod-arch-library/bff/internal/helpers"
 	authnv1 "k8s.io/api/authentication/v1"
 	authv1 "k8s.io/api/authorization/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
-	"log/slog"
-	"strings"
-	"time"
 )
 
 type TokenKubernetesClient struct {
@@ -62,10 +63,6 @@ func newTokenKubernetesClient(token string, logger *slog.Logger) (KubernetesClie
 
 	// Start with an anonymous config to avoid preloaded auth
 	cfg := rest.AnonymousClientConfig(baseConfig)
-	if err != nil {
-		logger.Error("failed to create anonymous config", "error", err)
-		return nil, fmt.Errorf("failed to create anonymous config: %w", err)
-	}
 	cfg.BearerToken = token
 
 	// Explicitly clear all other auth mechanisms

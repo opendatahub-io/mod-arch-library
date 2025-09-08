@@ -5,16 +5,13 @@ import { appChrome } from '~/__tests__/cypress/cypress/pages/appChrome';
 import { navBar } from '~/__tests__/cypress/cypress/pages/navBar';
 import { mockUserSettings } from '~/__mocks__/mockUserSettings';
 import { MODEL_REGISTRY_API_VERSION } from '~/__tests__/cypress/cypress/support/commands/api';
-import type { ModelRegistry } from '~/app/types';
 
 type HandlersProps = {
-  modelRegistries?: ModelRegistry[];
   namespaces?: Namespace[];
   username?: string;
 };
 
 const initIntercepts = ({
-  modelRegistries = [],
   username = 'test-user',
   namespaces = [
     mockNamespace({ name: 'namespace-1' }),
@@ -42,14 +39,6 @@ const initIntercepts = ({
       },
     },
     namespaces,
-  );
-
-  cy.interceptApi(
-    `GET /api/:apiVersion/model_registry`,
-    {
-      path: { apiVersion: MODEL_REGISTRY_API_VERSION },
-    },
-    modelRegistries,
   );
 };
 

@@ -1,4 +1,4 @@
-# Model Registry UI Testing
+# Mod Arch UI Testing
 
 ## Cypress Tests
 

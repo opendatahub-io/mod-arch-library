@@ -1,7 +1,7 @@
 import { useFetchState, APIOptions, FetchStateCallbackPromise } from 'mod-arch-core';
 import React from 'react';
 import { getNamespaces } from '~/app/api/k8s';
-import { NamespaceKind } from '~/app/shared/components/types';
+import { NamespaceKind } from '~/app/types';
 
 export const useNamespaces = (): [NamespaceKind[], boolean, Error | undefined] => {
   const callback = React.useCallback<FetchStateCallbackPromise<NamespaceKind[]>>(

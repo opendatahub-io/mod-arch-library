@@ -1,26 +1,26 @@
 [frontend requirements]: ./frontend/docs/dev-setup.md#requirements
 [BFF requirements]: ./bff/README.md#pre-requisites
-[Model registry UI]: ./docs/README.md
+[Mod arch UI]: ./docs/README.md
 [contributing guidelines]: ./CONTRIBUTING.md
 
-# Model Registry UI
+# Mod Arch UI
 
 ## Overview
 
-The Model Registry UI is a standalone web app for Kubeflow Model Registry. In this repository, you will find the frontend and backend for the Model Registry UI.
+The Mod Arch UI is a standalone web app for Kubeflow Mod Arch. In this repository, you will find the frontend and backend for the Mod Arch UI.
 
 ## Contributing
 
-You can check the [contributing guidelines] for more information on how to contribute to the Model Registry UI.
+You can check the [contributing guidelines] for more information on how to contribute to the Mod Arch UI.
 
 ## OpenAPI Specification
 
-You can find the OpenAPI specification for the Model Registry UI in the [openapi](./api/openapi) directory.
-A live version of the OpenAPI specification can be found [here](https://editor.swagger.io/?url=https://raw.githubusercontent.com/kubeflow/model-registry/main/clients/ui/api/openapi/mod-arch.yaml).
+You can find the OpenAPI specification for the Mod Arch UI in the [openapi](./api/openapi) directory.
+A live version of the OpenAPI specification can be found [here](https://editor.swagger.io/?url=https://raw.githubusercontent.com/kubeflow/mod-arch/main/clients/ui/api/openapi/mod-arch.yaml).
 
 ## Targeted environments
 
-There's two main environments that the Model Registry UI is targeted for:
+There's two main environments that the Mod Arch UI is targeted for:
 
 1. **Standalone**: This is the default environment for local development. The UI is served by the BFF and the BFF is responsible for serving the API requests. The BFF exposes a `/namespace` endpoint that returns all the namespaces in the cluster and the UI sends a user header `kubeflow-user` to authenticate the calls.
 
@@ -28,7 +28,7 @@ There's two main environments that the Model Registry UI is targeted for:
 
 ## Environment Variables
 
-The following environment variables are used to configure the deployment and development environment for the Model Registry UI. These variables should be defined in a `.env.local` file in the `clients/ui` directory of the project. **This values will affect the build and push commands**.
+The following environment variables are used to configure the deployment and development environment for the Mod Arch UI. These variables should be defined in a `.env.local` file in the `clients/ui` directory of the project. **This values will affect the build and push commands**.
 
 ### `CONTAINER_TOOL`
 
@@ -40,20 +40,20 @@ The following environment variables are used to configure the deployment and dev
 ### `IMG_UI`
 
 * **Description**: Specifies the image name and tag for the UI (with BFF).
-* **Default Value**: `ghcr.io/kubeflow/model-registry/ui:latest`
-* **Example**: `IMG_UI=ghcr.io/kubeflow/model-registry/ui:latest`
+* **Default Value**: `ghcr.io/kubeflow/mod-arch/ui:latest`
+* **Example**: `IMG_UI=ghcr.io/kubeflow/mod-arch/ui:latest`
 
 ### `IMG_UI_STANDALONE`
 
 * **Description**: Specifies the image name and tag for the UI (with BFF) in **standalone mode**, used for local kind deployment.
-* **Default Value**: `ghcr.io/kubeflow/model-registry/ui-standalone:latest`
-* **Example**: `IMG_UI_STANDALONE=ghcr.io/kubeflow/model-registry/ui-standalone:latest`
+* **Default Value**: `ghcr.io/kubeflow/mod-arch/ui-standalone:latest`
+* **Example**: `IMG_UI_STANDALONE=ghcr.io/kubeflow/mod-arch/ui-standalone:latest`
 
 ### `IMG_UI_FEDERATED`
 
 * **Description**: Specifies the image name and tag for the UI (with BFF) in **federated mode**, used for federated mode outside kubeflow.
-* **Default Value**: `ghcr.io/kubeflow/model-registry/ui-federated:latest`
-* **Example**: `IMG_UI_FEDERATED=ghcr.io/kubeflow/model-registry/ui-federated:latest`
+* **Default Value**: `ghcr.io/kubeflow/mod-arch/ui-federated:latest`
+* **Example**: `IMG_UI_FEDERATED=ghcr.io/kubeflow/mod-arch/ui-federated:latest`
 
 ### `PLATFORM`
 
@@ -82,8 +82,8 @@ Here is an example of what your `.env.local` file might look like:
 
 ```shell
 CONTAINER_TOOL=docker
-IMG_UI=quay.io/<personal-registry>/model-registry-ui:latest
-IMG_UI_STANDALONE=quay.io/<personal-registry>/model-registry-ui-standalone:latest
+IMG_UI=quay.io/<personal-registry>/mod-arch-ui:latest
+IMG_UI_STANDALONE=quay.io/<personal-registry>/mod-arch-ui-standalone:latest
 PLATFORM=linux/amd64
 ```
 
@@ -121,4 +121,4 @@ The following Makefile targets are used to build and push the Docker images the 
 
 ## Deployments
 
-For more information on how to deploy the Model Registry UI, please refer to the [Model registry UI] documentation.
+For more information on how to deploy the Mod Arch UI, please refer to the [Mod arch UI] documentation.

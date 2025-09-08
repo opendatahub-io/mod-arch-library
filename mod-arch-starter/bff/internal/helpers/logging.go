@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/kubeflow/model-registry/ui/bff/internal/constants"
 	"io"
 	"log/slog"
 	"net/http"
 	"slices"
+
+	"github.com/opendatahub-io/mod-arch-library/bff/internal/constants"
 )
 
 func GetContextLoggerFromReq(r *http.Request) *slog.Logger {

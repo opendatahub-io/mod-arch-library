@@ -1,13 +1,13 @@
 {
-  "name": "model-registry-ui",
+  "name": "mod-arch-ui",
   "version": "1.0.0",
-  "description": "An user interface for Kubeflow Model Registry project",
-  "repository": "https://github.com/kubeflow/model-registry.git",
-  "homepage": "https://github.com/kubeflow/model-registry",
+  "description": "An user interface for Mod Arch projects",
+  "repository": "https://github.com/opendatahub-io/mod-arch-library.git",
+  "homepage": "https://github.com/opendatahub-io/mod-arch-library",
   "license": "Apache-2.0",
   "private": true,
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "scripts": {
     "build": "run-s build:prod",
@@ -45,7 +45,6 @@
     "@types/lodash-es": "^4.17.8",
     "@types/react-dom": "^18.3.1",
     "@types/showdown": "^2.0.3",
-    "@typescript-eslint/eslint-plugin": "^8.35.0",
     "chai-subset": "^1.6.0",
     "copy-webpack-plugin": "^13.0.0",
     "core-js": "^3.40.0",
@@ -106,7 +105,6 @@
     "react-dom": "^18",
     "react-router": "^7.5.2",
     "react-router-dom": "^7.6.1",
-    "sass": "^1.83.0",
     "showdown": "^2.1.0"
   },
   "optionalDependencies": {

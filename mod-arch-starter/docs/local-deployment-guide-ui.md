@@ -1,9 +1,9 @@
-[Model registry server set up]: ../../bff/docs/dev-guide.md
+[Mod arch server set up]: ../../bff/docs/dev-guide.md
 
-# Deploying the Model Registry UI in a local cluster
+# Deploying the Mod Arch UI in a local cluster
 
 For this guide, we will be using kind for locally deploying our cluster. See
-the [Model registry server set up] guide for prerequisites on setting up kind
+the [Mod arch server set up] guide for prerequisites on setting up kind
 and deploying the model registry server.
 
 ## Setup
@@ -35,7 +35,7 @@ make docker-push-standalone
 
 **Note: You will need to set up `IMG_UI_STANDALONE` in your .env.local file to push the image to your own registry.**
 
-### 4. Deploy Model Registry UI to cluster
+### 4. Deploy Mod Arch UI to cluster
 
 You can now deploy the UI and BFF to your newly created cluster using the kustomize configs in the root manifest directory:
 
@@ -44,7 +44,7 @@ First you need to set up your new image
 ```shell
 export IMG_UI_STANDALONE="<img url that was set above>"
 cd manifests/kustomize/options/ui/base
-kustomize edit set image model-registry-ui=$IMG_UI_STANDALONE}
+kustomize edit set image mod-arch-ui=${IMG_UI_STANDALONE}
 ```
 
 Now you can set the namespace to kubeflow and apply the manifests:
@@ -63,17 +63,17 @@ kubectl get pods -n kubeflow
 
 ```shell
 NAME                                  READY   STATUS    RESTARTS   AGE
-model-registry-ui-58755c4754-zdrnr    1/1     Running   0          11s
+mod-arch-ui-58755c4754-zdrnr    1/1     Running   0          11s
 ```
 
-### 5. Access the Model Registry UI running in the cluster
+### 5. Access the Mod Arch UI running in the cluster
 
 Now that the pods are up and running you can access the UI.
 
 First you will need to port-forward the UI service by running the following in it's own terminal:
 
 ```shell
-kubectl port-forward service/model-registry-ui-service 8080:8080 -n kubeflow
+kubectl port-forward service/mod-arch-ui-service 8080:8080 -n kubeflow
 ```
 
 You can then access the UI running in your cluster locally at http://localhost:8080/
@@ -81,7 +81,7 @@ You can then access the UI running in your cluster locally at http://localhost:8
 You can now make API requests to the BFF endpoints like:
 
 ```shell
-curl http://localhost:8080/api/v1/model-registry
+curl http://localhost:8080/api/v1/mod-arch
 ```
 
 ```json

@@ -14,14 +14,12 @@ const moduleFederationConfig = {
     'react-router-dom': { singleton: true, eager: true, requiredVersion: deps['react-router-dom'] },
   },
   exposes: {
-    // TODO expose api. eg:
     // './index': './src/plugin/index.tsx',
     // './plugin': './src/plugin/index.tsx',
   },
   // For module federation to work when optimization.runtimeChunk="single":
   // See https://github.com/webpack/webpack/issues/18810
   runtime: false,
-  // TODO generate types when exposing api
   dts: false,
 };
 

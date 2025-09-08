@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"time"
 
-	helper "github.com/kubeflow/model-registry/ui/bff/internal/helpers"
+	helper "github.com/opendatahub-io/mod-arch-library/bff/internal/helpers"
 	authv1 "k8s.io/api/authorization/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -45,74 +45,7 @@ func newInternalKubernetesClient(logger *slog.Logger) (KubernetesClientInterface
 	}, nil
 }
 
-func (kc *InternalKubernetesClient) CanListServicesInNamespace(ctx context.Context, identity *RequestIdentity, namespace string) (bool, error) {
-	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
-	defer cancel()
-
-	// Perform SAR for get and list verbs
-	for _, verb := range []string{"get", "list"} {
-		sar := &authv1.SubjectAccessReview{
-			Spec: authv1.SubjectAccessReviewSpec{
-				User:   identity.UserID,
-				Groups: identity.Groups,
-				ResourceAttributes: &authv1.ResourceAttributes{
-					Verb:      verb,
-					Resource:  "services",
-					Namespace: namespace,
-				},
-			},
-		}
-
-		response, err := kc.Client.AuthorizationV1().SubjectAccessReviews().Create(ctx, sar, metav1.CreateOptions{})
-		if err != nil {
-			return false, fmt.Errorf("SAR failed: %w", err)
-		}
-
-		if !response.Status.Allowed {
-			kc.Logger.Warn("access denied", "user", identity.UserID, "verb", verb, "resource", "services", "namespace", namespace)
-			return false, nil
-		}
-	}
-
-	return true, nil
-}
-
-func (kc *InternalKubernetesClient) CanAccessServiceInNamespace(ctx context.Context, identity *RequestIdentity, namespace, serviceName string) (bool, error) {
-	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
-	defer cancel()
-
-	sar := &authv1.SubjectAccessReview{
-		Spec: authv1.SubjectAccessReviewSpec{
-			User:   identity.UserID,
-			Groups: identity.Groups,
-			ResourceAttributes: &authv1.ResourceAttributes{
-				Verb:      "get",
-				Resource:  "services",
-				Namespace: namespace,
-				Name:      serviceName,
-			},
-		},
-	}
-
-	// Perform SAR
-	response, err := kc.Client.AuthorizationV1().SubjectAccessReviews().Create(ctx, sar, metav1.CreateOptions{})
-	if err != nil {
-		return false, fmt.Errorf("SAR failed: %w", err)
-	}
-
-	if !response.Status.Allowed {
-		kc.Logger.Warn("access denied",
-			"user", identity.UserID,
-			"verb", "get",
-			"resource", "services",
-			"namespace", namespace,
-			"service", serviceName,
-		)
-		return false, nil
-	}
-
-	return true, nil
-}
+// Removed service discovery and service-level access checks for starter template.
 
 func (kc *InternalKubernetesClient) GetNamespaces(ctx context.Context, identity *RequestIdentity) ([]corev1.Namespace, error) {
 	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)

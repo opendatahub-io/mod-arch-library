@@ -1,8 +1,8 @@
 # Local Deployment Guide
 
-## Local kubernetes deployment of Model Registry
+## Local kubernetes deployment of Mod Arch
 
-To test the BFF locally without mocking the k8s calls the Model Registry backend can be deployed locally using kind.
+To test the BFF locally without mocking the k8s calls the Mod Arch backend can be deployed locally using kind.
 
 ### Prerequisites
 
@@ -52,19 +52,19 @@ then, switch to that  kubeflow namespace
   kubectl config set-context --current --namespace=kubeflow
 ```
 
-#### 3. Deploy Model Registry to cluster
+#### 3. Deploy Mod Arch to cluster
 
 You can now deploy the MR backend to your newly created cluster using the kustomize configs in the MR repository by
 running:
 
 ```shell
-kubectl apply -k "https://github.com/kubeflow/model-registry/manifests/kustomize/overlays/db"
+kubectl apply -k "https://github.com/opendatahub-io/mod-arch-library/manifests/kustomize/overlays/db"
 ```
 
 Wait for the model registry deployment to spin up, alternatively run:
 
 ```shell
-kubectl wait --for=condition=available -n kubeflow deployment/model-registry-deployment --timeout=1m
+kubectl wait --for=condition=available -n kubeflow deployment/mod-arch-deployment --timeout=1m
 ```
 
 This command will return when the cluster is ready. To verify this now run:
@@ -73,7 +73,7 @@ This command will return when the cluster is ready. To verify this now run:
 kubectl get pods -n kubeflow
 ```
 
-Two pods should be listed, `model-registry-db-xxx` and `model-registry-deployment-yyy` both should have a status of `Running`.
+Two pods should be listed, `mod-arch-db-xxx` and `mod-arch-deployment-yyy` both should have a status of `Running`.
 
 ##### NOTE: Issues running on arm64 architecture
 
@@ -83,12 +83,12 @@ manifest deployed in a fork of the repo - you can use this by running the below 
 section 3 of this guide.
 
 ```shell
-kubectl apply -k "https://github.com/alexcreasy/model-registry/manifests/kustomize/overlays/db?ref=kind"
+kubectl apply -k "https://github.com/alexcreasy/mod-arch/manifests/kustomize/overlays/db?ref=kind"
 ```
 
 Note: an issue has been filed regarding this ticket here:
 
-* [#266 Cannot deploy to k8s on AArch64 nodes using manifests in repo](https://github.com/kubeflow/model-registry/issues/266)
+* [#266 Cannot deploy to k8s on AArch64 nodes using manifests in repo](https://github.com/opendatahub-io/mod-arch-library/issues/266)
 
 #### 4. Setup a port forward to the service
 
@@ -96,7 +96,7 @@ In order to access the MR REST API locally you need to forward a local port to 8
 command: (Note: this command starts a long-running service and will not exit the shell)
 
 ```shell
-kubectl port-forward svc/model-registry-service -n kubeflow 8080:8080
+kubectl port-forward svc/mod-arch-service -n kubeflow 8080:8080
 ```
 
 Note: you can change the local forwarded port by changing the first port value, e.g. `4000:8080` will forward port 4000

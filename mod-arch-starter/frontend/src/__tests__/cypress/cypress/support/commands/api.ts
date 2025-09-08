@@ -1,16 +1,7 @@
 import type { GenericStaticResponse, RouteHandlerController } from 'cypress/types/net-stubbing';
-import type { ModelRegistryKind, RoleBindingKind } from 'mod-arch-shared';
+import type { RoleBindingKind } from 'mod-arch-shared';
 import type { Namespace, UserSettings } from 'mod-arch-core';
 import { mockModArchResponse } from 'mod-arch-core';
-import type {
-  ModelArtifact,
-  ModelArtifactList,
-  ModelRegistry,
-  ModelVersion,
-  ModelVersionList,
-  RegisteredModel,
-  RegisteredModelList,
-} from '~/app/types';
 
 const MODEL_REGISTRY_API_VERSION = 'v1';
 export { MODEL_REGISTRY_API_VERSION };
@@ -35,93 +26,10 @@ declare global {
   namespace Cypress {
     interface Chainable {
       interceptApi: ((
-        type: 'GET /api/:apiVersion/model_registry/:modelRegistryName/registered_models',
-        options: { path: { modelRegistryName: string; apiVersion: string } },
-        response: ApiResponse<RegisteredModelList>,
+        type: 'GET /api/:apiVersion/user',
+        options: { path: { apiVersion: string } },
+        response: ApiResponse<UserSettings>,
       ) => Cypress.Chainable<null>) &
-        ((
-          type: 'POST /api/:apiVersion/model_registry/:modelRegistryName/registered_models',
-          options: { path: { modelRegistryName: string; apiVersion: string } },
-          response: ApiResponse<RegisteredModel>,
-        ) => Cypress.Chainable<null>) &
-        ((
-          type: 'GET /api/:apiVersion/model_registry/:modelRegistryName/registered_models/:registeredModelId/versions',
-          options: {
-            path: { modelRegistryName: string; apiVersion: string; registeredModelId: number };
-          },
-          response: ApiResponse<ModelVersionList>,
-        ) => Cypress.Chainable<null>) &
-        ((
-          type: 'GET /api/:apiVersion/model_registry/:modelRegistryName/model_versions',
-          options: {
-            path: { modelRegistryName: string; apiVersion: string };
-          },
-          response: ApiResponse<ModelVersionList>,
-        ) => Cypress.Chainable<null>) &
-        ((
-          type: 'POST /api/:apiVersion/model_registry/:modelRegistryName/registered_models/:registeredModelId/versions',
-          options: {
-            path: { modelRegistryName: string; apiVersion: string; registeredModelId: number };
-          },
-          response: ApiResponse<ModelVersion>,
-        ) => Cypress.Chainable<null>) &
-        ((
-          type: 'GET /api/:apiVersion/model_registry/:modelRegistryName/registered_models/:registeredModelId',
-          options: {
-            path: { modelRegistryName: string; apiVersion: string; registeredModelId: number };
-          },
-          response: ApiResponse<RegisteredModel>,
-        ) => Cypress.Chainable<null>) &
-        ((
-          type: 'PATCH /api/:apiVersion/model_registry/:modelRegistryName/registered_models/:registeredModelId',
-          options: {
-            path: { modelRegistryName: string; apiVersion: string; registeredModelId: number };
-          },
-          response: ApiResponse<RegisteredModel>,
-        ) => Cypress.Chainable<null>) &
-        ((
-          type: 'GET /api/:apiVersion/model_registry/:modelRegistryName/model_versions/:modelVersionId',
-          options: {
-            path: { modelRegistryName: string; apiVersion: string; modelVersionId: number };
-          },
-          response: ApiResponse<ModelVersion>,
-        ) => Cypress.Chainable<null>) &
-        ((
-          type: 'GET /api/:apiVersion/model_registry/:modelRegistryName/model_versions/:modelVersionId/artifacts',
-          options: {
-            path: { modelRegistryName: string; apiVersion: string; modelVersionId: number };
-          },
-          response: ApiResponse<ModelArtifactList>,
-        ) => Cypress.Chainable<null>) &
-        ((
-          type: 'POST /api/:apiVersion/model_registry/:modelRegistryName/model_versions/:modelVersionId/artifacts',
-          options: {
-            path: { modelRegistryName: string; apiVersion: string; modelVersionId: number };
-          },
-          response: ApiResponse<ModelArtifact>,
-        ) => Cypress.Chainable<null>) &
-        ((
-          type: 'PATCH /api/:apiVersion/model_registry/:modelRegistryName/model_versions/:modelVersionId',
-          options: {
-            path: { modelRegistryName: string; apiVersion: string; modelVersionId: number };
-          },
-          response: ApiResponse<ModelVersion | undefined>,
-        ) => Cypress.Chainable<null>) &
-        ((
-          type: 'GET /api/:apiVersion/model_registry',
-          options: { path: { apiVersion: string } },
-          response: ApiResponse<ModelRegistry[]>,
-        ) => Cypress.Chainable<null>) &
-        ((
-          type: 'GET /api/:apiVersion/settings/model_registry',
-          options: { path: { apiVersion: string } },
-          response: ApiResponse<ModelRegistryKind[]>,
-        ) => Cypress.Chainable<null>) &
-        ((
-          type: 'GET /api/:apiVersion/user',
-          options: { path: { apiVersion: string } },
-          response: ApiResponse<UserSettings>,
-        ) => Cypress.Chainable<null>) &
         ((
           type: 'GET /api/:apiVersion/namespaces',
           options: { path: { apiVersion: string } },
@@ -166,7 +74,7 @@ Cypress.Commands.add(
     return cy.intercept(
       {
         method,
-        pathname: `/model-registry/${pathname}`,
+        pathname: `/mod-arch/${pathname}`,
         query: options?.query,
         ...(options?.times && { times: options.times }),
       },

@@ -4,125 +4,59 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"github.com/kubeflow/model-registry/ui/bff/internal/config"
-	"github.com/kubeflow/model-registry/ui/bff/internal/integrations/kubernetes"
-	k8s "github.com/kubeflow/model-registry/ui/bff/internal/integrations/mrserver"
 	"io"
-	"log/slog"
 	"net/http"
 	"net/http/httptest"
-	"os"
-	"path/filepath"
 
-	"github.com/kubeflow/model-registry/ui/bff/internal/constants"
-	"github.com/kubeflow/model-registry/ui/bff/internal/mocks"
-	"github.com/kubeflow/model-registry/ui/bff/internal/repositories"
+	"github.com/opendatahub-io/mod-arch-library/bff/internal/config"
+	"github.com/opendatahub-io/mod-arch-library/bff/internal/constants"
+	"github.com/opendatahub-io/mod-arch-library/bff/internal/integrations/kubernetes"
+	"github.com/opendatahub-io/mod-arch-library/bff/internal/repositories"
 )
 
-func setupApiTest[T any](method string, url string, body interface{}, k8Factory kubernetes.KubernetesClientFactory, requestIdentity kubernetes.RequestIdentity, namespace string) (T, *http.Response, error) {
-	mockMRClient, err := mocks.NewModelRegistryClient(nil)
-	if err != nil {
-		return *new(T), nil, err
-	}
-
-	mockClient := new(mocks.MockHTTPClient)
-
-	cfg := config.EnvConfig{
-		AuthMethod: config.AuthMethodInternal,
-	}
-	//if token is set, use token auth
-	if requestIdentity.Token != "" {
-		cfg.AuthMethod = config.AuthMethodUser
-	}
-	testApp := App{
-		repositories:            repositories.NewRepositories(mockMRClient),
-		kubernetesClientFactory: k8Factory,
-		logger:                  slog.Default(),
-		config:                  cfg,
-	}
-
-	var req *http.Request
+// setupApiTest is a minimal helper to exercise remaining handlers (user, namespaces, healthcheck)
+func setupApiTest[T any](method, url string, body interface{}, k8Factory kubernetes.KubernetesClientFactory, identity *kubernetes.RequestIdentity) (T, *http.Response, error) {
+	var empty T
+	var reqBody io.Reader
 	if body != nil {
-		r, err := json.Marshal(body)
+		b, err := json.Marshal(body)
 		if err != nil {
-			return *new(T), nil, err
+			return empty, nil, err
 		}
-		bytes.NewReader(r)
-		req, err = http.NewRequest(method, url, bytes.NewReader(r))
-		if err != nil {
-			return *new(T), nil, err
-		}
-	} else {
-		req, err = http.NewRequest(method, url, nil)
-		if err != nil {
-			return *new(T), nil, err
-		}
+		reqBody = bytes.NewReader(b)
+	}
+	if reqBody == nil {
+		reqBody = http.NoBody
+	}
+	req, err := http.NewRequest(method, url, reqBody)
+	if err != nil {
+		return empty, nil, err
 	}
 
-	// Set the kubeflow-userid header (middleware work)
-	if requestIdentity.UserID != "" {
-		req.Header.Set(constants.KubeflowUserIDHeader, requestIdentity.UserID)
+	// Inject headers expected by middleware for internal auth
+	if identity != nil && identity.UserID != "" {
+		req.Header.Set(constants.KubeflowUserIDHeader, identity.UserID)
 	}
 
-	ctx := mocks.NewMockSessionContext(req.Context())
+	app := &App{config: config.EnvConfig{AllowedOrigins: []string{"*"}, AuthMethod: config.AuthMethodInternal}, kubernetesClientFactory: k8Factory, repositories: repositories.NewRepositories()}
 
-	ctx = context.WithValue(ctx, constants.ModelRegistryHttpClientKey, mockClient)
-	ctx = context.WithValue(ctx, constants.RequestIdentityKey, requestIdentity)
-	ctx = context.WithValue(ctx, constants.NamespaceHeaderParameterKey, namespace)
-	mrHttpClient := k8s.HTTPClient{
-		ModelRegistryID: "model-registry",
-	}
-	ctx = context.WithValue(ctx, constants.ModelRegistryHttpClientKey, mrHttpClient)
+	ctx := context.WithValue(req.Context(), constants.RequestIdentityKey, identity)
 	req = req.WithContext(ctx)
 
 	rr := httptest.NewRecorder()
-
-	testApp.Routes().ServeHTTP(rr, req)
-
-	rs := rr.Result()
-	defer rs.Body.Close()
-	respBody, err := io.ReadAll(rs.Body)
+	app.Routes().ServeHTTP(rr, req)
+	res := rr.Result()
+	defer res.Body.Close()
+	data, err := io.ReadAll(res.Body)
 	if err != nil {
-		return *new(T), nil, err
+		return empty, nil, err
 	}
-
-	var entity T
-	err = json.Unmarshal(respBody, &entity)
-	if err != nil {
-		if err == io.EOF {
-			// There's no body to parse.
-			return *new(T), rs, nil
-		}
-		return *new(T), nil, err
+	if len(data) == 0 {
+		return empty, res, nil
 	}
-
-	return entity, rs, nil
-}
-
-func resolveStaticAssetsDirOnTests() string {
-	// Fall back to finding project root for testing
-	projectRoot, err := findProjectRootOnTests()
-	if err != nil {
-		panic("Failed to find project root: ")
+	var out T
+	if err := json.Unmarshal(data, &out); err != nil && err != io.EOF {
+		return empty, nil, err
 	}
-
-	return filepath.Join(projectRoot, "static")
-}
-
-// on tests findProjectRoot searches for the project root by locating go.mod
-func findProjectRootOnTests() (string, error) {
-	currentDir, err := os.Getwd()
-	if err != nil {
-		return "", err
-	}
-
-	// Traverse up until go.mod is found
-	for currentDir != "/" {
-		if _, err := os.Stat(filepath.Join(currentDir, "go.mod")); err == nil {
-			return currentDir, nil
-		}
-		currentDir = filepath.Dir(currentDir)
-	}
-
-	return "", os.ErrNotExist
+	return out, res, nil
 }

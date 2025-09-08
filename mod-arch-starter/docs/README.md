@@ -2,9 +2,9 @@
 [Local deployment UI]: ./local-deployment-guide-ui.md
 [Kubeflow development]: ./kubeflow-development-guide.md
 
-# Model Registry UI Docs
+# Mod Arch UI Docs
 
-This directory contains documentation for the Model Registry UI.
+This directory contains documentation for the Mod Arch UI.
 
 ## Local Deployment Guide
 

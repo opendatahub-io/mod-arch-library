@@ -5,7 +5,6 @@ import type { Matcher, MatcherOptions as DTLMatcherOptions } from '@testing-libr
 declare global {
   namespace Cypress {
     interface Chainable {
-      // TODO: [Global auth] Uncomment once auth is enabled
       // /**
       //  * Visits the URL and performs a login if necessary.
       //  * Uses credentials supplied by environment variables if not provided.
