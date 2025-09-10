@@ -50,6 +50,7 @@ export enum ProjectObjectType {
   singleModel = 'single-model',
   multiModel = 'multi-model',
   modelServer = 'model-server',
+  modelCatalog = 'model-catalog',
   registeredModels = 'registered-models',
   deployedModels = 'deployed-models',
   deployingModels = 'deploying-models',
@@ -84,6 +85,8 @@ export const typedIconColor = (objectType: ProjectObjectType): string => {
     case ProjectObjectType.pipelineExperiment:
     case ProjectObjectType.pipelineExecution:
     case ProjectObjectType.pipelineArtifact:
+      return 'var(--ai-pipeline--IconColor)';
+    case ProjectObjectType.modelCatalog:
       return 'var(--ai-pipeline--IconColor)';
     case ProjectObjectType.pipelineSetup:
       return 'var(--ai-set-up--IconColor)';
@@ -142,6 +145,8 @@ export const typedBackgroundColor = (objectType: ProjectObjectType): string => {
     case ProjectObjectType.pipelineExecution:
     case ProjectObjectType.pipelineArtifact:
       return 'var(--ai-pipeline--BackgroundColor)';
+    case ProjectObjectType.modelCatalog:
+      return 'var(--ai-pipeline--BackgroundColor)';
     case ProjectObjectType.pipelineSetup:
       return 'var(--ai-set-up--BackgroundColor)';
     case ProjectObjectType.clusterStorage:
@@ -198,6 +203,8 @@ export const typedColor = (objectType: ProjectObjectType): string => {
     case ProjectObjectType.pipelineRun:
     case ProjectObjectType.pipelineExecution:
     case ProjectObjectType.pipelineArtifact:
+      return 'var(--ai-pipeline--Color)';
+    case ProjectObjectType.modelCatalog:
       return 'var(--ai-pipeline--Color)';
     case ProjectObjectType.pipelineSetup:
       return 'var(--ai-set-up--Color)';

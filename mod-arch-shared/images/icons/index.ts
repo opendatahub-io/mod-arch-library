@@ -29,3 +29,4 @@ export { default as SingleModelIcon } from './SingleModelIcon';
 export { default as StorageClassIcon } from './StorageClassIcon';
 export { default as StorageIcon } from './StorageIcon';
 export { default as UserIcon } from './UserIcon';
+export { default as ModelCatalogIcon } from './ModelCatalogIcon';
