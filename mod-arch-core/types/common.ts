@@ -37,6 +37,7 @@ export type KeyValuePair = {
 
 export type Namespace = {
   name: string;
+  displayName?: string;
 };
 
 export type UpdateObjectAtPropAndValue<T> = <K extends keyof T>(
