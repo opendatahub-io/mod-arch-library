@@ -1,6 +1,6 @@
 {
   "name": "mod-arch-kubeflow",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Kubeflow-specific theme and UI components for modular architecture micro-frontend projects",
   "main": "dist/index.js",
   "module": "dist/index.js",
