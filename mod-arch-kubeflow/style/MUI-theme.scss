@@ -62,7 +62,7 @@
 
   // Sidebar from https://github.com/kubeflow/kubeflow/blob/4275d99754ac91f6cf5654b03824a73825e9fe55/components/centraldashboard/public/components/main-page.css#L7C1-L13C51
   --kf-central-primary-background-color: #0a3b71;
-  --kf-central-sidebar-default-color: #ffffff90;
+  --kf-central-sidebar-default-color: rgba(255, 255, 255, 0.7);
   --kf-central-app-drawer-width: 240px;
   --kf-central-app-bar-height: 24px;
 
@@ -131,6 +131,7 @@
   --pf-v6-c-alert--PaddingBlockEnd: var(--mui-alert--PaddingBlockEnd);
   --pf-v6-c-alert--PaddingInlineStart: var(--mui-alert--PaddingInlineStart);
   --pf-v6-c-alert--PaddingInlineEnd: var(--mui-alert--PaddingInlineEnd);
+  margin-bottom: 16px;
 }
 
 .mui-theme .pf-v6-c-alert__title {
@@ -889,6 +890,7 @@
   overflow: visible;
   margin-right: 2px;
   gap: 0;
+  margin: 0;
 }
 
 .mui-theme .pf-v6-c-page__main-container {
@@ -914,8 +916,40 @@
   text-transform: none;
 }
 
+.mui-theme .pf-v6-c-pagination__page-menu > .pf-v6-c-menu-toggle.pf-m-expanded.pf-m-plain.pf-m-text {
+  box-shadow: none;
+}
+.mui-theme .pf-v6-c-pagination__page-menu .pf-v6-c-menu-toggle__button {
+  white-space: nowrap;
+  min-width: fit-content;
+  outline: none;
+}
+
+.mui-theme .pf-v6-c-pagination__page-menu .pf-v6-c-menu-toggle:focus,
+.mui-theme .pf-v6-c-pagination__page-menu .pf-v6-c-menu-toggle:focus-within {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Remove hover background color on cards in stack layouts */
+.mui-theme .pf-v6-l-stack .pf-v6-c-card.pf-m-expanded:hover,
+.mui-theme .pf-v6-l-stack__item .pf-v6-c-card.pf-m-expanded:hover,
+.mui-theme .pf-v6-l-stack__item .pf-v6-c-card:hover {
+  --pf-v6-c-card--BackgroundColor: none;
+  --pf-v6-c-card--BorderColor: var(--mui-palette-grey-400);
+  background-color: inherit;
+}
+
+.mui-theme .pf-v6-c-pagination__page-menu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
 .mui-theme .pf-v6-c-pagination__page-menu::before {
   content: 'Rows per page:';
+  white-space: nowrap;
 }
 
 /* Hide Masthead Toggle by default */
@@ -931,7 +965,7 @@
   }
 
   .mui-theme .pf-v6-c-page__main-container {
-    margin-left: 0;
+    margin: none;
   }
 }
 
@@ -976,7 +1010,7 @@
   position: relative;
   width: 100%;
   display: flex;
-  height: 51px;
+  align-items: center;
 }
 
 .mui-theme .toolbar-fieldset-wrapper:hover .form-fieldset {
@@ -986,4 +1020,40 @@
 .mui-theme .toolbar-fieldset-wrapper:focus-within .form-fieldset,
 .mui-theme .tr-fieldset-wrapper:focus-within .form-fieldset {
   border-color: var(--mui-palette-primary-main);
+}
+
+.mui-theme .pf-v6-c-toolbar .pf-v6-c-form-control,
+.mui-theme .pf-v6-c-toolbar .pf-v6-c-menu-toggle,
+.mui-theme .pf-v6-c-toolbar .pf-v6-c-button {
+  min-height: 32px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+.mui-theme .pf-v6-c-toolbar .pf-v6-c-form-control {
+  --pf-v6-c-form-control--PaddingBlockStart: 6px;
+  --pf-v6-c-form-control--PaddingBlockEnd: 6px;
+  --pf-v6-c-form-control--PaddingInlineStart: 12px;
+  --pf-v6-c-form-control--PaddingInlineEnd: 12px;
+}
+
+.mui-theme .pf-v6-c-toolbar .pf-v6-c-menu-toggle {
+  --pf-v6-c-menu-toggle--PaddingBlockStart: 6px;
+  --pf-v6-c-menu-toggle--PaddingBlockEnd: 6px;
+  --pf-v6-c-menu-toggle--PaddingInlineStart: 12px;
+  --pf-v6-c-menu-toggle--PaddingInlineEnd: 12px;
+}
+
+/* Only apply fixed width to filter dropdown in toolbar filter group */
+.mui-theme .pf-v6-c-toolbar__group.pf-m-filter-group .pf-v6-c-menu-toggle:not(.pf-m-split-button):not(.pf-m-plain) {
+  --pf-v6-c-menu-toggle--MinWidth: 140px;
+  min-width: 140px;
+  width: 140px;
+}
+
+.mui-theme .pf-v6-c-toolbar__group.pf-m-filter-group .pf-v6-c-menu-toggle:not(.pf-m-split-button):not(.pf-m-plain) .pf-v6-c-menu-toggle__button {
+  min-width: 140px;
+  width: 140px;
+  justify-content: flex-start;
 }
