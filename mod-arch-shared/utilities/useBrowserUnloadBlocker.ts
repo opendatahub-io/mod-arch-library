@@ -1,21 +1,25 @@
-import * as React from 'react';
+import { useCallback, useEffect } from 'react';
 
-export const useBrowserUnloadBlocker = (shouldBlock: boolean): void => {
-  React.useEffect(() => {
-    if (!shouldBlock) return;
+export function useBrowserUnloadBlocker(shouldBlock: boolean): void {
+  const handleBeforeUnload = useCallback(
+    (e: BeforeUnloadEvent) => {
+      if (shouldBlock) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    },
+    [shouldBlock],
+  );
 
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-      event.returnValue = '';
-    };
+  useEffect(() => {
+    if (!shouldBlock) {
+      return;
+    }
 
     window.addEventListener('beforeunload', handleBeforeUnload);
+
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [shouldBlock]);
-};
-
-export default useBrowserUnloadBlocker;
-
-
+  }, [shouldBlock, handleBeforeUnload]);
+}

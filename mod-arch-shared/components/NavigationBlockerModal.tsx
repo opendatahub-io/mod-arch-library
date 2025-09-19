@@ -41,5 +41,3 @@ const NavigationBlockerModal: React.FC<NavigationBlockerModalProps> = ({
 };
 
 export default NavigationBlockerModal;
-
-
