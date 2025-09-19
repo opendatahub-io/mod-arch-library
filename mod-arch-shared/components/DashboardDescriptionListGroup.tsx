@@ -22,6 +22,8 @@ import {
 
 import './DashboardDescriptionListGroup.scss';
 import DashboardPopupIconButton from '~/components/dashboard/DashboardPopupIconButton';
+import { useBrowserUnloadBlocker } from '~/utilities/useBrowserUnloadBlocker';
+import NavigationBlockerModal from './NavigationBlockerModal';
 
 type EditableProps = {
   isEditing: boolean;
@@ -68,8 +70,17 @@ const DashboardDescriptionListGroup: React.FC<DashboardDescriptionListGroupProps
     cancelButtonTestId,
     isSaveDisabled,
   } = props;
+  const hasUnsavedChanges = !!(isEditable && isEditing);
+
+  useBrowserUnloadBlocker(hasUnsavedChanges);
+
+  const handleDiscardEditsClick = React.useCallback(() => {
+    onDiscardEditsClick?.();
+  }, [onDiscardEditsClick]);
+
   return (
-    <DescriptionListGroup data-testid={groupTestId}>
+    <>
+      <DescriptionListGroup data-testid={groupTestId}>
       {action || isEditable ? (
         <DescriptionListTerm className="kubeflow-custom-description-list-term-with-action">
           <Split>
@@ -139,6 +150,13 @@ const DashboardDescriptionListGroup: React.FC<DashboardDescriptionListGroupProps
         {isEditing ? contentWhenEditing : isEmpty ? contentWhenEmpty : children}
       </DescriptionListDescription>
     </DescriptionListGroup>
+    {hasUnsavedChanges && (
+      <NavigationBlockerModal
+        hasUnsavedChanges={hasUnsavedChanges}
+        onDiscardEditsClick={handleDiscardEditsClick}
+      />
+    )}
+    </>
   );
 };
 
