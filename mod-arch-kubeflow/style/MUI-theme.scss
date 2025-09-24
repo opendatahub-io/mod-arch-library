@@ -225,6 +225,16 @@
   );
 }
 
+.mui-theme .pf-v6-c-drawer.pf-m-inline.pf-m-expanded {
+  --pf-v6-c-drawer--m-inline--m-expanded__panel--MarginInlineStart: var(--mui-spacing-16px);
+}
+
+// Add spacing between main content and drawer when drawer is open
+.mui-theme .pf-v6-c-page__main-container:has(+ .pf-v6-c-drawer.pf-m-expanded),
+.mui-theme .pf-v6-c-page__main-container.pf-m-drawer-expanded {
+  margin-right: var(--mui-spacing-16px);
+}
+
 .mui-theme .pf-v6-c-form {
   --pf-v6-c-form--GridGap: none;
 }
@@ -522,8 +532,8 @@
   --pf-v6-c-menu--BorderRadius: var(--mui-shape-borderRadius);
   --pf-v6-c-menu--PaddingBlockStart: none;
   --pf-v6-c-menu--PaddingBlockEnd: none;
-  --pf-v6-c-menu--PaddingInlineStart: var(--mui-spacing);
-  --pf-v6-c-menu--PaddingInlineEnd: var(--mui-spacing);
+  --pf-v6-c-menu--PaddingInlineStart: none;
+  --pf-v6-c-menu--PaddingInlineEnd: none;
   --pf-v6-c-menu__item--PaddingBlockStart: var(--mui-menu__item--PaddingBlockStart);
   --pf-v6-c-menu__item--PaddingBlockEnd: var(--mui-menu__item--PaddingBlockEnd);
   --pf-v6-c-menu__item--PaddingInlineStart: var(--mui-menu__item--PaddingInlineStart);
@@ -532,8 +542,7 @@
 }
 
 .mui-theme .pf-v6-c-menu__item.pf-m-selected {
-  --pf-v6-c-menu__item--BackgroundColor: rgba(25, 118, 210, 0.08);
-  --pf-v6-c-menu__item--FontWeight: var(--mui-button-font-weight);
+  --pf-v6-c-menu__item--BackgroundColor: var(--mui-menu__item--selected--BackgroundColor);
 }
 
 .mui-theme .pf-v6-c-menu__item-select-icon {
@@ -683,10 +692,7 @@
   }
 }
 
-/* Additional support for current/active states */
-.mui-theme .pf-v6-c-nav__link.pf-m-current,
-.mui-theme .pf-v6-c-nav__link[aria-current="page"],
-.mui-theme .pf-v6-c-nav__link.active {
+.mui-theme .pf-v6-c-nav__link.pf-m-current {
   border-left: 3px solid var(--mui-palette-common-white) !important;
   background-color: #ffffff1b !important;
   color: var(--mui-palette-common-white) !important;
@@ -975,6 +981,10 @@
   --pf-v6-c-page__main--PaddingRight: 0;
   overflow: visible;
   margin-right: 2px;
+  height: calc(100vh - var(--kf-central-app-bar-height));
+  min-height: calc(100vh - var(--kf-central-app-bar-height));
+  display: flex;
+  flex-direction: column;
 }
 
 .mui-theme .pf-v6-c-page__main-section {
@@ -983,11 +993,23 @@
   margin-right: 2px;
   gap: 0;
   margin: 0;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.mui-theme .pf-v6-c-page__main-body {
+  margin-left: var(--mui-spacing-4px);
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .mui-theme .pf-v6-c-page__main-container {
   overflow: visible;
-  padding-right: 16px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .mui-theme .pf-v6-c-pagination {
@@ -1166,6 +1188,13 @@
     flex-grow: 1;
   }
 }
+
+.mui-theme .pf-v6-c-file-upload {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 
 /* Workaround for Toggle group header in Workspace Kind Form */
 .mui-theme .workspace-kind-form-header .pf-v6-c-toggle-group__button.pf-m-selected {
