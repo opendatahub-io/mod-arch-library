@@ -4,6 +4,7 @@ export { default as DashboardDescriptionListGroup } from './DashboardDescription
 export { default as DashboardEmptyTableView } from './DashboardEmptyTableView';
 export { default as DashboardHelpTooltip } from './DashboardHelpTooltip';
 export { default as DashboardModalFooter } from './DashboardModalFooter';
+export { default as NavigationBlockerModal } from './NavigationBlockerModal';
 export { default as DashboardSearchField } from './DashboardSearchField';
 export { default as EditableLabelsDescriptionListGroup } from './EditableLabelsDescriptionListGroup';
 export { default as EditableTextDescriptionListGroup } from './EditableTextDescriptionListGroup';
