@@ -13,6 +13,9 @@
   --mui-alert__icon--MarginBlockEnd: 7px;
   --mui-alert__icon--FontSize: 22px;
 
+  // Backdrop
+  --mui-backdrop-BackgroundColor: rgba(0, 0, 0, 0.5);
+
   // Button
   --mui-button-font-weight: 500;
   --mui-button--BorderWidth: 1px;
@@ -27,18 +30,23 @@
   // Drawer
   --mui-drawer-BorderLeft: var(--mui-palette-grey-300);
 
+  // Helper text
+  --mui-helper-text__item--FontWeight: 400;
+
   // Menu item
   --mui-menu__item--PaddingBlockStart: 6px;
   --mui-menu__item--PaddingBlockEnd: 6px;
   --mui-menu__item--PaddingInlineStart: 16px;
   --mui-menu__item--PaddingInlineEnd: 16px;
   --mui-menu__item--FontSize: 1rem;
+  --mui-menu__item--selected--BackgroundColor: rgba(var(--mui-palette-primary-mainChannel) / calc(var(--mui-palette-action-selectedOpacity, 0.08)));
+
 
   // Menu toggle
   --mui-menu-toggle__toggle-icon--MinHeight: auto;
   --mui-menu-toggle__controls--MinWidth: 0;
-  --mui-menu-toggle--expanded--BackgroundColor: none;
-  --mui-menu-toggle--expanded--BorderColor: none;
+  --mui-menu-toggle--expanded--BackgroundColor: transparent;
+  --mui-menu-toggle--expanded--BorderColor: transparent;
   --mui-menu-toggle--LineHeight: 1.75;
   --mui-menu-toggle--PaddingBlockStart: 6px;
   --mui-menu-toggle--PaddingBlockEnd: 6px;
@@ -46,8 +54,8 @@
   --mui-menu-toggle--PaddingInlineEnd: 16px;
   --mui-menu-toggle--ColumnGap: 0;
   --mui-menu-toggle--expanded--Color: black;
-  --mui-menu-toggle--hover--BorderColor: none;
-  --mui-menu-toggle--BorderColor: none;
+  --mui-menu-toggle--hover--BorderColor: transparent;
+  --mui-menu-toggle--BorderColor: transparent;
   --mui-menu-toggle--PaddingInlineStart: 10px;
   --mui-menu-toggle--PaddingInlineEnd: 10px;
 
@@ -66,8 +74,8 @@
   --kf-central-app-bar-height: 64px;
 
   // Table
-  --mui-table__button--BackgroundColor: none;
-  --mui-table__button--hover--BackgroundColor: none;
+  --mui-table__button--BackgroundColor: transparent;
+  --mui-table__button--hover--BackgroundColor: transparent;
   --mui-table__button--Color: var(--pf-v6-c-table--cell--Color);
   --mui-table__button--PaddingBlockStart: 0;
   --mui-table__button--PaddingBlockEnd: 0;
@@ -118,8 +126,8 @@
 }
 
 .mui-theme .pf-v6-c-action-list__item .pf-v6-c-button {
-  --pf-v6-c-button--PaddingInlineStart: none;
-  --pf-v6-c-button--PaddingInlineEnd: none;
+  --pf-v6-c-button--PaddingInlineStart: 0;
+  --pf-v6-c-button--PaddingInlineEnd: 0;
 }
 
 .mui-theme .pf-v6-c-alert {
@@ -302,7 +310,7 @@
     left: 0;
   }
 
-  .mui-theme .pf-v6-c-form-control {
+  .pf-v6-c-form-control {
     // Override default form control padding to match button padding in this context
     --pf-v6-c-form-control--PaddingBlockStart: var(--mui-spacing-8px);
     --pf-v6-c-form-control--PaddingBlockEnd: var(--mui-spacing-8px);
@@ -316,7 +324,7 @@
   }
 }
 
-.mui-theme .pf-v6-c-form-control::after {
+.mui-theme .pf-v6-c-form-control::after, .mui-theme .pf-v6-c-form-control::before {
   border: none;
 }
 
@@ -398,7 +406,7 @@
 }
 
 .mui-theme .pf-v6-c-text-input-group__text-input:focus {
-  --pf-v6-c-form-control--OutlineOffset: none;
+  --pf-v6-c-form-control--OutlineOffset: 0;
   outline: none;
 }
 
@@ -530,8 +538,8 @@
 .tr-fieldset-wrapper .pf-v6-c-form-control,
 .toolbar-fieldset-wrapper .pf-v6-c-form-control,
 .form-fieldset-wrapper .pf-v6-c-form-control {
-  --pf-v6-c-form-control--before--BorderColor: transparent;
-  --pf-v6-c-form-control--after--BorderColor: transparent;
+  --pf-v6-c-form-control--before--BorderColor: none;
+  --pf-v6-c-form-control--after--BorderColor: none;
 }
 
 .mui-theme .pf-v6-c-form__field-group-body {
@@ -583,10 +591,10 @@
 .mui-theme .pf-v6-c-menu {
   --pf-v6-c-menu--BoxShadow: var(--mui-shadows-8);
   --pf-v6-c-menu--BorderRadius: var(--mui-shape-borderRadius);
-  --pf-v6-c-menu--PaddingBlockStart: none;
-  --pf-v6-c-menu--PaddingBlockEnd: none;
-  --pf-v6-c-menu--PaddingInlineStart: none;
-  --pf-v6-c-menu--PaddingInlineEnd: none;
+  --pf-v6-c-menu--PaddingBlockStart: 0;
+  --pf-v6-c-menu--PaddingBlockEnd: 0;
+  --pf-v6-c-menu--PaddingInlineStart: 0;
+  --pf-v6-c-menu--PaddingInlineEnd: 0;
   --pf-v6-c-menu__item--PaddingBlockStart: var(--mui-menu__item--PaddingBlockStart);
   --pf-v6-c-menu__item--PaddingBlockEnd: var(--mui-menu__item--PaddingBlockEnd);
   --pf-v6-c-menu__item--PaddingInlineStart: var(--mui-menu__item--PaddingInlineStart);
@@ -594,12 +602,15 @@
   --pf-v6-c-menu__item--FontSize: var(--mui-menu__item--FontSize);
 }
 
-.mui-theme .pf-v6-c-menu__item.pf-m-selected {
-  --pf-v6-c-menu__item--BackgroundColor: var(--mui-menu__item--selected--BackgroundColor);
-}
 
-.mui-theme .pf-v6-c-menu__item-select-icon {
-  display: none;
+.mui-theme .pf-v6-c-menu__item {
+  &.pf-m-selected {
+    --pf-v6-c-menu__item--BackgroundColor: var(--mui-menu__item--selected--BackgroundColor);
+
+    .pf-v6-c-menu__item-select-icon {
+      visibility: hidden;
+    }
+  }
 }
 
 .mui-theme .pf-v6-c-menu-toggle {
@@ -695,7 +706,7 @@
   --pf-v6-c-menu-toggle--expanded--Color: var(--mui-palette-primary-dark);
 }
 
-.mui-theme.pf-v6-c-menu-toggle.pf-m-secondary.pf-m-split-button {
+.mui-theme .pf-v6-c-menu-toggle.pf-m-secondary.pf-m-split-button {
   --pf-v6-c-menu-toggle--BorderColor: var(--mui-palette-primary-main);
   --pf-v6-c-menu-toggle--BorderWidth: var(--mui-button--BorderWidth);
   --pf-v6-c-menu-toggle--BorderStyle: solid;
@@ -703,8 +714,8 @@
 }
 
 .mui-theme .pf-v6-c-menu-toggle__button:has(.pf-v6-c-menu-toggle__toggle-icon) {
-  --pf-v6-c-menu-toggle--PaddingBlockStart: var(--mui-spacing-4);
-  --pf-v6-c-menu-toggle--PaddingBlockEnd: var(--mui-spacing-4);
+  --pf-v6-c-menu-toggle--PaddingBlockStart: var(--mui-spacing-4px);
+  --pf-v6-c-menu-toggle--PaddingBlockEnd: var(--mui-spacing-4px);
   --pf-v6-c-menu-toggle--PaddingInlineStart: var(--mui-menu-toggle--PaddingInlineStart);
   --pf-v6-c-menu-toggle--PaddingInlineEnd: var(--mui-menu-toggle--PaddingInlineEnd);
 }
@@ -758,7 +769,7 @@
 }
 
 .mui-theme .pf-v6-c-nav__list {
-  row-gap: none;
+  row-gap: 0;
 }
 
 .mui-theme .pf-v6-radio {
@@ -981,7 +992,7 @@ left: 0;
   --pf-v6-c-tabs__link--hover--BackgroundColor: var(--mui-tabs__link--hover--BackgroundColor);
   --pf-v6-c-tabs__item--PaddingBlockStart: var(--mui-tabs__item--PaddingBlockStart);
   --pf-v6-c-tabs__item--PaddingBlockEnd: var(--mui-tabs__item--PaddingBlockEnd);
-  --pf-v6-c-tabs__item--PaddingInlineStart: none;
+  --pf-v6-c-tabs__item--PaddingInlineStart: 0;
   --pf-v6-c-tabs__item--PaddingInlineEnd: var(--mui-tabs__item--PaddingInlineEnd);
   --pf-v6-c-tabs__link--PaddingBlockStart: var(--mui-tabs__link--PaddingBlockStart);
   --pf-v6-c-tabs__link--PaddingBlockEnd: var(--mui-tabs__link--PaddingBlockEnd);
@@ -1152,8 +1163,8 @@ left: 0;
 }
 
 .mui-theme .pf-v6-c-pagination__page-menu .pf-v6-c-menu-toggle {
-  --pf-v6-c-menu-toggle--expanded--BackgroundColor: none;
-  --pf-v6-c-menu-toggle--hover--BackgroundColor: none;
+  --pf-v6-c-menu-toggle--expanded--BackgroundColor: transparent;
+  --pf-v6-c-menu-toggle--hover--BackgroundColor: transparent;
   text-transform: none;
 }
 
@@ -1176,7 +1187,7 @@ left: 0;
 .mui-theme .pf-v6-l-stack .pf-v6-c-card.pf-m-expanded:hover,
 .mui-theme .pf-v6-l-stack__item .pf-v6-c-card.pf-m-expanded:hover,
 .mui-theme .pf-v6-l-stack__item .pf-v6-c-card:hover {
-  --pf-v6-c-card--BackgroundColor: none;
+  --pf-v6-c-card--BackgroundColor: transparent;
   --pf-v6-c-card--BorderColor: var(--mui-palette-grey-400);
   background-color: inherit;
 }
@@ -1278,10 +1289,6 @@ left: 0;
 }
 
 
-.mui-theme .pf-v6-c-menu__item.pf-m-selected {
-  --pf-v6-c-menu__item--BackgroundColor: var(--mui-menu__item--selected--BackgroundColor);
-}
-
 .mui-theme .toolbar-fieldset-wrapper:focus-within .form-fieldset,
 .mui-theme .tr-fieldset-wrapper:focus-within .form-fieldset {
   border-color: var(--mui-palette-primary-main);
@@ -1352,20 +1359,6 @@ left: 0;
   color: var(--pf-t--color--black);
 }
 
-
-.mui-theme .pf-v6-c-menu__item {
-  &.pf-m-selected {
-    --pf-v6-c-menu__item--BackgroundColor: rgba(
-      var(--mui-palette-primary-mainChannel, 25 118 210) /
-        var(--mui-palette-action-selectedOpacity, 0.08)
-    );
-    --pf-v6-c-menu__item--FontWeight: var(--mui-button-font-weight);
-
-    .pf-v6-c-menu__item-select-icon {
-      visibility: hidden;
-    }
-  }
-}
 
 .mui-theme button.pf-v6-c-menu-toggle {
   // Use box-shadow to create a border effect without affecting the layout
