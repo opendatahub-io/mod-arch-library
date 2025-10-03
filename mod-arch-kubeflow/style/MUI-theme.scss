@@ -202,6 +202,10 @@
   --pf-v6-c-card--BorderColor: var(--mui-palette-divider);
 }
 
+.pf-v6-c-card.pf-m-compact.pf-m-selectable {
+  border: 1px solid var(--mui-palette-divider);
+}
+
 .mui-theme .pf-v6-c-card__selectable-actions
   :is(.pf-v6-c-check__label, .pf-v6-c-radio__label, .pf-v6-c-card__clickable-action):hover {
   --pf-v6-c-card--BorderColor: var(--mui-palette-grey-300);
@@ -324,9 +328,9 @@
   }
 }
 
-// Remove borders on form controls, except within file upload details
-.mui-theme .pf-v6-c-form-control:not(.pf-v6-c-file-upload__file-details .pf-v6-c-form-control)::after,
-.mui-theme .pf-v6-c-form-control:not(.pf-v6-c-file-upload__file-details .pf-v6-c-form-control)::before {
+// Remove borders on form controls, except within file upload details and modal boxes
+.mui-theme .pf-v6-c-form-control:not(.pf-v6-c-file-upload__file-details .pf-v6-c-form-control):not(.pf-v6-c-modal-box__body .pf-v6-c-form-control)::after,
+.mui-theme .pf-v6-c-form-control:not(.pf-v6-c-file-upload__file-details .pf-v6-c-form-control):not(.pf-v6-c-modal-box__body .pf-v6-c-form-control)::before {
   border: none;
 }
 
