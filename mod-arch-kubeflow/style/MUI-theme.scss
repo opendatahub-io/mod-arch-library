@@ -207,19 +207,19 @@
   --pf-v6-c-card--BorderColor: var(--mui-palette-grey-300);
 }
 
-.mui-theme .pf-v6-c-card:hover {
+.mui-theme .pf-v6-c-card.pf-m-selectable:hover {
   --pf-v6-c-card--BackgroundColor: var(--mui-palette-grey-100);
   --pf-v6-c-card--BorderColor: var(--mui-palette-grey-200);
 }
 
 .mui-theme .pf-v6-c-card.pf-m-selected {
   --pf-v6-c-card--BackgroundColor: var(--mui-palette-grey-200);
-  --pf-v6-c-card--m-selectable--m-selected--BorderColor: none;
+  --pf-v6-c-card--m-selectable--m-selected--BorderColor: var(--mui-palette-divider);
 }
 
 .mui-theme .pf-v6-c-card.pf-m-selected:hover {
   --pf-v6-c-card--BackgroundColor: var(--mui-palette-grey-300);
-  --pf-v6-c-card--m-selectable--m-selected--BorderColor: none;
+  --pf-v6-c-card--m-selectable--m-selected--BorderColor: var(--mui-palette-divider);
 }
 
 .mui-theme .pf-v6-c-description-list__term {
@@ -324,7 +324,9 @@
   }
 }
 
-.mui-theme .pf-v6-c-form-control::after, .mui-theme .pf-v6-c-form-control::before {
+// Remove borders on form controls, except within file upload details
+.mui-theme .pf-v6-c-form-control:not(.pf-v6-c-file-upload__file-details .pf-v6-c-form-control)::after,
+.mui-theme .pf-v6-c-form-control:not(.pf-v6-c-file-upload__file-details .pf-v6-c-form-control)::before {
   border: none;
 }
 
@@ -538,8 +540,8 @@
 .tr-fieldset-wrapper .pf-v6-c-form-control,
 .toolbar-fieldset-wrapper .pf-v6-c-form-control,
 .form-fieldset-wrapper .pf-v6-c-form-control {
-  --pf-v6-c-form-control--before--BorderColor: none;
-  --pf-v6-c-form-control--after--BorderColor: none;
+  --pf-v6-c-form-control--before--BorderColor: transparent;
+  --pf-v6-c-form-control--after--BorderColor: transparent;
 }
 
 .mui-theme .pf-v6-c-form__field-group-body {
@@ -1183,15 +1185,6 @@ left: 0;
   box-shadow: none;
 }
 
-/* Remove hover background color on cards in stack layouts */
-.mui-theme .pf-v6-l-stack .pf-v6-c-card.pf-m-expanded:hover,
-.mui-theme .pf-v6-l-stack__item .pf-v6-c-card.pf-m-expanded:hover,
-.mui-theme .pf-v6-l-stack__item .pf-v6-c-card:hover {
-  --pf-v6-c-card--BackgroundColor: transparent;
-  --pf-v6-c-card--BorderColor: var(--mui-palette-grey-400);
-  background-color: inherit;
-}
-
 .mui-theme .pf-v6-c-pagination__page-menu {
   display: flex;
   align-items: center;
@@ -1224,7 +1217,7 @@ left: 0;
   }
 
   .mui-theme .pf-v6-c-page__main-container {
-    margin: none;
+    margin: 0;
   }
 }
 
