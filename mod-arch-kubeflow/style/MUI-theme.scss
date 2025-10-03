@@ -2,7 +2,7 @@
   // Alert
   --mui-alert--BoxShadow: none;
   --mui-alert-warning-text: #663c00;
-  --mui-alert-warning-font-weight: 400;
+  --mui-alert-warning-FontWeight: 400;
   --mui-alert--PaddingBlockStart: 6px;
   --mui-alert--PaddingBlockEnd: 6px;
   --mui-alert--PaddingInlineStart: 16px;
@@ -17,7 +17,7 @@
   --mui-backdrop-BackgroundColor: rgba(0, 0, 0, 0.5);
 
   // Button
-  --mui-button-font-weight: 500;
+  --mui-button-FontWeight: 500;
   --mui-button--BorderWidth: 1px;
   --mui-button--hover--BorderWidth: 1px;
   --mui-button--PaddingBlockStart: 6px;
@@ -163,7 +163,7 @@
 }
 
 .mui-theme .pf-v6-c-button {
-  --pf-v6-c-button--FontWeight: var(--mui-button-font-weight);
+  --pf-v6-c-button--FontWeight: var(--mui-button-FontWeight);
   --pf-v6-c-button--PaddingBlockStart: var(--mui-button--PaddingBlockStart);
   --pf-v6-c-button--PaddingBlockEnd: var(--mui-button--PaddingBlockEnd);
   --pf-v6-c-button--PaddingInlineStart: var(--mui-button--PaddingInlineStart);
@@ -638,7 +638,7 @@
     --mui-palette-primary-dark
   );
 
-  font-weight: var(--mui-button-font-weight);
+  font-weight: var(--mui-button-FontWeight);
   letter-spacing: 0.02857em;
   height: 37px;
 
@@ -678,7 +678,7 @@
 }
 
 .mui-theme .pf-v6-c-menu-toggle__button {
-  font-weight: var(--mui-button-font-weight);
+  font-weight: var(--mui-button-FontWeight);
   letter-spacing: 0.02857em;
   align-self: stretch;
 }
@@ -699,13 +699,6 @@
   --pf-v6-c-menu-toggle--m-split-button--m-action--m-primary--child--BackgroundColor: var(
     --mui-palette-primary-dark
   );
-}
-
-.mui-theme .pf-v6-c-menu-toggle.pf-m-secondary.pf-m-split-button {
-  --pf-v6-c-menu-toggle--BorderColor: var(--mui-palette-primary-main);
-  --pf-v6-c-menu-toggle--BorderWidth: var(--mui-button--BorderWidth);
-  --pf-v6-c-menu-toggle--BorderStyle: solid;
-  --pf-v6-c-menu-toggle--expanded--Color: var(--mui-palette-primary-dark);
 }
 
 .mui-theme .pf-v6-c-menu-toggle.pf-m-secondary.pf-m-split-button {
