@@ -293,6 +293,7 @@
 // Base form label styles
 .mui-theme .pf-v6-c-form__label {
   position: relative;
+  // TODO: Investigate using a fixed value or transform/rem for consistent positioning.
   top: 78%;
   left: 12px;
   font-size: 12px;
@@ -648,8 +649,8 @@
 
 }
 
-// Apply the menu toggle styling to all except split button variant
-.mui-theme .pf-v6-c-menu-toggle:not(.pf-m-split-button) {
+// Apply the menu toggle styling to all except split button and primary variants
+.mui-theme .pf-v6-c-menu-toggle:not(.pf-m-split-button):not(.pf-m-primary):not(.pf-m-plain) {
   position: relative;
   box-sizing: border-box;
   border: 1px solid rgba(0, 0, 0, 0.23);
@@ -685,6 +686,9 @@
   font-weight: var(--mui-button-FontWeight);
   letter-spacing: 0.02857em;
   align-self: stretch;
+  white-space: nowrap;
+  min-width: fit-content;
+  flex-shrink: 0;
 }
 
 .mui-theme .pf-v6-c-menu-toggle.pf-m-primary {
