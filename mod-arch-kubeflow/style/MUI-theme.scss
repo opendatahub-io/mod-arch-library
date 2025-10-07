@@ -39,7 +39,7 @@
   --mui-menu__item--PaddingInlineStart: 16px;
   --mui-menu__item--PaddingInlineEnd: 16px;
   --mui-menu__item--FontSize: 1rem;
-  +  --mui-menu__item--selected--BackgroundColor: rgb(var(--mui-palette-primary-mainChannel) / calc(var(--mui-palette-action-selectedOpacity, 0.08)));
+  --mui-menu__item--selected--BackgroundColor: rgb(var(--mui-palette-primary-mainChannel) / calc(var(--mui-palette-action-selectedOpacity, 0.08)));
 
 
   // Menu toggle
@@ -740,7 +740,6 @@
 .mui-theme .pf-v6-c-nav {
   padding-block-start: 0;
 }
-
 
 .mui-theme .pf-v6-c-nav__link.pf-m-current {
   border-left: 3px solid var(--mui-palette-common-white);
