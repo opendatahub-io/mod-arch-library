@@ -1160,10 +1160,9 @@ left: 0;
   outline: none;
 }
 
-.mui-theme .pf-v6-c-pagination__page-menu .pf-v6-c-menu-toggle:focus,
-.mui-theme .pf-v6-c-pagination__page-menu .pf-v6-c-menu-toggle:focus-within {
-  outline: none;
-  box-shadow: none;
+.mui-theme .pf-v6-c-pagination__page-menu .pf-v6-c-menu-toggle:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--mui-palette-primary-main);
 }
 
 .mui-theme .pf-v6-c-pagination__page-menu {
