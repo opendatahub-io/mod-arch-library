@@ -39,13 +39,14 @@
   --mui-menu__item--PaddingInlineStart: 16px;
   --mui-menu__item--PaddingInlineEnd: 16px;
   --mui-menu__item--FontSize: 1rem;
-  --mui-menu__item--selected--BackgroundColor: rgba(25, 118, 210, 0.08);
+  --mui-menu__item--selected--BackgroundColor: rgb(var(--mui-palette-primary-mainChannel) / calc(var(--mui-palette-action-selectedOpacity, 0.08)));
+
 
   // Menu toggle
   --mui-menu-toggle__toggle-icon--MinHeight: auto;
   --mui-menu-toggle__controls--MinWidth: 0;
-  --mui-menu-toggle--expanded--BackgroundColor: none;
-  --mui-menu-toggle--expanded--BorderColor: none;
+  --mui-menu-toggle--expanded--BackgroundColor: transparent;
+  --mui-menu-toggle--expanded--BorderColor: transparent;
   --mui-menu-toggle--LineHeight: 1.75;
   --mui-menu-toggle--PaddingBlockStart: 6px;
   --mui-menu-toggle--PaddingBlockEnd: 6px;
@@ -53,8 +54,8 @@
   --mui-menu-toggle--PaddingInlineEnd: 16px;
   --mui-menu-toggle--ColumnGap: 0;
   --mui-menu-toggle--expanded--Color: black;
-  --mui-menu-toggle--hover--BorderColor: none;
-  --mui-menu-toggle--BorderColor: none;
+  --mui-menu-toggle--hover--BorderColor: transparent;
+  --mui-menu-toggle--BorderColor: transparent;
   --mui-menu-toggle--PaddingInlineStart: 10px;
   --mui-menu-toggle--PaddingInlineEnd: 10px;
 
@@ -70,11 +71,11 @@
   --kf-central-primary-background-color: #0a3b71;
   --kf-central-sidebar-default-color: rgba(255, 255, 255, 0.7);
   --kf-central-app-drawer-width: 240px;
-  --kf-central-app-bar-height: 24px;
+  --kf-central-app-bar-height: 64px;
 
   // Table
-  --mui-table__button--BackgroundColor: none;
-  --mui-table__button--hover--BackgroundColor: none;
+  --mui-table__button--BackgroundColor: transparent;
+  --mui-table__button--hover--BackgroundColor: transparent;
   --mui-table__button--Color: var(--pf-v6-c-table--cell--Color);
   --mui-table__button--PaddingBlockStart: 0;
   --mui-table__button--PaddingBlockEnd: 0;
@@ -84,7 +85,7 @@
   --mui-table--cell--PaddingInlineEnd: 16px;
   --mui-table--cell--PaddingBlockStart: 16px;
   --mui-table--cell--PaddingBlockEnd: 16px;
-  --mui-table--cell--first-last-child--PaddingInline: 0px;
+  --mui-table--cell--first-last-child--PaddingInline: 8px;
   --mui-table__thead--cell--FontSize: 14px;
   --mui-table__sort-indicator--MarginInlineStart: 4px;
 
@@ -104,15 +105,16 @@
   --mui-tabs__item--m-current__link--after--BorderWidth: 2px;
   --mui-tabs__link--FontSize: 0.875rem;
 
+  --mui-text-transform: uppercase;
+
   --mui-spacing-4px: calc(0.5 * var(--mui-spacing));
   --mui-spacing-8px: var(--mui-spacing);
-  --mui-spacing-12px: calc(1.5 * var(--mui-spacing));
   --mui-spacing-16px: calc(2 * var(--mui-spacing));
+  --mui-spacing-32px: calc(4 * var(--mui-spacing));
 
   --pf-t--global--spacer--gap--group-to-group--vertical--default: var(--pf-t--global--spacer--sm);
   --pf-t--global--border--width--box--status--default: 1px;
   --pf-t--global--border--radius--pill: var(--mui-shape-borderRadius);
-  --pf-t--global--border--radius--medium: var(--mui-shape-borderRadius);
   --pf-t--global--text--color--brand--default: var(--mui-palette-primary-main);
 
   --pf-t--global--color--nonstatus--blue--default: var(--mui-palette-primary-main);
@@ -126,7 +128,6 @@
 .mui-theme .pf-v6-c-action-list__item .pf-v6-c-button {
   --pf-v6-c-button--PaddingInlineStart: 0;
   --pf-v6-c-button--PaddingInlineEnd: 0;
-  border-radius: var(--mui-shape-borderRadius);
 }
 
 .mui-theme .pf-v6-c-alert {
@@ -142,6 +143,7 @@
   --pf-v6-c-alert--PaddingBlockEnd: var(--mui-alert--PaddingBlockEnd);
   --pf-v6-c-alert--PaddingInlineStart: var(--mui-alert--PaddingInlineStart);
   --pf-v6-c-alert--PaddingInlineEnd: var(--mui-alert--PaddingInlineEnd);
+  margin-bottom: 16px;
 }
 
 .mui-theme .pf-v6-c-alert__title {
@@ -167,7 +169,6 @@
   --pf-v6-c-button--PaddingInlineStart: var(--mui-button--PaddingInlineStart);
   --pf-v6-c-button--PaddingInlineEnd: var(--mui-button--PaddingInlineEnd);
   --pf-v6-c-button--LineHeight: var(--mui-button--LineHeight);
-
   letter-spacing: 0.02857em;
 }
 
@@ -194,29 +195,35 @@
   --pf-v6-c-button--BackgroundColor: rgba(33, 150, 243, 0.04);
 }
 
+
 .mui-theme .pf-v6-c-card {
   --pf-v6-c-card--BorderWidth: 1px;
   --pf-v6-c-card--BorderRadius: var(--mui-shape-borderRadius);
   --pf-v6-c-card--BorderColor: var(--mui-palette-divider);
 }
 
-.mui-theme .pf-v6-c-card__selectable-actions :is(.pf-v6-c-check__label, .pf-v6-c-radio__label, .pf-v6-c-card__clickable-action):hover {
+.mui-theme .pf-v6-c-card.pf-m-compact.pf-m-selectable {
+  border: 1px solid var(--mui-palette-divider);
+}
+
+.mui-theme .pf-v6-c-card__selectable-actions
+  :is(.pf-v6-c-check__label, .pf-v6-c-radio__label, .pf-v6-c-card__clickable-action):hover {
   --pf-v6-c-card--BorderColor: var(--mui-palette-grey-300);
 }
 
-.mui-theme .pf-v6-c-card:hover {
+.mui-theme .pf-v6-c-card.pf-m-selectable:hover {
   --pf-v6-c-card--BackgroundColor: var(--mui-palette-grey-100);
   --pf-v6-c-card--BorderColor: var(--mui-palette-grey-200);
 }
 
 .mui-theme .pf-v6-c-card.pf-m-selected {
   --pf-v6-c-card--BackgroundColor: var(--mui-palette-grey-200);
-  --pf-v6-c-card--m-selectable--m-selected--BorderColor: transparent;
+  --pf-v6-c-card--m-selectable--m-selected--BorderColor: var(--mui-palette-divider);
 }
 
 .mui-theme .pf-v6-c-card.pf-m-selected:hover {
   --pf-v6-c-card--BackgroundColor: var(--mui-palette-grey-300);
-  --pf-v6-c-card--m-selectable--m-selected--BorderColor: transparent;
+  --pf-v6-c-card--m-selectable--m-selected--BorderColor: var(--mui-palette-divider);
 }
 
 .mui-theme .pf-v6-c-description-list__term {
@@ -231,6 +238,16 @@
   --pf-v6-c-drawer--m-inline--m-expanded__panel--after--BackgroundColor: var(
     --mui-drawer-BorderLeft
   );
+}
+
+.mui-theme .pf-v6-c-drawer.pf-m-inline.pf-m-expanded {
+  --pf-v6-c-drawer--m-inline--m-expanded__panel--MarginInlineStart: var(--mui-spacing-16px);
+}
+
+// Add spacing between main content and drawer when drawer is open
+.mui-theme .pf-v6-c-page__main-container:has(+ .pf-v6-c-drawer.pf-m-expanded),
+.mui-theme .pf-v6-c-page__main-container.pf-m-drawer-expanded {
+  margin-right: var(--mui-spacing-16px);
 }
 
 .mui-theme .pf-v6-c-form {
@@ -254,6 +271,10 @@
   color: var(--mui-palette-error-main);
 }
 
+.mui-theme .pf-v6-c-form__label-required {
+  color: var(--mui-palette-grey-600);
+}
+
 .mui-theme .pf-v6-c-form__helper-text.path-helper-text {
   margin-inline-start: var(--pf-t--global--spacer--lg);
 }
@@ -271,19 +292,14 @@
 
 // Base form label styles
 .mui-theme .pf-v6-c-form__label {
+  position: relative;
+    // TODO: Investigate using a fixed value or transform/rem for consistent positioning.
+  top: 78%;
+  left: 12px;
+  font-size: 12px;
   color: var(--mui-palette-grey-600);
   pointer-events: none;
   transition: all 0.2s ease;
-  --pf-v6-c-form__label-required--Color: currentColor;
-}
-
-// Text input labels (text fields, textareas, selects)
-.mui-theme .pf-v6-c-form__group:has(.pf-v6-c-form-control) .pf-v6-c-form__label,
-.mui-theme .pf-v6-c-form__group:has(.pf-v6-c-text-input-group) .pf-v6-c-form__label {
-  position: absolute;
-  top: 35%;
-  left: 12px;
-  font-size: 14px;
   transform-origin: left center;
   transform: translateY(-50%) scale(0.75);
   background-color: var(--mui-palette-common-white);
@@ -313,8 +329,22 @@
   }
 }
 
+// Remove borders on form controls, except within file upload details and modal boxes
+.mui-theme .pf-v6-c-form-control:not(.pf-v6-c-file-upload__file-details .pf-v6-c-form-control):not(.pf-v6-c-modal-box__body .pf-v6-c-form-control)::after,
+.mui-theme .pf-v6-c-form-control:not(.pf-v6-c-file-upload__file-details .pf-v6-c-form-control):not(.pf-v6-c-modal-box__body .pf-v6-c-form-control)::before {
+  border: none;
+}
+
 .mui-theme .pf-v6-c-form-control input::placeholder {
   --pf-v6-c-form-control--m-placeholder--Color: var(--mui-palette-grey-600);
+}
+
+// Fix padding on footer action menu buttons
+.mui-theme .pf-v6-c-action-list .pf-v6-c-button {
+  --pf-v6-c-button--PaddingBlockStart: var(--mui-button--PaddingBlockStart);
+  --pf-v6-c-button--PaddingBlockEnd: var(--mui-button--PaddingBlockEnd);
+  --pf-v6-c-button--PaddingInlineStart: var(--mui-button--PaddingInlineStart);
+  --pf-v6-c-button--PaddingInlineEnd: var(--mui-button--PaddingInlineEnd);
 }
 
 .mui-theme .pf-v6-c-form-control {
@@ -324,6 +354,7 @@
   --pf-v6-c-form-control--m-error--hover--after--BorderColor: var(--mui-palette-error-main);
 }
 
+// Consistent form control padding for all inputs except file upload components
 .mui-theme .pf-v6-c-form-control {
   // Resize is disabled in MUI.
   resize: none;
@@ -340,22 +371,8 @@
   --pf-v6-c-form__section--Gap: 0px;
 }
 
-.mui-theme .toolbar-fieldset-wrapper .pf-v6-c-form-control input {
-  padding: 8px 14px;
-}
-
 .mui-theme .tr-fieldset-wrapper .form-fieldset {
   inset: 0px;
-}
-
-.mui-theme .pf-v6-c-form-control {
-  // Using CSS property here since PF vars for input padding do not exist.
-  // PF can add custom vars for padding on text input, text area, and form select
-
-  --pf-v6-c-form-control--PaddingBlockStart: 16.5px;
-  --pf-v6-c-form-control--PaddingBlockEnd: 16.5px;
-  --pf-v6-c-form-control--PaddingInlineStart: 14px;
-  --pf-v6-c-form-control--PaddingInlineEnd: 14px;
 }
 
 .mui-theme .pf-v6-c-text-input-group::before {
@@ -365,7 +382,7 @@
 .mui-theme .pf-v6-c-text-input-group {
   --pf-v6-c-text-input-group__text-input--PaddingBlockStart: 16.5px;
   --pf-v6-c-text-input-group__text-input--PaddingInlineStart: 32px;
-  --pf-v6-c-text-input-group__text-input--PaddingBlockEnd: 14px;
+  --pf-v6-c-text-input-group__text-input--PaddingBlockEnd: 16.5px;
   --pf-v6-c-text-input-group__text-input--PaddingInlineEnd: 14px;
 }
 
@@ -373,10 +390,6 @@
   --pf-v6-c-text-input-group__icon--Color: rgba(0, 0, 0, 0.38);
 }
 
-.mui-theme .pf-v6-c-form__group-control textarea {
-  position: relative;
-  box-sizing: border-box;
-}
 
 .mui-theme .pf-v6-c-form-control > :is(input, select, textarea):focus {
   --pf-v6-c-form-control--OutlineOffset: 0;
@@ -400,7 +413,7 @@
 }
 
 .mui-theme .pf-v6-c-text-input-group__text-input:focus {
-  --pf-v6-c-form-control--OutlineOffset: none;
+  --pf-v6-c-form-control--OutlineOffset: 0;
   outline: none;
 }
 
@@ -409,7 +422,7 @@
   width: 100%;
 }
 
-.pf-v6-c-form__group .form-fieldset-legend {
+.mui-theme .pf-v6-c-form__group .form-fieldset-legend {
   float: unset;
   width: auto;
   overflow: hidden;
@@ -492,7 +505,7 @@
 .form-fieldset {
   text-align: left;
   position: absolute;
-  inset: -5px 0px 0px;
+  inset: -7px 0px 0px;
   margin: 0;
   padding: 0 8px;
   pointer-events: none;
@@ -532,25 +545,25 @@
 .tr-fieldset-wrapper .pf-v6-c-form-control,
 .toolbar-fieldset-wrapper .pf-v6-c-form-control,
 .form-fieldset-wrapper .pf-v6-c-form-control {
-  --pf-v6-c-form-control--before--BorderColor: transparent !important;
-  --pf-v6-c-form-control--after--BorderColor: transparent !important;
+  --pf-v6-c-form-control--before--BorderColor: transparent;
+  --pf-v6-c-form-control--after--BorderColor: transparent;
 }
 
-.pf-v6-c-form__field-group-body {
+.mui-theme .pf-v6-c-form__field-group-body {
   --pf-v6-c-form__field-group-body--PaddingBlockStart: 8px;
 }
 
-.pf-v6-c-form__group .pf-v6-c-form-control:focus-within + .pf-v6-c-form__label,
-.pf-v6-c-form__group .pf-v6-c-form-control:not(:placeholder-shown) + .pf-v6-c-form__label {
+.mui-theme .pf-v6-c-form__group .pf-v6-c-form-control:focus-within + .pf-v6-c-form__label,
+.mui-theme .pf-v6-c-form__group .pf-v6-c-form-control:not(:placeholder-shown) + .pf-v6-c-form__label {
   color: var(--mui-palette-primary-main);
 }
 
-.pf-v6-c-form__group:focus-within .pf-v6-c-form-control {
+.mui-theme .pf-v6-c-form__group:focus-within .pf-v6-c-form-control {
   --pf-v6-c-form-control--after--BorderWidth: 2px;
   --pf-v6-c-form-control--after--BorderColor: var(--mui-palette-primary-main);
 }
 
-.pf-v6-c-form-control.pf-m-error {
+.mui-theme .pf-v6-c-form-control.pf-m-error {
   --pf-v6-c-form-control--after--BorderColor: var(--mui-palette-error-main);
 }
 
@@ -565,7 +578,7 @@
   margin-top: 3px;
 }
 
-.pf-v6-c-form__group.pf-m-error .pf-v6-c-form__label {
+.mui-theme .pf-v6-c-form__group.pf-m-error .pf-v6-c-form__label {
   // Using CSS property here since --pf-v6-c-form__label--Color does not exist.
 
   color: var(--mui-palette-error-main);
@@ -585,15 +598,26 @@
 .mui-theme .pf-v6-c-menu {
   --pf-v6-c-menu--BoxShadow: var(--mui-shadows-8);
   --pf-v6-c-menu--BorderRadius: var(--mui-shape-borderRadius);
-  --pf-v6-c-menu--PaddingBlockStart: var(--mui-spacing);
-  --pf-v6-c-menu--PaddingBlockEnd: var(--mui-spacing);
-  --pf-v6-c-menu--PaddingInlineStart: var(--mui-spacing);
-  --pf-v6-c-menu--PaddingInlineEnd: var(--mui-spacing);
+  --pf-v6-c-menu--PaddingBlockStart: 0;
+  --pf-v6-c-menu--PaddingBlockEnd: 0;
+  --pf-v6-c-menu--PaddingInlineStart: 0;
+  --pf-v6-c-menu--PaddingInlineEnd: 0;
   --pf-v6-c-menu__item--PaddingBlockStart: var(--mui-menu__item--PaddingBlockStart);
   --pf-v6-c-menu__item--PaddingBlockEnd: var(--mui-menu__item--PaddingBlockEnd);
   --pf-v6-c-menu__item--PaddingInlineStart: var(--mui-menu__item--PaddingInlineStart);
   --pf-v6-c-menu__item--PaddingInlineEnd: var(--mui-menu__item--PaddingInlineEnd);
   --pf-v6-c-menu__item--FontSize: var(--mui-menu__item--FontSize);
+}
+
+
+.mui-theme .pf-v6-c-menu__item {
+  &.pf-m-selected {
+    --pf-v6-c-menu__item--BackgroundColor: var(--mui-menu__item--selected--BackgroundColor);
+
+    .pf-v6-c-menu__item-select-icon {
+      visibility: hidden;
+    }
+  }
 }
 
 .mui-theme .pf-v6-c-menu-toggle {
@@ -625,6 +649,39 @@
 
 }
 
+// Apply the menu toggle styling to all except split button variant
+.mui-theme .pf-v6-c-menu-toggle:not(.pf-m-split-button) {
+  position: relative;
+  box-sizing: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  --pf-v6-c-menu-toggle--BackgroundColor: var(--mui-palette-common-white);
+
+  &:hover {
+    // Restore direct border color setting for hover
+    border-color: var(--mui-palette-common-black);
+  }
+
+  &:focus-within {
+    // Keep border width consistent to prevent layout shift
+    border: 1px solid var(--mui-palette-primary-main);
+    // Use box-shadow to create a thicker border while preventing layout shift
+    box-shadow: 0 0 0 1px var(--mui-palette-primary-main);
+  }
+}
+
+.mui-theme .pf-v6-c-menu-toggle.pf-m-plain {
+  // --pf-v6-c-menu-toggle--BorderRadius: 50%;
+  // Ensure plain variant doesn't get the border styling
+  border: none;
+
+  &:hover,
+  &:focus-within {
+    border: none;
+    box-shadow: none;
+    background-color: var(--pf-v6-c-menu-toggle--hover--BackgroundColor);
+  }
+}
+
 .mui-theme .pf-v6-c-menu-toggle__button {
   font-weight: var(--mui-button-FontWeight);
   letter-spacing: 0.02857em;
@@ -649,7 +706,7 @@
   );
 }
 
-.pf-v6-c-menu-toggle.pf-m-secondary.pf-m-split-button {
+.mui-theme .pf-v6-c-menu-toggle.pf-m-secondary.pf-m-split-button {
   --pf-v6-c-menu-toggle--BorderColor: var(--mui-palette-primary-main);
   --pf-v6-c-menu-toggle--BorderWidth: var(--mui-button--BorderWidth);
   --pf-v6-c-menu-toggle--BorderStyle: solid;
@@ -657,8 +714,8 @@
 }
 
 .mui-theme .pf-v6-c-menu-toggle__button:has(.pf-v6-c-menu-toggle__toggle-icon) {
-  --pf-v6-c-menu-toggle--PaddingBlockStart: var(--mui-spacing-4);
-  --pf-v6-c-menu-toggle--PaddingBlockEnd: var(--mui-spacing-4);
+  --pf-v6-c-menu-toggle--PaddingBlockStart: var(--mui-spacing-4px);
+  --pf-v6-c-menu-toggle--PaddingBlockEnd: var(--mui-spacing-4px);
   --pf-v6-c-menu-toggle--PaddingInlineStart: var(--mui-menu-toggle--PaddingInlineStart);
   --pf-v6-c-menu-toggle--PaddingInlineEnd: var(--mui-menu-toggle--PaddingInlineEnd);
 }
@@ -684,18 +741,10 @@
   padding-block-start: 0;
 }
 
-.mui-theme .pf-v6-c-nav__link {
-  --pf-v6-c-nav__link--BorderRadius: 0px;
-  --pf-v6-c-nav__link--FontSize: var(--pf-t--global--font--size--md);
-
-  &.active {
-    border-left: 3px solid var(--mui-palette-common-white);
-    --pf-v6-c-nav__link--hover--Color: var(--mui-palette-common-white);
-  }
-
-  &.pf-v6-c-brand {
-    --pf-v6-c-nav__link--hover--BackgroundColor: none;
-  }
+.mui-theme .pf-v6-c-nav__link.pf-m-current {
+  border-left: 3px solid var(--mui-palette-common-white);
+  background-color: #ffffff1b;
+  color: var(--mui-palette-common-white);
 }
 
 .mui-theme .pf-v6-c-nav__link:focus {
@@ -703,7 +752,7 @@
 }
 
 .mui-theme .pf-v6-c-nav__list {
-  row-gap: none;
+  row-gap: 0;
 }
 
 .mui-theme .pf-v6-radio {
@@ -729,9 +778,17 @@
   user-select: none;
 }
 
+// Hide radio button elements when they're inside cards (for card selection)
+.mui-theme .pf-v6-c-card .pf-v6-c-radio__label::before, 
+.mui-theme .pf-v6-c-card .pf-v6-c-radio__label::after {
+  display: none;
+}
+
+
 /* Custom radio circle */
 .mui-theme .pf-v6-c-radio__label:not(.pf-v6-c-card .pf-v6-c-radio__label)::before {
   content: '';
+  display: block;
   position: absolute;
   left: 0;
   top: 50%;
@@ -781,7 +838,6 @@
 
 .mui-theme .pf-v6-c-page__sidebar {
 position: fixed;
---pf-v6-c-page__sidebar--Width: var(--kf-central-app-drawer-width);
 --pf-v6-c-page__sidebar--BackgroundColor: var(--kf-central-primary-background-color);
 height: 100vh;
 z-index: 1200;
@@ -813,6 +869,7 @@ left: 0;
 /* Inner dot for checked state */
 .mui-theme .pf-v6-c-radio__input:not(.pf-v6-c-card .pf-v6-c-radio__input):checked + .pf-v6-c-radio__label::after {
   content: '';
+  display: block;
   position: absolute;
   left: 5px;
   /* Center the dot */
@@ -907,7 +964,7 @@ left: 0;
   --pf-v6-c-tab-content__body--m-padding--PaddingInlineStart: var(--pf-t--global--spacer--lg);
 }
 
-.pf-v6-c-tab-content__body.pf-m-padding {
+.mui-theme .pf-v6-c-tab-content__body.pf-m-padding {
   --pf-v6-c-tab-content__body--PaddingInlineStart: 0px;
   --pf-v6-c-tab-content__body--PaddingInlineEnd: 0px;
   --pf-v6-c-tab-content__body--PaddingBlockStart: var(--mui-spacing-8px);
@@ -918,7 +975,7 @@ left: 0;
   --pf-v6-c-tabs__link--hover--BackgroundColor: var(--mui-tabs__link--hover--BackgroundColor);
   --pf-v6-c-tabs__item--PaddingBlockStart: var(--mui-tabs__item--PaddingBlockStart);
   --pf-v6-c-tabs__item--PaddingBlockEnd: var(--mui-tabs__item--PaddingBlockEnd);
-  --pf-v6-c-tabs__item--PaddingInlineStart: none;
+  --pf-v6-c-tabs__item--PaddingInlineStart: 0;
   --pf-v6-c-tabs__item--PaddingInlineEnd: var(--mui-tabs__item--PaddingInlineEnd);
   --pf-v6-c-tabs__link--PaddingBlockStart: var(--mui-tabs__link--PaddingBlockStart);
   --pf-v6-c-tabs__link--PaddingBlockEnd: var(--mui-tabs__link--PaddingBlockEnd);
@@ -952,6 +1009,10 @@ left: 0;
 .mui-theme .pf-v6-c-table__td.pf-v6-c-table__toggle .pf-v6-c-button.pf-m-plain {
   --pf-v6-c-button--PaddingInlineStart: 6px;
   --pf-v6-c-button--PaddingInlineEnd: 6px;
+}
+
+.mui-theme .pf-v6-c-toolbar__item.kubeflow-u-namespace-select>.pf-v6-c-menu-toggle.pf-m-disabled {
+  border: none;
 }
 
 .mui-theme .pf-v6-c-label {
@@ -1010,31 +1071,50 @@ left: 0;
 
 .mui-theme .pf-v6-c-page {
   --pf-v6-c-page--BackgroundColor: transparent;
-  background: linear-gradient(to right, 
-    var(--kf-central-primary-background-color) 0, 
-    var(--kf-central-primary-background-color) var(--kf-central-app-drawer-width),
-    var(--mui-palette-grey-100) var(--kf-central-app-drawer-width),
-    var(--mui-palette-grey-100) 100%);
   width: 100vw;
   min-height: 100vh;
   overflow-x: hidden;
+  --pf-v6-c-page__sidebar--Width: var(--kf-central-app-drawer-width);
+}
+
+// Error page container
+.mui-theme .error-page-container {
+  padding: var(--mui-spacing-32px);
 }
 
 .mui-theme .pf-v6-c-page__main {
-  // background-color: var(--mui-palette-grey-100);
-  // width: calc(100vw - var(--kf-central-app-drawer-width));
-  // max-width: calc(100vw - var(--kf-central-app-drawer-width));
-  // box-sizing: border-box;
+  --pf-v6-c-page__main--PaddingRight: 0;
+  overflow: visible;
+  margin-right: 2px;
+  height: calc(100vh - var(--kf-central-app-bar-height));
+  min-height: calc(100vh - var(--kf-central-app-bar-height));
+  display: flex;
+  flex-direction: column;
+}
+
+.mui-theme .pf-v6-c-page__main-section {
+  --pf-v6-c-page__main-section--PaddingRight: 0;
+  overflow: visible;
+  margin-right: 2px;
+  gap: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mui-theme .pf-v6-c-page__main-body {
+  margin-left: var(--mui-spacing-4px);
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .mui-theme .pf-v6-c-page__main-container {
-  --pf-v6-c-page__main-container--BorderWidth: 0px;
-  --pf-v6-c-page__main-container--BorderRadius: var(--mui-shape-borderRadius);
-  box-shadow: var(--mui-shadows-1);
-  margin: 0;
-  margin-top: var(--kf-central-app-bar-height);
-  margin-right: 24px;
-  padding: 8px 24px;
+  overflow: visible;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  margin-right: var(--mui-spacing-8px);
 }
 
 .mui-theme .pf-v6-c-page__main-group.pf-m-sticky-top {
@@ -1047,16 +1127,14 @@ left: 0;
   --pf-v6-c-page__main-section--PaddingInlineStart: 0px;
 }
 
-.mui-theme .pf-v6-c-page__main-section {
-  --pf-v6-c-page__main-section--PaddingBlockStart: 8px;
-  --pf-v6-c-page__main-section--PaddingBlockEnd: 8px;
-  --pf-v6-c-page__main-section--PaddingInlineStart: 0px;
-  --pf-v6-c-page__main-section--PaddingInlineEnd: 0px;
-}
 
 
 .mui-theme .pf-v6-c-pagination {
   --pf-v6-c-pagination__total-items--Display: block;
+}
+
+.mui-theme .pf-v6-c-pagination .pf-v6-c-pagination__page-menu {
+  display: flex;
 }
 
 .mui-theme .pf-v6-c-pagination__total-items b {
@@ -1068,17 +1146,36 @@ left: 0;
 }
 
 .mui-theme .pf-v6-c-pagination__page-menu .pf-v6-c-menu-toggle {
-  --pf-v6-c-menu-toggle--expanded--BackgroundColor: none;
-  --pf-v6-c-menu-toggle--hover--BackgroundColor: none;
+  --pf-v6-c-menu-toggle--expanded--BackgroundColor: transparent;
+  --pf-v6-c-menu-toggle--hover--BackgroundColor: transparent;
   text-transform: none;
+}
+
+.mui-theme .pf-v6-c-pagination__page-menu > .pf-v6-c-menu-toggle.pf-m-expanded.pf-m-plain.pf-m-text {
+  box-shadow: none;
+}
+.mui-theme .pf-v6-c-pagination__page-menu .pf-v6-c-menu-toggle__button {
+  white-space: nowrap;
+  min-width: fit-content;
+  outline: none;
+}
+
+.mui-theme .pf-v6-c-pagination__page-menu .pf-v6-c-menu-toggle:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--mui-palette-primary-main);
+}
+
+.mui-theme .pf-v6-c-pagination__page-menu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
 }
 
 .mui-theme .pf-v6-c-pagination__page-menu::before {
   content: 'Rows per page:';
+  white-space: nowrap;
 }
-
-
-
 
 
 .mui-theme .pf-v6-c-page.embedded {
@@ -1098,14 +1195,9 @@ left: 0;
     display: block;
     padding-block-start: var(--mui-spacing-4px);
   }
-  
-  .mui-theme .pf-v6-c-page__main {
-    width: 100vw;
-    max-width: 100vw;
-  }
-  
-  .mui-theme .pf-v6-c-page {
-    background: var(--mui-palette-grey-100);
+
+  .mui-theme .pf-v6-c-page__main-container {
+    margin: 0;
   }
 }
 
@@ -1113,6 +1205,10 @@ left: 0;
   .mui-theme .pf-v6-c-masthead {
     padding-left: var(--kf-central-app-drawer-width);
   }
+}
+
+.mui-theme .pf-v6-c-masthead__content {
+  padding-left: calc(3 * var(--mui-spacing-8px));
 }
 
 .mui-theme .pf-v6-c-toolbar__group.pf-m-filter-group .pf-v6-c-form-control {
@@ -1135,6 +1231,7 @@ left: 0;
   border: 1px solid rgba(0, 0, 0, 0.23);
   border-radius: var(--mui-shape-borderRadius);
   background-color: var(--mui-palette-common-white);
+  height: 54px;
 
   &:hover {
     border-color: var(--mui-palette-common-black);
@@ -1156,20 +1253,85 @@ left: 0;
   }
 }
 
+.mui-theme .pf-v6-c-toolbar__item.toolbar-fieldset-wrapper,
+.mui-theme .toolbar-fieldset-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+
+.mui-theme .toolbar-fieldset-wrapper:focus-within .form-fieldset,
+.mui-theme .tr-fieldset-wrapper:focus-within .form-fieldset {
+  border-color: var(--mui-palette-primary-main);
+}
+
+.mui-theme .pf-v6-c-toolbar .pf-v6-c-form-control,
+.mui-theme .pf-v6-c-toolbar .pf-v6-c-menu-toggle,
+.mui-theme .pf-v6-c-toolbar .pf-v6-c-button {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+.mui-theme .pf-v6-c-toolbar .pf-v6-c-form-control {
+  --pf-v6-c-form-control--PaddingBlockStart: 6px;
+  --pf-v6-c-form-control--PaddingBlockEnd: 6px;
+  --pf-v6-c-form-control--PaddingInlineStart: 12px;
+  --pf-v6-c-form-control--PaddingInlineEnd: 12px;
+}
+
+.mui-theme .pf-v6-c-toolbar .pf-v6-c-menu-toggle {
+  --pf-v6-c-menu-toggle--PaddingBlockStart: 6px;
+  --pf-v6-c-menu-toggle--PaddingBlockEnd: 6px;
+  --pf-v6-c-menu-toggle--PaddingInlineStart: 12px;
+  --pf-v6-c-menu-toggle--PaddingInlineEnd: 12px;
+}
+
+/* Only apply fixed width to filter dropdown in toolbar filter group */
+.mui-theme .pf-v6-c-toolbar__group.pf-m-filter-group .pf-v6-c-menu-toggle:not(.pf-m-split-button):not(.pf-m-plain) {
+  --pf-v6-c-menu-toggle--MinWidth: 140px;
+  min-width: 140px;
+  width: 140px;
+}
+
+.mui-theme .pf-v6-c-toolbar__group.pf-m-filter-group .pf-v6-c-menu-toggle:not(.pf-m-split-button):not(.pf-m-plain) .pf-v6-c-menu-toggle__button {
+  min-width: 140px;
+  width: 140px;
+  justify-content: flex-start;
+}
+
+// Fix hover state margin issue by removing problematic padding
+.mui-theme .pf-v6-c-menu__list {
+  --pf-v6-c-content--list--PaddingInlineStart: 0;
+}
+
+.mui-theme .pf-v6-c-expandable-section .pf-v6-c-expandable-section__content {
+  margin-block-end: var(--mui-spacing-16px);
+}
+
+.mui-theme .workspacekind-file-upload {
+  height: 100%;
+
+  .pf-v6-c-file-upload__file-details {
+    flex-grow: 1;
+  }
+}
+
+.mui-theme .pf-v6-c-file-upload {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+
 /* Workaround for Toggle group header in Workspace Kind Form */
 .mui-theme .workspace-kind-form-header .pf-v6-c-toggle-group__button.pf-m-selected {
   background-color: #e0f0ff;
   color: var(--pf-t--color--black);
 }
 
-
-.mui-theme .pf-v6-c-menu__item.pf-m-selected {
-  --pf-v6-c-menu__item--BackgroundColor: var(--mui-menu__item--selected--BackgroundColor);
-}
-
-.mui-theme .pf-v6-c-menu__item-select-icon {
-  display: none;
-}
 
 .mui-theme button.pf-v6-c-menu-toggle {
   // Use box-shadow to create a border effect without affecting the layout
