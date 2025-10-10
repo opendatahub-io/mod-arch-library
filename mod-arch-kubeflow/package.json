@@ -51,14 +51,16 @@
     "access": "public"
   },
   "peerDependencies": {
-    "react": ">=16.8.0",
-    "@mui/material": "^6.0.0"
+    "react": ">=18.2.0",
+    "react-dom": ">=18.2.0",
+    "@mui/material": "^7.0.0"
   },
   "devDependencies": {
-    "@mui/material": "^6.1.7",
+    "@mui/material": "^7.0.0",
     "@types/react": "^18.3.1",
     "npm-run-all2": "^7.0.1",
     "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "sass": "^1.83.0",
     "tsc-alias": "^1.8.15",
     "typescript": "^5.0.4"
@@ -78,5 +80,8 @@
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.2.0"
+  },
+  "overrides": {
+    "react-is": "^18.3.1"
   }
 }
