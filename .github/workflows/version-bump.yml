@@ -18,11 +18,13 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.ADMIN_TOKEN }}
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -42,20 +44,44 @@ jobs:
       - name: Run tests
         run: npm run test
 
-      - name: Bump patch version
-        if: github.event.inputs.version-type == 'patch'
-        run: npm run version:patch
-
-      - name: Bump minor version
-        if: github.event.inputs.version-type == 'minor'
-        run: npm run version:minor
-
-      - name: Bump major version
-        if: github.event.inputs.version-type == 'major'
-        run: npm run version:major
-
-      - name: Push changes
+      - name: Bump version
+        id: version
         run: |
-          git push origin main --follow-tags
-        env:
-          GITHUB_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+          if [ "${{ github.event.inputs.version-type }}" == "patch" ]; then
+            npm run version:patch
+          elif [ "${{ github.event.inputs.version-type }}" == "minor" ]; then
+            npm run version:minor
+          else
+            npm run version:major
+          fi
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "new_version=v${NEW_VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Get changelog
+        id: changelog
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            CHANGES=$(git log --pretty=format:"- %s (%h)" --no-merges)
+          else
+            CHANGES=$(git log ${LAST_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges)
+          fi
+          echo "changes<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.ADMIN_TOKEN }}
+          branch: ${{ steps.version.outputs.new_version }}
+          title: "chore: bump version to ${{ steps.version.outputs.new_version }}"
+          body: |
+            ## Version Bump: ${{ steps.version.outputs.new_version }}
+            
+            This PR bumps the version to ${{ steps.version.outputs.new_version }}.
+            
+            ### Changes since last release
+            
+            ${{ steps.changelog.outputs.changes }}
+          commit-message: "chore: bump version to ${{ steps.version.outputs.new_version }}"

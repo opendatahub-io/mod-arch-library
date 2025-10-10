@@ -401,6 +401,7 @@ To create a new release, follow these steps in order:
      - `minor` - for new features (1.0.0 → 1.1.0)
      - `major` - for breaking changes (1.0.0 → 2.0.0)
    - Click "Run workflow"
+   - Merge the Pull Request created by the workflow to update the version in all packages.
 
 2. **Create a GitHub Release**:
    - Once the version bump workflow completes, go to the [Releases page](../../releases)
