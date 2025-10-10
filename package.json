@@ -1,11 +1,11 @@
 {
   "name": "mod-arch-library",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "Modular Architecture Essentials - A monorepo containing libraries for building scalable micro-frontend applications",
   "private": true,
   "workspaces": [
     "mod-arch-core",
-    "mod-arch-shared", 
+    "mod-arch-shared",
     "mod-arch-kubeflow"
   ],
   "engines": {
@@ -25,9 +25,9 @@
     "lint": "npm run test:lint --workspaces --if-present",
     "lint:fix": "npm run test:fix --workspaces --if-present",
     "clean": "rm -rf */dist */node_modules node_modules",
-    "version:patch": "npm version patch --workspaces --no-git-tag-version && npm run version:commit",
-    "version:minor": "npm version minor --workspaces --no-git-tag-version && npm run version:commit",
-    "version:major": "npm version major --workspaces --no-git-tag-version && npm run version:commit",
+    "version:patch": "npm version patch --no-git-tag-version && npm version patch --workspaces --no-git-tag-version && npm run version:commit",
+    "version:minor": "npm version minor --no-git-tag-version && npm version minor --workspaces --no-git-tag-version && npm run version:commit",
+    "version:major": "npm version major --no-git-tag-version && npm version major --workspaces --no-git-tag-version && npm run version:commit",
     "version:commit": "git add -A && git commit -m \"chore: version bump\" --allow-empty",
     "publish:all": "npm run build && npm publish --workspaces",
     "publish:core": "npm run build:core && npm publish --workspace=mod-arch-core",
