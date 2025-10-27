@@ -4,6 +4,7 @@
 When working with styling (CSS, SCSS, or JavaScript/TypeScript theming), ALWAYS reference the PatternFly design tokens defined in:
 - **File**: `mod-arch-kubeflow/style/pf-tokens-SSOT.json`
 - **Purpose**: Single Source of Truth (SSOT) for all PatternFly v6 design tokens
+- **Token Values**: https://www.patternfly.org/tokens/all-patternfly-tokens/ - Official PatternFly documentation showing computed values for all tokens
 
 ## Project-Specific Pattern: MUI-theme.scss Architecture
 
@@ -16,10 +17,14 @@ This project follows a specific pattern for styling PatternFly components to mat
   --mui-button-FontWeight: 500;
   --mui-button--PaddingBlockStart: 6px;
   --mui-spacing-8px: var(--mui-spacing);
-  // ... etc
+  
+  // 2. Override PF global tokens with MUI equivalents (affects ALL components)
+  --pf-t--global--border--width--regular: 1px;
+  --pf-t--global--color--brand--default: var(--mui-palette-primary-main);
+  --pf-t--global--text--color--brand--default: var(--mui-palette-primary-main);
 }
 
-// 2. Map PF component variables to MUI values (scoped to .mui-theme)
+// 3. Only override component variables when they need different values from globals
 .mui-theme .pf-v6-c-button {
   --pf-v6-c-button--FontWeight: var(--mui-button-FontWeight);
   --pf-v6-c-button--PaddingBlockStart: var(--mui-button--PaddingBlockStart);
@@ -28,26 +33,34 @@ This project follows a specific pattern for styling PatternFly components to mat
 
 ### Hierarchy of Variable Usage (Priority Order)
 
-1. **First Priority: Use PF Component Variables**
+**MOST EFFICIENT: Override PF global tokens at :root (affects all components automatically)**
+
+1. **First Priority: Override PF Global Tokens at :root**
+   ```scss
+   .mui-theme:root {
+     // This automatically applies to ALL components using this token
+     --pf-t--global--border--width--regular: 1px;
+     --pf-t--global--color--brand--default: var(--mui-palette-primary-main);
+   }
+   ```
+   **Why**: One override affects all components. Scalable and efficient.
+
+2. **Second Priority: Use PF Component Variables (only when different from global)**
    ```scss
    .mui-theme .pf-v6-c-button {
+     // Only when button needs something different from the global token
      --pf-v6-c-button--FontWeight: var(--mui-button-FontWeight);
    }
    ```
+   **Why**: Component-specific overrides when global tokens aren't appropriate.
 
-2. **Second Priority: Use PF Global Tokens**
-   ```scss
-   .mui-theme .pf-v6-c-brand {
-     padding: var(--pf-t--global--spacer--md);
-   }
-   ```
-
-3. **Third Priority: Use Custom MUI Variables (defined at top)**
+3. **Third Priority: Use Custom MUI Variables (for MUI-specific values)**
    ```scss
    .mui-theme .pf-v6-c-alert {
      --pf-v6-c-alert--PaddingBlockStart: var(--mui-alert--PaddingBlockStart);
    }
    ```
+   **Why**: For values that don't have PF token equivalents.
 
 4. **Last Resort: Direct CSS (only when no token/variable exists)**
    ```scss
@@ -55,6 +68,7 @@ This project follows a specific pattern for styling PatternFly components to mat
      position: relative; // No PF variable for this
    }
    ```
+   **Why**: Layout/positioning properties without PF equivalents.
 
 ### Critical Rules
 
@@ -229,37 +243,42 @@ const theme = createTheme({
 
 ## SCSS/CSS Guidelines
 
-### ✅ DO: Use PF Component Variables with MUI-theme Scope
+### ✅ DO: Override PF Global Tokens at :root (MOST EFFICIENT)
 ```scss
-// First: Define MUI values at top of file
+// BEST: Override global tokens once - affects ALL components automatically
 .mui-theme:root {
+  // MUI custom values
   --mui-button-FontWeight: 500;
   --mui-button--PaddingBlockStart: 6px;
-  --mui-button--PaddingBlockEnd: 6px;
+  
+  // Override PF global tokens with MUI equivalents
+  --pf-t--global--border--width--regular: 1px;
+  --pf-t--global--color--brand--default: var(--mui-palette-primary-main);
+  --pf-t--global--text--color--brand--default: var(--mui-palette-primary-main);
+  // Now ALL components using these tokens get MUI values automatically!
 }
+```
 
-// Then: Map PF component variables to MUI values
+### ✅ DO: Use PF Component Variables (Only When Different from Global)
+```scss
+// Only override component variables when they need different values
 .mui-theme .pf-v6-c-button {
+  // Button needs custom font weight (different from global)
   --pf-v6-c-button--FontWeight: var(--mui-button-FontWeight);
   --pf-v6-c-button--PaddingBlockStart: var(--mui-button--PaddingBlockStart);
-  --pf-v6-c-button--PaddingBlockEnd: var(--mui-button--PaddingBlockEnd);
   
   &:hover {
+    // Use global token for hover (works for all components)
     --pf-v6-c-button--BackgroundColor: var(--pf-t--global--color--brand--hover);
   }
 }
 ```
 
-### ✅ DO: Use PF Global Tokens When Component Variables Don't Exist
+### ✅ DO: Reference PF Global Tokens Directly (When Already Set Correctly)
 ```scss
+// If global token is already set correctly at :root, just reference it
 .mui-theme .pf-v6-c-brand {
   padding: var(--pf-t--global--spacer--md);
-}
-
-.mui-theme .pf-v6-c-menu-toggle {
-  --pf-v6-c-menu-toggle--hover--BackgroundColor: var(
-    --pf-t--global--background--color--action--plain--hover
-  );
 }
 ```
 
@@ -293,9 +312,10 @@ const theme = createTheme({
 
 ### How to find the right token:
 1. Search `pf-tokens-SSOT.json` for relevant keywords (e.g., "brand", "danger", "spacer", "border")
-2. Prefer global tokens (`--pf-t--global--*`) over component-specific tokens when possible
-3. Use semantic tokens (e.g., `--pf-t--global--color--status--danger--default`) rather than raw color values
-4. Follow the token naming convention to find variants (default, hover, clicked)
+2. Check computed values at https://www.patternfly.org/tokens/all-patternfly-tokens/ (the JSON contains references, the docs show actual values)
+3. Prefer global tokens (`--pf-t--global--*`) over component-specific tokens when possible
+4. Use semantic tokens (e.g., `--pf-t--global--color--status--danger--default`) rather than raw color values
+5. Follow the token naming convention to find variants (default, hover, clicked)
 
 ## Benefits of Using Design Tokens
 
@@ -307,9 +327,9 @@ const theme = createTheme({
 
 ## Reference Documentation
 
-- **Local token file**: `mod-arch-kubeflow/style/pf-tokens-SSOT.json`
+- **Local token file**: `mod-arch-kubeflow/style/pf-tokens-SSOT.json` (token names and references)
+- **Token computed values**: https://www.patternfly.org/tokens/all-patternfly-tokens/ (actual values for all PF tokens)
 - **MUI theming reference**: `mod-arch-kubeflow/style/MUI-theme.scss` (shows PF-to-MUI mappings)
-- **PatternFly docs**: https://www.patternfly.org/tokens/all-patternfly-tokens/
 - **MUI customization**: https://mui.com/material-ui/customization/theming/
 
 ## Code Review Checklist
@@ -434,12 +454,20 @@ Only use direct CSS properties (not variables) in these cases:
 ```
 Need to add styling?
 │
-├─ Is there a --pf-v6-c-{component}--{property} variable?
-│  └─ YES → Use it! Map to MUI variable or PF token
+├─ Is there a --pf-t--global--{category}--{property} token that applies?
+│  └─ YES → Does the global token need a MUI value?
+│     ├─ YES → Override it at .mui-theme:root (affects all components)
+│     │        .mui-theme:root {
+│     │          --pf-t--global--border--width--regular: 1px;
+│     │        }
+│     └─ NO  → Use the global token as-is
 │  └─ NO  → Continue ↓
 │
-├─ Is there a --pf-t--global--{category}--{property} token?
-│  └─ YES → Use it directly
+├─ Is there a --pf-v6-c-{component}--{property} variable?
+│  └─ YES → Override it (component needs different value from global)
+│     .mui-theme .pf-v6-c-button {
+│       --pf-v6-c-button--FontWeight: var(--mui-button-FontWeight);
+│     }
 │  └─ NO  → Continue ↓
 │
 ├─ Is it a layout/positioning/descriptive property?
@@ -449,5 +477,5 @@ Need to add styling?
 
 ---
 
-**Remember**: Always scope to `.mui-theme`, always prefer PF component variables over direct CSS, and check both `mod-arch-kubeflow/style/pf-tokens-SSOT.json` and `MUI-theme.scss` for existing patterns before adding new styles.
+**Remember**: Always scope to `.mui-theme`, always prefer overriding PF global tokens at `:root` first (most efficient), then use component variables only when needed, and check both `mod-arch-kubeflow/style/pf-tokens-SSOT.json` and `MUI-theme.scss` for existing patterns before adding new styles.
 
