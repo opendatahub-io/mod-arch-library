@@ -200,6 +200,7 @@
   --pf-v6-c-card--BorderWidth: 1px;
   --pf-v6-c-card--BorderRadius: var(--mui-shape-borderRadius);
   --pf-v6-c-card--BorderColor: var(--mui-palette-divider);
+  border: var(--pf-v6-c-card--BorderWidth) solid var(--pf-v6-c-card--BorderColor);
 }
 
 .mui-theme .pf-v6-c-card.pf-m-compact.pf-m-selectable {
@@ -248,6 +249,24 @@
 .mui-theme .pf-v6-c-page__main-container:has(+ .pf-v6-c-drawer.pf-m-expanded),
 .mui-theme .pf-v6-c-page__main-container.pf-m-drawer-expanded {
   margin-right: var(--mui-spacing-16px);
+}
+
+// Ensure drawer panel has proper max-width to prevent it from being too wide
+.mui-theme .pf-v6-c-drawer__panel {
+  max-width: 600px;
+  min-width: 400px;
+}
+
+// On smaller screens, make drawer take full width or switch to overlay
+@media (max-width: 1200px) {
+  .mui-theme .pf-v6-c-drawer.pf-m-inline {
+    // Switch to panel-left positioning on smaller screens for better UX
+    --pf-v6-c-drawer--m-inline--m-expanded__panel--FlexBasis: 100%;
+  }
+  
+  .mui-theme .pf-v6-c-drawer__panel {
+    max-width: 100%;
+  }
 }
 
 .mui-theme .pf-v6-c-form {
@@ -329,10 +348,18 @@
   }
 }
 
-// Remove borders on form controls, except within file upload details and modal boxes
-.mui-theme .pf-v6-c-form-control:not(.pf-v6-c-file-upload__file-details .pf-v6-c-form-control):not(.pf-v6-c-modal-box__body .pf-v6-c-form-control)::after,
-.mui-theme .pf-v6-c-form-control:not(.pf-v6-c-file-upload__file-details .pf-v6-c-form-control):not(.pf-v6-c-modal-box__body .pf-v6-c-form-control)::before {
-  border: none;
+// Use PatternFly's border system via CSS custom properties instead of pseudo-elements
+// This provides proper borders without relying on ::before/::after which can conflict
+// Exclude spans from getting borders (they're used for labels/legends)
+.mui-theme .pf-v6-c-form-control:not(span) {
+  border: var(--pf-v6-c-form-control--BorderWidth, 1px) solid var(--pf-v6-c-form-control--BorderColor, var(--pf-t--global--border--color--default));
+  border-radius: var(--pf-v6-c-form-control--BorderRadius, var(--mui-shape-borderRadius));
+}
+
+// Remove pseudo-element borders everywhere since we're using real borders now
+.mui-theme .pf-v6-c-form-control::after,
+.mui-theme .pf-v6-c-form-control::before {
+  display: none;
 }
 
 .mui-theme .pf-v6-c-form-control input::placeholder {
@@ -545,8 +572,39 @@
 .tr-fieldset-wrapper .pf-v6-c-form-control,
 .toolbar-fieldset-wrapper .pf-v6-c-form-control,
 .form-fieldset-wrapper .pf-v6-c-form-control {
-  --pf-v6-c-form-control--before--BorderColor: transparent;
-  --pf-v6-c-form-control--after--BorderColor: transparent;
+  // Hide real borders since fieldset wrappers provide their own border styling
+  border: none;
+}
+
+// Ensure legend spans don't get form control styling
+.form-fieldset-legend span {
+  border: none;
+  padding: 0;
+  background: transparent;
+}
+
+// Ensure form-fieldset-wrapper styling works within expandable sections
+.mui-theme .pf-v6-c-expandable-section .form-fieldset-wrapper:hover .form-fieldset {
+  border-color: var(--mui-palette-common-black);
+}
+
+.mui-theme .pf-v6-c-expandable-section .form-fieldset-wrapper:focus-within .form-fieldset {
+  border-color: var(--mui-palette-primary-main);
+  border-width: 2px;
+  padding: 7px 7px;
+}
+
+.mui-theme .pf-v6-c-expandable-section .form-fieldset-wrapper:focus-within {
+  color: var(--mui-palette-primary-main);
+}
+
+.mui-theme .pf-v6-c-expandable-section .form-fieldset-wrapper span.pf-v6-c-form-control.pf-m-error ~ .form-fieldset {
+  border-color: var(--mui-palette-error-main);
+}
+
+.mui-theme .pf-v6-c-expandable-section .form-fieldset-wrapper:focus-within span.pf-v6-c-form-control.pf-m-disabled ~ .form-fieldset,
+.mui-theme .pf-v6-c-expandable-section .form-fieldset-wrapper:hover span.pf-v6-c-form-control.pf-m-disabled ~ .form-fieldset {
+  border-color: rgba(0, 0, 0, 0.23);
 }
 
 .mui-theme .pf-v6-c-form__field-group-body {
@@ -558,13 +616,17 @@
   color: var(--mui-palette-primary-main);
 }
 
-.mui-theme .pf-v6-c-form__group:focus-within .pf-v6-c-form-control {
-  --pf-v6-c-form-control--after--BorderWidth: 2px;
-  --pf-v6-c-form-control--after--BorderColor: var(--mui-palette-primary-main);
+.mui-theme .pf-v6-c-form__group:focus-within .pf-v6-c-form-control:not(span) {
+  border-width: 2px;
+  border-color: var(--mui-palette-primary-main);
 }
 
-.mui-theme .pf-v6-c-form-control.pf-m-error {
-  --pf-v6-c-form-control--after--BorderColor: var(--mui-palette-error-main);
+.mui-theme .pf-v6-c-form-control.pf-m-error:not(span) {
+  border-color: var(--mui-palette-error-main);
+}
+
+.mui-theme .pf-v6-c-form-control:hover:not(span) {
+  border-color: var(--pf-t--global--border--color--hover, var(--mui-palette-grey-400));
 }
 
 .mui-theme .pf-v6-c-form-control__utilities {
@@ -722,6 +784,31 @@
 
 .mui-theme .pf-v6-c-menu-toggle__button .pf-v6-c-menu-toggle__toggle-icon .pf-v6-svg {
   vertical-align: revert;
+}
+
+// Specific styling for workspace details actions menu - minimal overrides only
+.mui-theme .workspace-details-action-toggle.pf-m-primary {
+  // Override the white background that gets applied to all menu toggles
+  --pf-v6-c-menu-toggle--BackgroundColor: var(--pf-t--global--color--brand--default);
+  // Use the proper PatternFly menu toggle variable for primary background color
+  --pf-v6-c-menu-toggle--m-primary--BackgroundColor: var(--pf-t--global--color--brand--default);
+}
+
+// Prevent text wrapping in Connect split button
+.mui-theme .connect-button-no-wrap {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: fit-content;
+}
+
+// Ensure the split button menu toggle maintains proper width
+.mui-theme .pf-v6-c-menu-toggle.pf-m-split-button {
+  min-width: fit-content;
+  
+  .pf-v6-c-menu-toggle__button {
+    white-space: nowrap;
+  }
 }
 
 .mui-theme .pf-v6-c-menu-toggle__toggle-icon {
@@ -1075,6 +1162,9 @@ left: 0;
   min-height: 100vh;
   overflow-x: hidden;
   --pf-v6-c-page__sidebar--Width: var(--kf-central-app-drawer-width);
+  
+  // Prevent double scrollbars by disabling overflow on the outer page container
+  overflow-y: hidden;
 }
 
 // Error page container
@@ -1084,7 +1174,7 @@ left: 0;
 
 .mui-theme .pf-v6-c-page__main {
   --pf-v6-c-page__main--PaddingRight: 0;
-  overflow: visible;
+  overflow-y: auto; // Allow main content to scroll instead of outer container
   margin-right: 2px;
   height: calc(100vh - var(--kf-central-app-bar-height));
   min-height: calc(100vh - var(--kf-central-app-bar-height));
@@ -1339,5 +1429,28 @@ left: 0;
   &:focus {
     box-shadow: 0 0 0 2px var(--mui-palette-primary-main);
     outline: none; // Remove default browser outline
+  }
+}
+
+// Grid view: Position action cell (Actions kebab) on the right
+// The Connect button is a regular cell and will appear with other row content on the left
+.mui-theme .pf-v6-c-table.pf-m-grid .pf-v6-c-table__tbody .pf-v6-c-table__tr {
+  .pf-v6-c-table__td.pf-m-action {
+    // Actions kebab menu stays on the right side in grid view
+    // PatternFly automatically positions action cells appropriately
+    justify-self: end;
+  }
+  
+  // Connect button cell styling in grid view
+  .pf-v6-c-table__td:has(.workspace-connect-wrapper) {
+    // Remove the label for Connect cell since it's empty anyway
+    &::before {
+      content: none;
+    }
+  }
+  
+  // Add top padding to Connect button only in grid view
+  .workspace-connect-wrapper {
+    padding-top: var(--pf-t--global--spacer--lg);
   }
 }
