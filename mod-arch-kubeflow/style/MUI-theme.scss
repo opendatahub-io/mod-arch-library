@@ -18,8 +18,8 @@
 
   // Button
   --mui-button-FontWeight: 500;
-  --mui-button--BorderWidth: 1px;
-  --mui-button--hover--BorderWidth: 1px;
+  --mui-button--BorderWidth: var(--pf-t--global--border--width--regular);
+  --mui-button--hover--BorderWidth: var(--pf-t--global--border--width--regular);
   --mui-button--PaddingBlockStart: 6px;
   --mui-button--PaddingBlockEnd: 6px;
   --mui-button--PaddingInlineStart: 16px;
@@ -58,6 +58,12 @@
   --mui-menu-toggle--BorderColor: transparent;
   --mui-menu-toggle--PaddingInlineStart: 10px;
   --mui-menu-toggle--PaddingInlineEnd: 10px;
+
+  // Nav
+  --mui-nav--current--BackgroundColor: #ffffff1b;
+
+  // Toggle group
+  --mui-toggle-group--selected--BackgroundColor: #e0f0ff;
 
   // Radio
   --mui-radio--margin: 10px 0;
@@ -113,7 +119,7 @@
   --mui-spacing-32px: calc(4 * var(--mui-spacing));
 
   --pf-t--global--spacer--gap--group-to-group--vertical--default: var(--pf-t--global--spacer--sm);
-  --pf-t--global--border--width--box--status--default: 1px;
+  --pf-t--global--border--width--box--status--default: var(--pf-t--global--border--width--regular);
   --pf-t--global--border--radius--pill: var(--mui-shape-borderRadius);
   --pf-t--global--text--color--brand--default: var(--mui-palette-primary-main);
 
@@ -197,13 +203,14 @@
 
 
 .mui-theme .pf-v6-c-card {
-  --pf-v6-c-card--BorderWidth: 1px;
+  --pf-v6-c-card--BorderWidth: var(--pf-t--global--border--width--regular);
   --pf-v6-c-card--BorderRadius: var(--mui-shape-borderRadius);
   --pf-v6-c-card--BorderColor: var(--mui-palette-divider);
 }
 
 .mui-theme .pf-v6-c-card.pf-m-compact.pf-m-selectable {
-  border: 1px solid var(--mui-palette-divider);
+  --pf-v6-c-card--BorderWidth: var(--pf-t--global--border--width--regular);
+  --pf-v6-c-card--BorderColor: var(--mui-palette-divider);
 }
 
 .mui-theme .pf-v6-c-card__selectable-actions
@@ -372,7 +379,7 @@
 }
 
 .mui-theme .tr-fieldset-wrapper .form-fieldset {
-  inset: 0px;
+  inset: 0px; // Layout property - no PF variable exists
 }
 
 .mui-theme .pf-v6-c-text-input-group::before {
@@ -511,7 +518,7 @@
   pointer-events: none;
   border-radius: inherit;
   border-style: solid;
-  border-width: 1px;
+  border-width: var(--pf-t--global--border--width--regular);
   overflow: hidden;
   min-width: 0%;
   border-color: rgba(0, 0, 0, 0.23);
@@ -653,17 +660,19 @@
 .mui-theme .pf-v6-c-menu-toggle:not(.pf-m-split-button) {
   position: relative;
   box-sizing: border-box;
-  border: 1px solid rgba(0, 0, 0, 0.23);
+  --pf-v6-c-menu-toggle--BorderWidth: var(--pf-t--global--border--width--regular);
+  --pf-v6-c-menu-toggle--BorderStyle: solid;
+  --pf-v6-c-menu-toggle--BorderColor: rgba(0, 0, 0, 0.23);
   --pf-v6-c-menu-toggle--BackgroundColor: var(--mui-palette-common-white);
 
   &:hover {
-    // Restore direct border color setting for hover
-    border-color: var(--mui-palette-common-black);
+    --pf-v6-c-menu-toggle--hover--BorderColor: var(--mui-palette-common-black);
   }
 
   &:focus-within {
     // Keep border width consistent to prevent layout shift
-    border: 1px solid var(--mui-palette-primary-main);
+    --pf-v6-c-menu-toggle--BorderWidth: var(--pf-t--global--border--width--regular);
+    --pf-v6-c-menu-toggle--BorderColor: var(--mui-palette-primary-main);
     // Use box-shadow to create a thicker border while preventing layout shift
     box-shadow: 0 0 0 1px var(--mui-palette-primary-main);
   }
@@ -743,7 +752,7 @@
 
 .mui-theme .pf-v6-c-nav__link.pf-m-current {
   border-left: 3px solid var(--mui-palette-common-white);
-  background-color: #ffffff1b;
+  background-color: var(--mui-nav--current--BackgroundColor);
   color: var(--mui-palette-common-white);
 }
 
@@ -812,14 +821,14 @@
 
 .mui-theme .pf-v6-c-nav__link {
   --pf-v6-c-nav__link--BorderRadius: 0px;
-  --pf-v6-c-nav__link--hover--BackgroundColor: #ffffff1b;
+  --pf-v6-c-nav__link--hover--BackgroundColor: var(--mui-nav--current--BackgroundColor);
   --pf-v6-c-nav__link--Color: var(--kf-central-sidebar-default-color);
   --pf-v6-c-nav__link--hover--Color: var(--kf-central-sidebar-default-color);
   --pf-v6-c-nav__link--FontSize: var(--pf-t--global--font--size--md);
 
   &.pf-m-current {
     border-left: 3px solid var(--mui-palette-common-white);
-    --pf-v6-c-nav__link--m-current--BackgroundColor: #ffffff1b;
+    --pf-v6-c-nav__link--m-current--BackgroundColor: var(--mui-nav--current--BackgroundColor);
     --pf-v6-c-nav__link--m-current--Color: var(--mui-palette-common-white);
   }
 
@@ -1026,7 +1035,9 @@ left: 0;
 }
 
 .mui-theme .pf-v6-c-label.pf-m-overflow {
-  border: 1px solid var(--mui-palette-grey-400);
+  --pf-v6-c-label--BorderWidth: var(--pf-t--global--border--width--regular);
+  --pf-v6-c-label--BorderStyle: solid;
+  --pf-v6-c-label--BorderColor: var(--mui-palette-grey-400);
 
   .pf-v6-c-label__text {
     color: var(--mui-palette-common-black);
@@ -1228,20 +1239,22 @@ left: 0;
 
 .mui-theme .pf-v6-c-form__group-control .pf-v6-c-menu-toggle.pf-m-full-width.pf-m-typeahead {
   position: relative;
-  border: 1px solid rgba(0, 0, 0, 0.23);
-  border-radius: var(--mui-shape-borderRadius);
-  background-color: var(--mui-palette-common-white);
+  --pf-v6-c-menu-toggle--BorderWidth: var(--pf-t--global--border--width--regular);
+  --pf-v6-c-menu-toggle--BorderStyle: solid;
+  --pf-v6-c-menu-toggle--BorderColor: rgba(0, 0, 0, 0.23);
+  --pf-v6-c-menu-toggle--BorderRadius: var(--mui-shape-borderRadius);
+  --pf-v6-c-menu-toggle--BackgroundColor: var(--mui-palette-common-white);
   height: 54px;
 
   &:hover {
-    border-color: var(--mui-palette-common-black);
-    background-color: var(--mui-palette-common-white);
+    --pf-v6-c-menu-toggle--hover--BorderColor: var(--mui-palette-common-black);
+    --pf-v6-c-menu-toggle--hover--BackgroundColor: var(--mui-palette-common-white);
   }
 
   &:focus-within {
-    border-color: var(--mui-palette-primary-main);
-    border-width: 2px;
-    background-color: var(--mui-palette-common-white);
+    --pf-v6-c-menu-toggle--BorderColor: var(--mui-palette-primary-main);
+    border-width: 2px; // Keep thicker border for focus state (intentional for emphasis)
+    --pf-v6-c-menu-toggle--BackgroundColor: var(--mui-palette-common-white);
   }
 }
 
@@ -1328,7 +1341,7 @@ left: 0;
 
 /* Workaround for Toggle group header in Workspace Kind Form */
 .mui-theme .workspace-kind-form-header .pf-v6-c-toggle-group__button.pf-m-selected {
-  background-color: #e0f0ff;
+  background-color: var(--mui-toggle-group--selected--BackgroundColor);
   color: var(--pf-t--color--black);
 }
 
