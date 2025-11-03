@@ -1,0 +1,481 @@
+# PatternFly Design Token Usage Rules
+
+## Design Token Reference
+When working with styling (CSS, SCSS, or JavaScript/TypeScript theming), ALWAYS reference the PatternFly design tokens defined in:
+- **File**: `mod-arch-kubeflow/style/pf-tokens-SSOT.json`
+- **Purpose**: Single Source of Truth (SSOT) for all PatternFly v6 design tokens
+- **Token Values**: https://www.patternfly.org/tokens/all-patternfly-tokens/ - Official PatternFly documentation showing computed values for all tokens
+
+## Project-Specific Pattern: MUI-theme.scss Architecture
+
+This project follows a specific pattern for styling PatternFly components to match Material UI design:
+
+### Architecture Overview
+```scss
+// 1. Define MUI design values as custom variables (top of file)
+.mui-theme:root {
+  --mui-button-FontWeight: 500;
+  --mui-button--PaddingBlockStart: 6px;
+  --mui-spacing-8px: var(--mui-spacing);
+  
+  // 2. Override PF global tokens with MUI equivalents (affects ALL components)
+  --pf-t--global--border--width--regular: 1px;
+  --pf-t--global--color--brand--default: var(--mui-palette-primary-main);
+  --pf-t--global--text--color--brand--default: var(--mui-palette-primary-main);
+}
+
+// 3. Only override component variables when they need different values from globals
+.mui-theme .pf-v6-c-button {
+  --pf-v6-c-button--FontWeight: var(--mui-button-FontWeight);
+  --pf-v6-c-button--PaddingBlockStart: var(--mui-button--PaddingBlockStart);
+}
+```
+
+### Hierarchy of Variable Usage (Priority Order)
+
+**MOST EFFICIENT: Override PF global tokens at :root (affects all components automatically)**
+
+1. **First Priority: Override PF Global Tokens at :root**
+   ```scss
+   .mui-theme:root {
+     // This automatically applies to ALL components using this token
+     --pf-t--global--border--width--regular: 1px;
+     --pf-t--global--color--brand--default: var(--mui-palette-primary-main);
+   }
+   ```
+   **Why**: One override affects all components. Scalable and efficient.
+
+2. **Second Priority: Use PF Component Variables (only when different from global)**
+   ```scss
+   .mui-theme .pf-v6-c-button {
+     // Only when button needs something different from the global token
+     --pf-v6-c-button--FontWeight: var(--mui-button-FontWeight);
+   }
+   ```
+   **Why**: Component-specific overrides when global tokens aren't appropriate.
+
+3. **Third Priority: Use Custom MUI Variables (for MUI-specific values)**
+   ```scss
+   .mui-theme .pf-v6-c-alert {
+     --pf-v6-c-alert--PaddingBlockStart: var(--mui-alert--PaddingBlockStart);
+   }
+   ```
+   **Why**: For values that don't have PF token equivalents.
+
+4. **Last Resort: Direct CSS (only when no token/variable exists)**
+   ```scss
+   .mui-theme .pf-v6-c-form {
+     position: relative; // No PF variable for this
+   }
+   ```
+   **Why**: Layout/positioning properties without PF equivalents.
+
+### Critical Rules
+
+❌ **DON'T** use direct CSS properties when PF variables exist:
+```scss
+.mui-theme .pf-v6-c-button {
+  padding: 6px 16px; // ❌ BAD
+  border: none;      // ❌ BAD
+  inset: 0px;        // ❌ BAD
+}
+```
+
+✅ **DO** use PF component variables or tokens:
+```scss
+.mui-theme .pf-v6-c-button {
+  --pf-v6-c-button--PaddingBlockStart: var(--mui-button--PaddingBlockStart);
+  --pf-v6-c-button--PaddingBlockEnd: var(--mui-button--PaddingBlockEnd);
+}
+
+.mui-theme .pf-v6-c-text-input-group::before {
+  border: none; // ✅ OK - no PF variable exists for ::before border
+}
+```
+
+❌ **DON'T** forget `.mui-theme` scope:
+```scss
+.pf-v6-c-button {
+  --pf-v6-c-button--FontWeight: 500; // ❌ BAD - not scoped
+}
+```
+
+✅ **DO** always scope to `.mui-theme`:
+```scss
+.mui-theme .pf-v6-c-button {
+  --pf-v6-c-button--FontWeight: var(--mui-button-FontWeight); // ✅ GOOD
+}
+```
+
+### 2. Token Categories Available in pf-tokens-SSOT.json
+- **Colors**: `--pf-t--global--color--*`
+- **Spacing**: `--pf-t--global--spacer--*`
+- **Typography**: `--pf-t--global--font--*`
+- **Borders**: `--pf-t--global--border--*`
+- **Shadows**: `--pf-t--global--box-shadow--*`
+- **Z-index**: `--pf-t--global--z-index--*`
+- **Motion**: `--pf-t--global--motion--*`
+- **Component-specific**: `--pf-v6-c-{component}--*`
+
+### 3. PatternFly Variable Naming Patterns
+
+#### PF Component Variables (Use These First!)
+```scss
+// Pattern: --pf-v6-c-{component}--{property}--{modifier}
+--pf-v6-c-button--FontWeight
+--pf-v6-c-button--PaddingBlockStart
+--pf-v6-c-button--hover--BackgroundColor
+--pf-v6-c-alert--PaddingInlineStart
+--pf-v6-c-menu-toggle--expanded--Color
+```
+
+#### PF Global Tokens (Use When Component Variables Don't Exist)
+```scss
+/* Brand colors */
+--pf-t--global--color--brand--default
+--pf-t--global--color--brand--hover
+--pf-t--global--color--brand--clicked
+
+/* Status colors */
+--pf-t--global--color--status--danger--default
+--pf-t--global--color--status--warning--default
+--pf-t--global--color--status--success--default
+
+/* Text colors */
+--pf-t--global--text--color--regular
+--pf-t--global--text--color--subtle
+--pf-t--global--text--color--disabled
+--pf-t--global--text--color--on-brand--default
+
+/* Background colors */
+--pf-t--global--background--color--primary--default
+--pf-t--global--background--color--secondary--default
+--pf-t--global--background--color--action--hover
+```
+
+#### Spacing
+```css
+/* Spacing scale (xs to 4xl) */
+--pf-t--global--spacer--xs     /* 4px */
+--pf-t--global--spacer--sm     /* 8px */
+--pf-t--global--spacer--md     /* 16px */
+--pf-t--global--spacer--lg     /* 24px */
+--pf-t--global--spacer--xl     /* 32px */
+--pf-t--global--spacer--2xl
+--pf-t--global--spacer--3xl
+--pf-t--global--spacer--4xl
+```
+
+#### Borders
+```css
+--pf-t--global--border--width--regular
+--pf-t--global--border--width--strong
+--pf-t--global--border--color--default
+--pf-t--global--border--color--hover
+--pf-t--global--border--color--clicked
+--pf-t--global--border--radius--small
+--pf-t--global--border--radius--medium
+--pf-t--global--border--radius--large
+```
+
+#### Typography
+```css
+--pf-t--global--font--family--body
+--pf-t--global--font--family--heading
+--pf-t--global--font--size--body--default
+--pf-t--global--font--size--body--sm
+--pf-t--global--font--size--body--lg
+--pf-t--global--font--weight--body--default
+--pf-t--global--font--weight--body--bold
+--pf-t--global--font--weight--heading--default
+```
+
+## MUI Theme Object Integration
+
+When creating Material UI themes that need to match PatternFly design system:
+
+### ✅ DO: Use PF tokens in MUI theme objects
+```typescript
+import { createTheme } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: 'var(--pf-t--global--color--brand--default)',
+      light: 'var(--pf-t--global--color--brand--hover)',
+      dark: 'var(--pf-t--global--color--brand--clicked)',
+      contrastText: 'var(--pf-t--global--text--color--on-brand--default)',
+    },
+    text: {
+      primary: 'var(--pf-t--global--text--color--regular)',
+      secondary: 'var(--pf-t--global--text--color--subtle)',
+      disabled: 'var(--pf-t--global--text--color--disabled)',
+    },
+    background: {
+      default: 'var(--pf-t--global--background--color--primary--default)',
+      paper: 'var(--pf-t--global--background--color--secondary--default)',
+    },
+  },
+  spacing: 8, // PF base spacing unit - use number for theme.spacing() function
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          fontWeight: 'var(--pf-t--global--font--weight--body--bold)',
+          padding: theme.spacing(1, 2),
+          borderRadius: 'var(--pf-t--global--border--radius--medium)',
+        }),
+        outlined: {
+          borderWidth: 'var(--pf-t--global--border--width--regular)',
+          borderColor: 'var(--pf-t--global--border--color--default)',
+        },
+      },
+    },
+  },
+});
+```
+
+### Important MUI + PF Token Guidelines:
+1. **Palette colors**: Use PF tokens to maintain consistency and support theme switching
+2. **Spacing base unit**: Use hardcoded number (8) for `theme.spacing()` function to work
+3. **Component overrides**: Prefer PF tokens for all visual properties
+4. **Interactive states**: Always use PF token variants (hover, clicked, etc.)
+
+## SCSS/CSS Guidelines
+
+### ✅ DO: Override PF Global Tokens at :root (MOST EFFICIENT)
+```scss
+// BEST: Override global tokens once - affects ALL components automatically
+.mui-theme:root {
+  // MUI custom values
+  --mui-button-FontWeight: 500;
+  --mui-button--PaddingBlockStart: 6px;
+  
+  // Override PF global tokens with MUI equivalents
+  --pf-t--global--border--width--regular: 1px;
+  --pf-t--global--color--brand--default: var(--mui-palette-primary-main);
+  --pf-t--global--text--color--brand--default: var(--mui-palette-primary-main);
+  // Now ALL components using these tokens get MUI values automatically!
+}
+```
+
+### ✅ DO: Use PF Component Variables (Only When Different from Global)
+```scss
+// Only override component variables when they need different values
+.mui-theme .pf-v6-c-button {
+  // Button needs custom font weight (different from global)
+  --pf-v6-c-button--FontWeight: var(--mui-button-FontWeight);
+  --pf-v6-c-button--PaddingBlockStart: var(--mui-button--PaddingBlockStart);
+  
+  &:hover {
+    // Use global token for hover (works for all components)
+    --pf-v6-c-button--BackgroundColor: var(--pf-t--global--color--brand--hover);
+  }
+}
+```
+
+### ✅ DO: Reference PF Global Tokens Directly (When Already Set Correctly)
+```scss
+// If global token is already set correctly at :root, just reference it
+.mui-theme .pf-v6-c-brand {
+  padding: var(--pf-t--global--spacer--md);
+}
+```
+
+### ❌ DON'T: Use Direct CSS When PF Variables Exist
+```scss
+// BAD - direct padding values
+.mui-theme .pf-v6-c-button {
+  padding: 6px 16px; // ❌
+}
+
+// GOOD - use PF component variables
+.mui-theme .pf-v6-c-button {
+  --pf-v6-c-button--PaddingBlockStart: var(--mui-button--PaddingBlockStart); // ✅
+  --pf-v6-c-button--PaddingBlockEnd: var(--mui-button--PaddingBlockEnd); // ✅
+  --pf-v6-c-button--PaddingInlineStart: var(--mui-button--PaddingInlineStart); // ✅
+  --pf-v6-c-button--PaddingInlineEnd: var(--mui-button--PaddingInlineEnd); // ✅
+}
+```
+
+## When to Reference pf-tokens-SSOT.json
+
+### Always check the token file when:
+1. Adding new colors to any component
+2. Setting spacing/padding/margin values
+3. Defining border styles or radius
+4. Implementing hover/active/focus states
+5. Setting typography properties (font-family, font-weight, font-size)
+6. Using shadows or elevation
+7. Setting z-index values
+8. Implementing transitions/animations
+
+### How to find the right token:
+1. Search `pf-tokens-SSOT.json` for relevant keywords (e.g., "brand", "danger", "spacer", "border")
+2. Check computed values at https://www.patternfly.org/tokens/all-patternfly-tokens/ (the JSON contains references, the docs show actual values)
+3. Prefer global tokens (`--pf-t--global--*`) over component-specific tokens when possible
+4. Use semantic tokens (e.g., `--pf-t--global--color--status--danger--default`) rather than raw color values
+5. Follow the token naming convention to find variants (default, hover, clicked)
+
+## Benefits of Using Design Tokens
+
+1. **Consistency**: All components use the same design values
+2. **Theme switching**: Automatic support for dark mode, high contrast, etc.
+3. **Maintainability**: Update tokens in one place, changes propagate everywhere
+4. **Accessibility**: Semantic tokens ensure proper contrast ratios
+5. **Design system alignment**: Stay synchronized with PatternFly updates
+
+## Reference Documentation
+
+- **Local token file**: `mod-arch-kubeflow/style/pf-tokens-SSOT.json` (token names and references)
+- **Token computed values**: https://www.patternfly.org/tokens/all-patternfly-tokens/ (actual values for all PF tokens)
+- **MUI theming reference**: `mod-arch-kubeflow/style/MUI-theme.scss` (shows PF-to-MUI mappings)
+- **MUI customization**: https://mui.com/material-ui/customization/theming/
+
+## Code Review Checklist
+
+Before submitting styling changes, verify:
+- [ ] No hardcoded color values (use PF color tokens)
+- [ ] No hardcoded spacing values (use PF spacer tokens or theme.spacing())
+- [ ] Border styles use PF border tokens
+- [ ] Interactive states (hover, active, focus) use appropriate token variants
+- [ ] Typography uses PF font tokens
+- [ ] Shadows use PF box-shadow tokens
+- [ ] All tokens referenced exist in `pf-tokens-SSOT.json`
+
+## Example: Converting Hardcoded Styles to Follow MUI-theme Pattern
+
+### Before (❌ Bad - Direct CSS):
+```scss
+.mui-theme .pf-v6-c-card {
+  background: #fff;
+  border: 1px solid #d2d2d2;
+  border-radius: 3px;
+  padding: 16px;
+}
+
+.mui-theme .pf-v6-c-card:hover {
+  border-color: #000;
+}
+```
+
+### After (✅ Good - PF Component Variables):
+```scss
+// Step 1: Define MUI values at top of file (if needed)
+.mui-theme:root {
+  --mui-card--BorderWidth: 1px;
+  --mui-shape-borderRadius: 4px;
+}
+
+// Step 2: Use PF component variables, mapped to MUI or PF tokens
+.mui-theme .pf-v6-c-card {
+  --pf-v6-c-card--BackgroundColor: var(--mui-palette-background-paper);
+  --pf-v6-c-card--BorderWidth: var(--mui-card--BorderWidth);
+  --pf-v6-c-card--BorderColor: var(--mui-palette-divider);
+  --pf-v6-c-card--BorderRadius: var(--mui-shape-borderRadius);
+  --pf-v6-c-card--PaddingBlockStart: var(--pf-t--global--spacer--md);
+  --pf-v6-c-card--PaddingBlockEnd: var(--pf-t--global--spacer--md);
+}
+
+.mui-theme .pf-v6-c-card:hover {
+  --pf-v6-c-card--BorderColor: var(--mui-palette-grey-300);
+}
+```
+
+### Real Example from MUI-theme.scss:
+```scss
+// From lines 165-173 of MUI-theme.scss
+.mui-theme .pf-v6-c-button {
+  --pf-v6-c-button--FontWeight: var(--mui-button-FontWeight);
+  --pf-v6-c-button--PaddingBlockStart: var(--mui-button--PaddingBlockStart);
+  --pf-v6-c-button--PaddingBlockEnd: var(--mui-button--PaddingBlockEnd);
+  --pf-v6-c-button--PaddingInlineStart: var(--mui-button--PaddingInlineStart);
+  --pf-v6-c-button--PaddingInlineEnd: var(--mui-button--PaddingInlineEnd);
+  --pf-v6-c-button--LineHeight: var(--mui-button--LineHeight);
+  letter-spacing: 0.02857em; // No PF variable exists for this
+}
+```
+
+---
+
+## When Direct CSS Properties Are Acceptable
+
+Only use direct CSS properties (not variables) in these cases:
+
+### ✅ Acceptable Use Cases:
+1. **Properties with no PF variable equivalent**
+   ```scss
+   .mui-theme .pf-v6-c-form__group {
+     position: relative; // No --pf-v6-c-form__group--Position exists
+   }
+   ```
+
+2. **Pseudo-elements without PF variable support**
+   ```scss
+   .mui-theme .pf-v6-c-text-input-group::before {
+     border: none; // No PF variable for ::before border
+   }
+   ```
+
+3. **Layout properties (display, flex, grid)**
+   ```scss
+   .mui-theme .pf-v6-c-page__sidebar {
+     display: flex;
+     flex-direction: column;
+   }
+   ```
+
+4. **Descriptive properties (letter-spacing, text-transform, etc.)**
+   ```scss
+   .mui-theme .pf-v6-c-button {
+     letter-spacing: 0.02857em; // MUI-specific, no PF equivalent
+     text-transform: none;
+   }
+   ```
+
+5. **Selector-specific resets**
+   ```scss
+   .form-fieldset-wrapper:hover .form-fieldset {
+     border-color: var(--mui-palette-common-black); // ✅ Specific hover behavior
+   }
+   ```
+
+### ❌ Unacceptable Use Cases:
+- ❌ Padding/margin when `--pf-v6-c-*--Padding*` variables exist
+- ❌ Colors when PF tokens or variables exist
+- ❌ Border width/radius when PF variables exist
+- ❌ Font properties when PF variables exist
+- ❌ Any property where a PF component variable exists
+
+---
+
+## Quick Decision Tree
+
+```
+Need to add styling?
+│
+├─ Is there a --pf-t--global--{category}--{property} token that applies?
+│  └─ YES → Does the global token need a MUI value?
+│     ├─ YES → Override it at .mui-theme:root (affects all components)
+│     │        .mui-theme:root {
+│     │          --pf-t--global--border--width--regular: 1px;
+│     │        }
+│     └─ NO  → Use the global token as-is
+│  └─ NO  → Continue ↓
+│
+├─ Is there a --pf-v6-c-{component}--{property} variable?
+│  └─ YES → Override it (component needs different value from global)
+│     .mui-theme .pf-v6-c-button {
+│       --pf-v6-c-button--FontWeight: var(--mui-button-FontWeight);
+│     }
+│  └─ NO  → Continue ↓
+│
+├─ Is it a layout/positioning/descriptive property?
+│  └─ YES → Direct CSS is OK (document with comment)
+│  └─ NO  → Create custom MUI variable at top of file
+```
+
+---
+
+**Remember**: Always scope to `.mui-theme`, always prefer overriding PF global tokens at `:root` first (most efficient), then use component variables only when needed, and check both `mod-arch-kubeflow/style/pf-tokens-SSOT.json` and `MUI-theme.scss` for existing patterns before adding new styles.
+
