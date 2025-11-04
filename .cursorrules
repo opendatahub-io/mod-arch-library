@@ -290,7 +290,7 @@ const theme = createTheme({
 
 This file contains the complete MUI default theme configuration in JSON format. Use it as a reference when creating MUI custom variables.
 
-**To regenerate after MUI upgrades**: Run `npm run generate-mui-theme` in the `mod-arch-kubeflow` directory
+**To regenerate after MUI upgrades**: Run `npm run generate-mui-theme-object` in the `mod-arch-kubeflow` directory
 
 **Methods to find MUI values**:
 
