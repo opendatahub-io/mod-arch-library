@@ -14,7 +14,7 @@ export const mergeRequestInit = (
   },
 });
 
-type CallRestJSONOptions = {
+type CallRestOptions = {
   queryParams?: Record<string, unknown>;
   parseJSON?: boolean;
 } & EitherOrNone<
@@ -22,15 +22,15 @@ type CallRestJSONOptions = {
     fileContents: string;
   },
   {
-    data: Record<string, unknown>;
+    data: Record<string, unknown> | FormData;
   }
 >;
 
-const callRestJSON = <T>(
+const callRest = <T>(
   host: string,
   path: string,
   requestInit: RequestInit,
-  { data, fileContents, queryParams, parseJSON = true }: CallRestJSONOptions,
+  { data, fileContents, queryParams, parseJSON = true }: CallRestOptions,
 ): Promise<T> => {
   const { method, ...otherOptions } = requestInit;
 
@@ -58,6 +58,8 @@ const callRestJSON = <T>(
       new Blob([fileContents], { type: 'application/x-yaml' }),
       'uploadedFile.yml',
     );
+  } else if (data instanceof FormData) {
+    formData = data;
   } else if (data) {
     // It's OK for contentType and requestData to BOTH be undefined for e.g. a GET request or POST with no body.
     contentType = 'application/json;charset=UTF-8';
@@ -88,7 +90,7 @@ export const restGET = <T>(
   queryParams: Record<string, unknown> = {},
   options?: APIOptions,
 ): Promise<T> =>
-  callRestJSON<T>(host, path, mergeRequestInit(options, { method: 'GET' }), {
+  callRest<T>(host, path, mergeRequestInit(options, { method: 'GET' }), {
     queryParams,
     parseJSON: options?.parseJSON,
   });
@@ -97,11 +99,11 @@ export const restGET = <T>(
 export const restCREATE = <T>(
   host: string,
   path: string,
-  data: Record<string, unknown>,
+  data: Record<string, unknown> | FormData,
   queryParams: Record<string, unknown> = {},
   options?: APIOptions,
 ): Promise<T> =>
-  callRestJSON<T>(host, path, mergeRequestInit(options, { method: 'POST' }), {
+  callRest<T>(host, path, mergeRequestInit(options, { method: 'POST' }), {
     data,
     queryParams,
     parseJSON: options?.parseJSON,
@@ -115,7 +117,7 @@ export const restFILE = <T>(
   queryParams: Record<string, unknown> = {},
   options?: APIOptions,
 ): Promise<T> =>
-  callRestJSON<T>(host, path, mergeRequestInit(options, { method: 'POST' }), {
+  callRest<T>(host, path, mergeRequestInit(options, { method: 'POST' }), {
     fileContents,
     queryParams,
     parseJSON: options?.parseJSON,
@@ -128,7 +130,7 @@ export const restENDPOINT = <T>(
   queryParams: Record<string, unknown> = {},
   options?: APIOptions,
 ): Promise<T> =>
-  callRestJSON<T>(host, path, mergeRequestInit(options, { method: 'POST' }), {
+  callRest<T>(host, path, mergeRequestInit(options, { method: 'POST' }), {
     queryParams,
     parseJSON: options?.parseJSON,
   });
@@ -140,7 +142,7 @@ export const restUPDATE = <T>(
   queryParams: Record<string, unknown> = {},
   options?: APIOptions,
 ): Promise<T> =>
-  callRestJSON<T>(host, path, mergeRequestInit(options, { method: 'PUT' }), {
+  callRest<T>(host, path, mergeRequestInit(options, { method: 'PUT' }), {
     data,
     queryParams,
     parseJSON: options?.parseJSON,
@@ -153,7 +155,7 @@ export const restPATCH = <T>(
   queryParams: Record<string, unknown> = {},
   options?: APIOptions,
 ): Promise<T> =>
-  callRestJSON<T>(host, path, mergeRequestInit(options, { method: 'PATCH' }), {
+  callRest<T>(host, path, mergeRequestInit(options, { method: 'PATCH' }), {
     data,
     queryParams,
     parseJSON: options?.parseJSON,
@@ -166,7 +168,7 @@ export const restDELETE = <T>(
   queryParams: Record<string, unknown> = {},
   options?: APIOptions,
 ): Promise<T> =>
-  callRestJSON<T>(host, path, mergeRequestInit(options, { method: 'DELETE' }), {
+  callRest<T>(host, path, mergeRequestInit(options, { method: 'DELETE' }), {
     data,
     queryParams,
     parseJSON: options?.parseJSON,
