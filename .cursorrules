@@ -241,6 +241,274 @@ const theme = createTheme({
 3. **Component overrides**: Prefer PF tokens for all visual properties
 4. **Interactive states**: Always use PF token variants (hover, clicked, etc.)
 
+## Using the MUI Theme Viewer for Value Reference
+
+**File**: `mod-arch-kubeflow/style/MUI-default-theme-object.json` (Reference file)
+
+This file contains the complete MUI default theme configuration in JSON format. Use it as a reference when creating MUI custom variables.
+
+**To regenerate after MUI upgrades**: Run `npm run generate-mui-theme` in the `mod-arch-kubeflow` directory
+
+**Methods to find MUI values**:
+
+1. **JSON Reference File**: Check `MUI-default-theme-object.json`
+2. **Browser Console**: `console.log(theme)` in dev mode
+3. **MUI Documentation**: <https://mui.com/material-ui/customization/default-theme/>
+4. **React DevTools**: Inspect ThemeProvider context
+5. **DOM Inspection**: Inspect MUI components to see computed CSS variable values
+
+### Decision Process for Overrides
+
+```text
+Need to style a component?
+│
+├─ Step 1: Identify the PF variable to override
+│  │        Check pf-tokens-SSOT.json or inspect DOM
+│  │
+│  ├─ Found global token (--pf-t--global--*)?
+│  │  └─ Use this! (affects all components)
+│  │
+│  └─ Found component variable (--pf-v6-c-{component}--*)?
+│     └─ Use this (component-specific)
+│
+├─ Step 2: Find the MUI equivalent value
+│  │        Check MUI-default-theme-object.json OR inspect MUI component in DOM
+│  │
+│  ├─ Is it a standard MUI theme property?
+│  │  └─ YES → Use auto-available variable (from ThemeProvider)
+│  │     Example: var(--mui-palette-primary-main)
+│  │     .mui-theme:root {
+│  │       --pf-t--global--color--brand--default: var(--mui-palette-primary-main);
+│  │     }
+│  │
+│  └─ Is it a custom/computed value?
+│     └─ YES → Define custom MUI variable first
+│        Example: Button padding from inspecting MUI button
+│        .mui-theme:root {
+│          --mui-button--PaddingBlockStart: 6px; // Custom: spacing(0.75)
+│        }
+│        .mui-theme .pf-v6-c-button {
+│          --pf-v6-c-button--PaddingBlockStart: var(--mui-button--PaddingBlockStart);
+│        }
+│
+└─ Step 3: No PF variable exists?
+   Use direct CSS as last resort
+   .mui-theme .pf-v6-c-component {
+     position: relative; // No PF variable exists
+   }
+```
+
+### MUI Variables Available from ThemeProvider
+
+**IMPORTANT**: Most MUI variables are **automatically available** via `<MUIThemeProvider theme={createMUITheme}>` and **DO NOT** need to be defined in SCSS.
+
+#### Variables Already Available (DO NOT redefine these)
+
+These are injected by the MUI ThemeProvider and can be referenced directly:
+
+```scss
+// ✅ CORRECT - Use directly without defining
+.mui-theme .pf-v6-c-card {
+  --pf-v6-c-card--BorderColor: var(--mui-palette-divider); // Already exists!
+  --pf-v6-c-card--BackgroundColor: var(--mui-palette-background-paper); // Already exists!
+}
+
+// ❌ WRONG - Don't redefine these in SCSS
+.mui-theme:root {
+  --mui-palette-divider: rgba(0, 0, 0, 0.12); // ❌ Already from ThemeProvider!
+  --mui-palette-background-paper: #fff;       // ❌ Already from ThemeProvider!
+}
+```
+
+**Available MUI variables from ThemeProvider**:
+
+- `--mui-palette-*` (all palette colors: primary, secondary, error, text, grey, etc.)
+- `--mui-typography-*` (font families, weights, sizes)
+- `--mui-spacing-*` (spacing multipliers)
+- `--mui-shape-*` (border radius, etc.)
+- `--mui-shadows-*` (elevation shadows)
+
+#### When to Define Custom MUI Variables
+
+**ONLY** define custom `--mui-*` variables when:
+
+1. The value doesn't exist in the MUI theme
+2. You need a computed/derived value
+3. You need a component-specific customization
+
+```scss
+.mui-theme:root {
+  // ✅ Custom computed values (not in MUI theme)
+  --mui-button--PaddingBlockStart: 6px;  // spacing(0.75) - custom computation
+  --mui-button--PaddingInlineStart: 16px; // spacing(2) - custom computation
+
+  // ✅ Component-specific customizations (not in default theme)
+  --mui-card--BorderWidth: 1px; // Custom: card border width not in theme
+  --mui-form--LabelColor: rgba(0, 0, 0, 0.6); // Custom: specific label color
+}
+```
+
+### Best Practice Workflow
+
+1. **Open `MUI-default-theme-object.json`** to check what values exist
+2. **Determine if the variable already exists from ThemeProvider**:
+   - If it's a standard MUI theme value (palette, typography, spacing, shape, shadows) → **Use directly, don't define**
+   - If it's a custom/computed value → **Define in SCSS**
+3. **Use the MUI variable** (either existing or custom) in your PF overrides
+
+**Example - Using existing MUI variables**:
+
+```scss
+// ✅ CORRECT - These variables already exist from ThemeProvider
+.mui-theme .pf-v6-c-card {
+  --pf-v6-c-card--BorderColor: var(--mui-palette-divider);
+  --pf-v6-c-card--BackgroundColor: var(--mui-palette-background-paper);
+  --pf-v6-c-card--Color: var(--mui-palette-text-primary);
+}
+```
+
+**Example - Defining custom MUI variables**:
+
+```scss
+// ✅ CORRECT - Custom values not in MUI theme
+.mui-theme:root {
+  --mui-button--PaddingBlockStart: 6px;  // spacing(0.75) - computed
+  --mui-card--BorderWidth: 1px;         // Custom value
+}
+
+.mui-theme .pf-v6-c-button {
+  --pf-v6-c-button--PaddingBlockStart: var(--mui-button--PaddingBlockStart);
+}
+```
+
+### Complete Example - Styling a Form Control Component
+
+This example shows the complete workflow from checking the theme viewer to applying overrides:
+
+```scss
+// STEP 1: Check MUI-default-theme-object.json
+// Found these values exist in the theme:
+//   palette.text.primary: "rgba(0, 0, 0, 0.87)"      → --mui-palette-text-primary (auto-available)
+//   palette.text.disabled: "rgba(0, 0, 0, 0.38)"     → --mui-palette-text-disabled (auto-available)
+//   palette.divider: "rgba(0, 0, 0, 0.12)"           → --mui-palette-divider (auto-available)
+//   typography.body1.fontSize: "1rem"                → --mui-typography-body1-fontSize (auto-available)
+//   shape.borderRadius: 4                            → --mui-shape-borderRadius (auto-available)
+
+// STEP 2: Only define CUSTOM MUI variables (computed/non-standard values)
+.mui-theme:root {
+  // ✅ Custom computed padding (not in default theme)
+  --mui-form-control--PaddingBlockStart: 8px;  // Custom: computed from spacing
+  --mui-form-control--PaddingInlineStart: 12px; // Custom: computed from spacing
+
+  // STEP 3: Check if PF global tokens exist and override them
+  // These affect ALL components - most efficient!
+  // Use the auto-available MUI variables directly (don't redefine them)
+  --pf-t--global--text--color--regular: var(--mui-palette-text-primary);
+  --pf-t--global--border--color--default: var(--mui-palette-divider);
+  --pf-t--global--border--radius--medium: var(--mui-shape-borderRadius);
+}
+
+// STEP 4: Only override component variables when needed
+.mui-theme .pf-v6-c-form-control {
+  // Use auto-available MUI variables directly
+  --pf-v6-c-form-control--FontSize: var(--mui-typography-body1-fontSize);
+  --pf-v6-c-form-control--Color: var(--mui-palette-text-primary);
+
+  // Use custom MUI variables for non-standard values
+  --pf-v6-c-form-control--PaddingBlockStart: var(--mui-form-control--PaddingBlockStart);
+
+  // Placeholder uses auto-available MUI variable
+  &::placeholder {
+    --pf-v6-c-form-control--m-placeholder--Color: var(--mui-palette-text-disabled);
+  }
+
+  // STEP 5: Only use hardcoded values as last resort
+  &:disabled {
+    cursor: not-allowed; // No PF variable for cursor
+  }
+}
+```
+
+### Key Takeaways from Example
+
+1. **Check MUI-default-theme-object.json** - Understand what values exist in the theme
+2. **Use auto-available MUI variables** - Most MUI theme values are already available from `<MUIThemeProvider>`
+3. **Only define custom MUI variables** - For computed/derived values not in the default theme
+4. **Check for PF global tokens** - Override these first with MUI variables (affects all components)
+5. **Use component variables** - When component needs different value from global
+6. **Hardcode only when necessary** - Document why with a comment
+
+### Finding Component-Scoped PF Variables
+
+When you need to override a component-specific property:
+
+1. **Check PatternFly documentation** or inspect the component in browser DevTools
+2. **Look for the pattern**: `--pf-v6-c-{component}--{property}--{modifier}`
+   - Example: `--pf-v6-c-form-control--FontSize`
+   - Example: `--pf-v6-c-form-control--m-placeholder--Color`
+   - Example: `--pf-v6-c-button--hover--BackgroundColor`
+
+3. **Common component variable patterns**:
+
+   ```scss
+   // Basic property
+   --pf-v6-c-{component}--{Property}
+
+   // With modifier
+   --pf-v6-c-{component}--m-{modifier}--{Property}
+
+   // With state
+   --pf-v6-c-{component}--{state}--{Property}
+
+   // With element
+   --pf-v6-c-{component}__{element}--{Property}
+   ```
+
+4. **Set the value to a MUI variable**:
+
+   ```scss
+   // ✅ Use auto-available MUI variables (don't define)
+   .mui-theme .pf-v6-c-button {
+     --pf-v6-c-button--BackgroundColor: var(--mui-palette-primary-main); // Auto-available!
+   }
+
+   // ✅ Or define custom MUI variables when needed
+   .mui-theme:root {
+     --mui-button--custom-padding: 6px; // Custom: not in default theme
+   }
+
+   .mui-theme .pf-v6-c-button {
+     --pf-v6-c-button--PaddingBlockStart: var(--mui-button--custom-padding);
+   }
+   ```
+
+### Quick Reference - Auto-Available vs Custom MUI Variables
+
+#### Auto-Available (DON'T define these - use directly)
+
+From `<MUIThemeProvider theme={createMUITheme}>`:
+
+- `--mui-palette-primary-*` (main, light, dark, contrastText)
+- `--mui-palette-secondary-*`
+- `--mui-palette-error-*`, `--mui-palette-warning-*`, `--mui-palette-info-*`, `--mui-palette-success-*`
+- `--mui-palette-text-*` (primary, secondary, disabled)
+- `--mui-palette-background-*` (default, paper)
+- `--mui-palette-grey-*` (50, 100, 200...900, A100, A200, A400, A700)
+- `--mui-palette-divider`
+- `--mui-typography-fontFamily`
+- `--mui-typography-fontWeight*` (Light, Regular, Medium, Bold)
+- `--mui-shape-borderRadius`
+- `--mui-spacing-*`
+- All other standard MUI theme properties
+
+#### Custom Variables (ONLY define these when needed)
+
+Define in `.mui-theme:root` when:
+
+- **Computed values**: `--mui-button--PaddingBlockStart: 6px; // spacing(0.75)`
+- **Component-specific**: `--mui-card--BorderWidth: 1px;`
+- **Non-standard values**: `--mui-form--LabelColor: rgba(0, 0, 0, 0.6);`
+
 ## SCSS/CSS Guidelines
 
 ### ✅ DO: Override PF Global Tokens at :root (MOST EFFICIENT)
