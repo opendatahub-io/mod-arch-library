@@ -6,6 +6,3 @@ stats.json
 coverage
 .idea
 public-cypress
-**/jest-coverage
-.DS_Store
-.vscode

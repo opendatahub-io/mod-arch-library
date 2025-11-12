@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mod-arch-ui
+  labels:
+    app: mod-arch-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mod-arch-ui
+  template:
+    metadata:
+      labels:
+        app: mod-arch-ui
+    spec: 
+      serviceAccountName: mod-arch-ui
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        runAsNonRoot: true
+      containers:
+      - name: mod-arch-ui
+        image: mod-arch-ui
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /healthcheck
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 30
+          timeoutSeconds: 15
+          periodSeconds: 30
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /healthcheck
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 15
+          timeoutSeconds: 15
+          periodSeconds: 30
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          limits:
+            memory: 2Gi
+          requests:
+            cpu: 500m
+            memory: 2Gi
+        ports:
+          - containerPort: 8080
+        args:
+          - "--port=8080"
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
