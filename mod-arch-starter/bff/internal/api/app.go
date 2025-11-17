@@ -39,7 +39,7 @@ type App struct {
 	repositories            *repositories.Repositories
 	//used only on mocked k8s client
 	testEnv *envtest.Environment
-	// rootCAs used for outbound TLS connections to Model Registry/Catalog
+	// rootCAs used for outbound TLS connections to Client Service
 	rootCAs *x509.CertPool
 }
 

@@ -1,5 +1,6 @@
 module.exports = {
   "parser": "@typescript-eslint/parser",
+  "root": true, // Required to prevent prettier plugin conflicts
   "env": {
     "browser": true,
     "node": true
@@ -116,6 +117,7 @@ module.exports = {
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/no-var-requires": "off",
+    '@typescript-eslint/no-require-imports': 'off',
     "@typescript-eslint/no-empty-function": "error",
     "@typescript-eslint/no-inferrable-types": "error",
     "@typescript-eslint/no-unused-vars": "error",

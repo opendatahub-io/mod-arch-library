@@ -33,10 +33,10 @@
     "noEmit": true
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.jsx",
-    "**/*.js"
+    "./**/*.ts",
+    "./**/*.tsx",
+    "./**/*.jsx",
+    "./**/*.js"
   ],
   "exclude": [
     "node_modules",
