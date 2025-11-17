@@ -13,15 +13,12 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-import chaiSubset from 'chai-subset';
 import '@cypress/code-coverage/support';
 import { mockUserSettings } from '~/__mocks__/mockUserSettings';
 import 'cypress-mochawesome-reporter/register';
 import './commands';
 import { mockNamespace } from '~/__mocks__/mockNamespace';
 import { MODEL_REGISTRY_API_VERSION } from './commands/api';
-
-chai.use(chaiSubset);
 
 Cypress.Keyboard.defaults({
   keystrokeDelay: 0,

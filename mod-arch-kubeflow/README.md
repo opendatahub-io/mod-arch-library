@@ -11,7 +11,7 @@ npm install mod-arch-kubeflow @mui/material sass sass-loader
 ## Peer Dependencies
 
 - `react` (>=16.8.0)
-- `@mui/material` (^6.0.0)
+- `@mui/material` (^7.0.0)
 
 ## Usage
 
