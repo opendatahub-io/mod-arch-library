@@ -17,5 +17,5 @@ We do have some [contributing guidelines] you can follow.
 
 Read more about the Mod Arch UI in one of our documentation links.
 
-* [Dev setup & Requirements]
-* [Mod Arch UI documentation]
+- [Dev setup & Requirements]
+- [Mod Arch UI documentation]

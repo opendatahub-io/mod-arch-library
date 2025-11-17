@@ -58,7 +58,6 @@ func (kc *InternalKubernetesClient) GetNamespaces(ctx context.Context, identity 
 		kc.Logger.Warn("failed to check cluster admin status", "user", identity.UserID, "error", err)
 		// Continue with individual checks if cluster admin check fails
 	} else if isAdmin {
-		kc.Logger.Debug("user is cluster-admin, returning all namespaces", "user", identity.UserID)
 		namespaceList, err := kc.Client.CoreV1().Namespaces().List(ctx, metav1.ListOptions{})
 		if err != nil {
 			return nil, fmt.Errorf("failed to list namespaces: %w", err)
@@ -201,7 +200,6 @@ func (kc *InternalKubernetesClient) IsClusterAdmin(identity *RequestIdentity) (b
 		}
 		for _, subject := range crb.Subjects {
 			if subject.Kind == "User" && subject.Name == identity.UserID {
-				kc.Logger.Info("user is cluster-admin", "user", identity.UserID, "crb", crb.Name)
 				return true, nil
 			}
 		}
