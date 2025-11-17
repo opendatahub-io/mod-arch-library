@@ -13,17 +13,21 @@
 
 1. Change the [webpack config](https://github.com/kubeflow/kubeflow/blob/master/components/centraldashboard/webpack.config.js#L186) proxies to allow Mod Arch:
 
-```javascript
-        proxy: {
-            ...
-            '/mod-arch': {
-                target: 'http://localhost:9000',
-                pathRewrite: {'^/mod-arch': ''},
-                changeOrigin: true,
-                ws: true,
-                secure: false,
-            },
-        },
+```js
+// Add this to your webpack.config.js devServer options
+module.exports = {
+  devServer: {
+    proxy: {
+      '/mod-arch': {
+        target: 'http://localhost:9000',
+        pathRewrite: { '^/mod-arch': '' },
+        changeOrigin: true,
+        ws: true,
+        secure: false,
+      },
+    },
+  },
+};
 ```
 
 2. Run the centraldashboard:

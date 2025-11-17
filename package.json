@@ -1,12 +1,13 @@
 {
   "name": "mod-arch-library",
-  "version": "1.2.2",
+  "version": "1.4.0",
   "description": "Modular Architecture Essentials - A monorepo containing libraries for building scalable micro-frontend applications",
   "private": true,
   "workspaces": [
     "mod-arch-core",
     "mod-arch-shared",
-    "mod-arch-kubeflow"
+    "mod-arch-kubeflow",
+    "mod-arch-installer"
   ],
   "engines": {
     "node": ">=20.0.0",
@@ -17,13 +18,18 @@
     "build:core": "npm run build --workspace=mod-arch-core",
     "build:shared": "npm run build --workspace=mod-arch-shared",
     "build:kubeflow": "npm run build --workspace=mod-arch-kubeflow",
+    "build:installer": "npm run build --workspace=mod-arch-installer",
     "test": "npm run test --workspaces --if-present",
     "test:jest": "npm run test:jest --workspaces --if-present",
     "test:core": "npm run test --workspace=mod-arch-core",
     "test:shared": "npm run test --workspace=mod-arch-shared",
     "test:kubeflow": "npm run test --workspace=mod-arch-kubeflow",
+    "test:installer": "npm run test --workspace=mod-arch-installer",
+    "test:installer:flavor": "npm run test:flavor --workspace=mod-arch-installer",
     "lint": "npm run test:lint --workspaces --if-present",
     "lint:fix": "npm run test:fix --workspaces --if-present",
+    "lint:installer:flavor": "npm run lint:flavor --workspace=mod-arch-installer",
+    "lint:installer:flavor:fix": "npm run lint:flavor:fix --workspace=mod-arch-installer",
     "clean": "rm -rf */dist */node_modules node_modules",
     "version:patch": "npm version patch --no-git-tag-version && npm version patch --workspaces --no-git-tag-version && npm run version:commit",
     "version:minor": "npm version minor --no-git-tag-version && npm version minor --workspaces --no-git-tag-version && npm run version:commit",
@@ -33,6 +39,7 @@
     "publish:core": "npm run build:core && npm publish --workspace=mod-arch-core",
     "publish:shared": "npm run build:shared && npm publish --workspace=mod-arch-shared",
     "publish:kubeflow": "npm run build:kubeflow && npm publish --workspace=mod-arch-kubeflow",
+    "publish:installer": "npm run build:installer && npm publish --workspace=mod-arch-installer",
     "prepublish:all": "npm run test"
   },
   "repository": {

@@ -1,0 +1,50 @@
+{
+  "name": "mod-arch-installer",
+  "version": "1.4.2",
+  "description": "CLI installer that bootstraps mod-arch-starter projects with Kubeflow or default flavors.",
+  "type": "module",
+  "bin": {
+    "mod-arch-installer": "dist/cli.js",
+    "install-mod-arch-starter": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "templates",
+    "flavors"
+  ],
+  "scripts": {
+    "build": "npm run clean && tsc -p tsconfig.json",
+    "clean": "rm -rf dist .test-workdir .lint-workdir",
+    "lint": "tsc --noEmit",
+    "lint:flavor": "node ./scripts/lint-flavor.mjs",
+    "lint:flavor:fix": "node ./scripts/lint-flavor.mjs --fix",
+    "test": "node ./scripts/test-flavor.mjs",
+    "test:flavor": "node ./scripts/test-flavor.mjs",
+    "sync-templates": "node ./scripts/sync-templates.mjs",
+    "prepare": "npm run build",
+    "prebuild": "npm run sync-templates"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "picocolors": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/opendatahub-io/mod-arch-library.git"
+  },
+  "bugs": {
+    "url": "https://github.com/opendatahub-io/mod-arch-library/issues"
+  },
+  "keywords": [
+    "modular-architecture",
+    "kubeflow",
+    "installer"
+  ]
+}
