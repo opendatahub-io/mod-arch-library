@@ -1,8 +1,3 @@
-[frontend requirements]: ./frontend/docs/dev-setup.md#requirements
-[BFF requirements]: ./bff/README.md#pre-requisites
-[Mod arch UI]: ./docs/README.md
-[contributing guidelines]: ./CONTRIBUTING.md
-
 # Mod Arch UI
 
 ## Overview
@@ -13,10 +8,20 @@ The Mod Arch UI is a standalone web app for Kubeflow Mod Arch. In this repositor
 
 You can check the [contributing guidelines] for more information on how to contribute to the Mod Arch UI.
 
+## Quick Install
+
+Bootstrap a fresh copy of this starter without cloning the repo by using the published CLI:
+
+```bash
+npx mod-arch-installer my-module --flavor kubeflow
+```
+
+See [`docs/install.md`](./docs/install.md) for all CLI options and details about the PatternFly-first default flavor.
+
 ## OpenAPI Specification
 
 You can find the OpenAPI specification for the Mod Arch UI in the [openapi](./api/openapi) directory.
-A live version of the OpenAPI specification can be found [here](https://editor.swagger.io/?url=https://raw.githubusercontent.com/kubeflow/mod-arch/main/clients/ui/api/openapi/mod-arch.yaml).
+[Open the spec in Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/kubeflow/mod-arch/main/clients/ui/api/openapi/mod-arch.yaml).
 
 ## Targeted environments
 
@@ -122,3 +127,6 @@ The following Makefile targets are used to build and push the Docker images the 
 ## Deployments
 
 For more information on how to deploy the Mod Arch UI, please refer to the [Mod arch UI] documentation.
+
+[Mod arch UI]: ./docs/README.md
+[contributing guidelines]: ./CONTRIBUTING.md
