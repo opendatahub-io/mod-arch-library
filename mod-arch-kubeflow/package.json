@@ -14,12 +14,14 @@
   },
   "files": [
     "dist",
+    "scripts",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
     "build": "tsc && tsc-alias && npm run copy-assets",
     "copy-assets": "mkdir -p dist/style dist/images && cp -r style/* dist/style/ && cp -r images/* dist/images/",
+    "generate-mui-theme-object": "node scripts/generate-mui-theme.mjs",
     "test": "run-s test:lint test:unit test:type-check",
     "test:jest": "jest --passWithNoTests",
     "test:unit": "npm run test:jest -- --silent",
@@ -51,11 +53,13 @@
     "access": "public"
   },
   "peerDependencies": {
+    "@mui/material": "^7.0.0",
     "react": ">=18.2.0",
-    "react-dom": ">=18.2.0",
-    "@mui/material": "^7.0.0"
+    "react-dom": ">=18.2.0"
   },
   "devDependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@mui/material": "^7.0.0",
     "@types/react": "^18.3.1",
     "npm-run-all2": "^7.0.1",
