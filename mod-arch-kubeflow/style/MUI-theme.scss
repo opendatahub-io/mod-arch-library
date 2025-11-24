@@ -1559,7 +1559,7 @@ left: 0;
 
   // Fix text input alignment in typeahead
   input.pf-v6-c-text-input-group__text-input {
-    padding-left: 16px;
+    padding-left: var(--mui-spacing-16px);
   }
 }
 
