@@ -197,7 +197,7 @@ const TypeaheadSelect: React.FunctionComponent<TypeaheadSelectProps> = ({
 
   const setActiveAndFocusedItem = (itemIndex: number) => {
     setFocusedItemIndex(itemIndex);
-    const focusedItem = selectOptions[itemIndex];
+    const focusedItem = filteredSelections[itemIndex];
     setActiveItemId(String(focusedItem.value));
   };
 
@@ -433,13 +433,17 @@ const TypeaheadSelect: React.FunctionComponent<TypeaheadSelectProps> = ({
         onSelect={handleSelect}
         onOpenChange={(open) => !open && closeMenu()}
         toggle={toggle}
+        variant="typeahead"
         shouldFocusFirstItemOnOpen={false}
         ref={innerRef}
         {...props}
       >
         <SelectList>
           {filteredSelections.map((option, index) => {
-            const { content, value, ...optionProps } = option;
+            // Exclude content, value, and isSelected - only spread other SelectOptionProps
+            // isSelected is excluded to prevent conflicts with isFocused during keyboard navigation
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { content, value, isSelected, ...optionProps } = option;
             return (
               <SelectOption
                 key={value}

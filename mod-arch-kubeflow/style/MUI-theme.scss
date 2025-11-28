@@ -888,6 +888,10 @@
   }
 }
 
+.mui-theme .pf-v6-c-menu__list-item.pf-m-focus {
+  --pf-v6-c-menu__item--BackgroundColor: var(--mui-palette-action-focus);
+}
+
 .mui-theme .pf-v6-c-menu-toggle {
   --pf-v6-c-menu-toggle__toggle-icon--MinHeight: var(--mui-menu-toggle__toggle-icon--MinHeight);
   --pf-v6-c-menu-toggle__controls--MinWidth: var(--mui-menu-toggle__controls--MinWidth);
@@ -1551,6 +1555,11 @@ left: 0;
     --pf-v6-c-menu-toggle--BorderColor: var(--mui-palette-primary-main);
     border-width: var(--mui-form--focus--BorderWidth); // Thicker border for focus state (intentional for emphasis)
     --pf-v6-c-menu-toggle--BackgroundColor: var(--mui-palette-common-white);
+  }
+
+  // Fix text input alignment in typeahead
+  input.pf-v6-c-text-input-group__text-input {
+    padding-left: var(--mui-spacing-16px);
   }
 }
 
