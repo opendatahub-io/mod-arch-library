@@ -30,13 +30,14 @@
     "importHelpers": true,
     "skipLibCheck": true,
     "noErrorTruncation": true,
-    "noEmit": true
+    "noEmit": true,
+    "allowImportingTsExtensions": true
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.jsx",
-    "**/*.js"
+    "./**/*.ts",
+    "./**/*.tsx",
+    "./**/*.jsx",
+    "./**/*.js"
   ],
   "exclude": [
     "node_modules",

@@ -4,7 +4,7 @@ const { ModuleFederationPlugin } = require('@module-federation/enhanced/webpack'
 const deps = require('../package.json').dependencies;
 
 const moduleFederationConfig = {
-  name: 'modelRegistry',
+  name: 'modArch',
   filename: 'remoteEntry.js',
 
   shared: {

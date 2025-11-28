@@ -49,7 +49,6 @@ func (kc *TokenKubernetesClient) IsClusterAdmin(_ *RequestIdentity) (bool, error
 		return false, nil
 	}
 
-	kc.Logger.Info("user is cluster-admin")
 	return true, nil
 }
 
