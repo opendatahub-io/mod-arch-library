@@ -1,10 +1,10 @@
+/* eslint-disable no-console */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const { moduleFederationPlugins } = require('./moduleFederation');
 const { setupWebpackDotenvFilesForEnv } = require('./dotenv');
 const { name } = require('../package.json');
-
-const { moduleFederationPlugins } = require('./moduleFederation');
 
 const RELATIVE_DIRNAME = process.env._RELATIVE_DIRNAME;
 const IS_PROJECT_ROOT_DIR = process.env._IS_PROJECT_ROOT_DIR;
@@ -13,11 +13,13 @@ const PUBLIC_PATH = process.env._PUBLIC_PATH;
 const SRC_DIR = process.env._SRC_DIR;
 const COMMON_DIR = process.env._COMMON_DIR;
 const DIST_DIR = process.env._DIST_DIR;
-const OUTPUT_ONLY = process.env._OUTPUT_ONLY;
-const FAVICON = process.env.FAVICON;
-const PRODUCT_NAME = process.env.PRODUCT_NAME;
-const COVERAGE = process.env.COVERAGE;
-const DEPLOYMENT_MODE = process.env._DEPLOYMENT_MODE;
+const {
+  _OUTPUT_ONLY: OUTPUT_ONLY,
+  FAVICON,
+  PRODUCT_NAME,
+  COVERAGE,
+  _DEPLOYMENT_MODE: DEPLOYMENT_MODE,
+} = process.env;
 const BASE_PATH = DEPLOYMENT_MODE === 'kubeflow' ? '/mod-arch/' : PUBLIC_PATH;
 
 if (OUTPUT_ONLY !== 'true') {

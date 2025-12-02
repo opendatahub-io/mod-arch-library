@@ -3,8 +3,8 @@ import type { RoleBindingKind } from 'mod-arch-shared';
 import type { Namespace, UserSettings } from 'mod-arch-core';
 import { mockModArchResponse } from 'mod-arch-core';
 
-const MODEL_REGISTRY_API_VERSION = 'v1';
-export { MODEL_REGISTRY_API_VERSION };
+const CLIENT_API_VERSION = 'v1';
+export { CLIENT_API_VERSION };
 
 type SuccessErrorResponse = {
   success: boolean;

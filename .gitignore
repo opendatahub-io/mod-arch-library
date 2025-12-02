@@ -9,3 +9,5 @@ public-cypress
 **/jest-coverage
 .DS_Store
 .vscode
+mod-arch-installer/templates/
+tmp

@@ -25,8 +25,8 @@ import (
 
 const (
 	Version         = "1.0.0"
-	PathPrefix      = "/mod-arch"            // optional UI prefix (empty for starter)
-	ApiPathPrefix   = PathPrefix + "/api/v1" // base API prefix
+	PathPrefix      = "/mod-arch"
+	ApiPathPrefix   = "/api/v1"
 	HealthCheckPath = "/healthcheck"
 	UserPath        = ApiPathPrefix + "/user"
 	NamespacePath   = ApiPathPrefix + "/namespaces"
@@ -39,7 +39,7 @@ type App struct {
 	repositories            *repositories.Repositories
 	//used only on mocked k8s client
 	testEnv *envtest.Environment
-	// rootCAs used for outbound TLS connections to Model Registry/Catalog
+	// rootCAs used for outbound TLS connections to Client Service
 	rootCAs *x509.CertPool
 }
 
@@ -146,6 +146,7 @@ func (app *App) Routes() http.Handler {
 
 	// handler for api calls
 	appMux.Handle(ApiPathPrefix+"/", apiRouter)
+	appMux.Handle(PathPrefix+ApiPathPrefix+"/", http.StripPrefix(PathPrefix, apiRouter))
 
 	// file server for the frontend file and SPA routes
 	staticDir := http.Dir(app.config.StaticAssetsDir)
@@ -172,6 +173,7 @@ func (app *App) Routes() http.Handler {
 	healthcheckMux.Handle(HealthCheckPath, app.RecoverPanic(app.EnableTelemetry(healthcheckRouter)))
 
 	// Combines the healthcheck endpoint with the rest of the routes
+	// Apply middleware to appMux which contains the API routes
 	combinedMux := http.NewServeMux()
 	combinedMux.Handle(HealthCheckPath, healthcheckMux)
 	combinedMux.Handle("/", app.RecoverPanic(app.EnableTelemetry(app.EnableCORS(app.InjectRequestIdentity(appMux)))))

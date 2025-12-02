@@ -52,17 +52,17 @@ const getTsCompilerOptions = (directory) => {
 /**
  * Setup a webpack dotenv plugin config.
  *
- * @param {string} path
+ * @param {string} filePath
  * @returns {*}
  */
-const setupWebpackDotenvFile = (path) => {
+const setupWebpackDotenvFile = (filePath) => {
   const settings = {
     systemvars: true,
     silent: true,
   };
 
-  if (path) {
-    settings.path = path;
+  if (filePath) {
+    settings.path = filePath;
   }
 
   return new Dotenv(settings);
@@ -109,11 +109,11 @@ const setupWebpackDotenvFilesForEnv = ({ directory, env, isRoot = true }) => {
 /**
  * Setup, and access, a dotenv file and the related set of parameters.
  *
- * @param {string} path
+ * @param {string} filePath
  * @returns {*}
  */
-const setupDotenvFile = (path) => {
-  const dotenvInitial = dotenv.config({ path });
+const setupDotenvFile = (filePath) => {
+  const dotenvInitial = dotenv.config({ path: filePath });
   dotenvExpand(dotenvInitial);
 };
 
@@ -156,7 +156,7 @@ const setupDotenvFilesForEnv = ({ env }) => {
   const PORT = process.env.PORT || '9000';
   const PROXY_PROTOCOL = process.env.PROXY_PROTOCOL || 'http';
   const PROXY_HOST = process.env.PROXY_HOST || 'localhost';
-  const PROXY_PORT = process.env.PROXY_PORT || process.env.PORT || 4000;
+  const PROXY_PORT = process.env.PROXY_PORT || 4000;
   const DEV_MODE = process.env.DEV_MODE || undefined;
   const OUTPUT_ONLY = process.env._OUTPUT_ONLY === 'true';
 

@@ -201,7 +201,7 @@ components:
                 description: Metadata about the response
               data:
                 $ref: "#/components/schemas/Config"
-      description: A response containing a list of ModelArtifact entities.
+      description: A response containing a list of Config entities.
     ConflictResponse:
       content:
         application/json:
