@@ -40,8 +40,12 @@
   --mui-form--focus--BorderWidth: 2px;
   --mui-form--focus--Padding: 7px;
   
+  // MUI default border color for inputs, selects, and menu toggles
+  // MUI OutlinedInput default - not exposed as a palette token in MUI's theme
+  --mui-input--BorderColor: rgba(0, 0, 0, 0.23);
+  
   // Form fieldset styling (MUI input border defaults)
-  --mui-form-fieldset--BorderColor: rgba(0, 0, 0, 0.23); // MUI default input border
+  --mui-form-fieldset--BorderColor: var(--mui-input--BorderColor); // Reference shared border color
   --mui-form-fieldset--Padding: var(--mui-spacing-8px); // 8px
   --mui-form-fieldset--InsetTop: calc(-1 * var(--mui-spacing-8px)); // -8px for label positioning
   --mui-form-fieldset--LegendPadding: var(--mui-spacing-4px); // 4px horizontal padding
@@ -605,14 +609,7 @@
   color: var(--mui-palette-primary-main);
 }
 
-// Indentation for secret key-value pairs
-.mui-theme .pf-v6-l-grid.secret-key-grid {
-  margin-left: var(--pf-t--global--spacer--xl);
-}
 
-.mui-theme .pf-v6-c-form .pf-v6-c-form__group.secret-value-indented {
-  margin-left: var(--pf-t--global--spacer--xl);
-}
 
 .mui-theme .pf-v6-l-grid__item.secret-remove-button-container {
   display: flex;
@@ -921,26 +918,51 @@
 
 }
 
-// Apply the menu toggle styling to all except split button variant
-.mui-theme .pf-v6-c-menu-toggle:not(.pf-m-split-button) {
+// Apply the menu toggle styling to all MenuToggles
+.mui-theme .pf-v6-c-menu-toggle {
   position: relative;
   box-sizing: border-box;
   --pf-v6-c-menu-toggle--BorderWidth: var(--pf-t--global--border--width--regular);
   --pf-v6-c-menu-toggle--BorderStyle: solid;
-  --pf-v6-c-menu-toggle--BorderColor: rgba(0, 0, 0, 0.23);
+  --pf-v6-c-menu-toggle--BorderColor: var(--mui-input--BorderColor);
   --pf-v6-c-menu-toggle--BackgroundColor: var(--mui-palette-common-white);
 
-  &:hover {
+  &:hover:not(.pf-m-primary) {
     --pf-v6-c-menu-toggle--hover--BorderColor: var(--mui-palette-common-black);
+    --pf-v6-c-menu-toggle--hover--BorderWidth: var(--pf-t--global--border--width--regular);
+    background-color: transparent;
   }
 
-  &:focus-within {
-    // Keep border width consistent to prevent layout shift
-    --pf-v6-c-menu-toggle--BorderWidth: var(--pf-t--global--border--width--regular);
+  &:focus,
+  &:focus-within,
+  &:active {
     --pf-v6-c-menu-toggle--BorderColor: var(--mui-palette-primary-main);
-    // Use box-shadow to create a thicker border while preventing layout shift
-    box-shadow: 0 0 0 1px var(--mui-palette-primary-main);
   }
+
+  &.pf-m-expanded {
+    --pf-v6-c-menu-toggle--expanded--BorderColor: var(--mui-palette-primary-main);
+  }
+
+  // Disabled state theming
+  &.pf-m-disabled {
+    --pf-v6-c-menu-toggle--disabled--BackgroundColor: transparent;
+    --pf-v6-c-menu-toggle--Color: var(--mui-palette-text-disabled);
+    --pf-v6-c-menu-toggle--disabled__toggle-icon--Color: var(--mui-palette-text-disabled);
+    // No PF variable exists for disabled border; using direct CSS
+    background-color: var(--pf-v6-c-menu-toggle--disabled--BackgroundColor);
+    border: 1px solid var(--mui-palette-action-disabled);
+    
+    &:hover {
+      --pf-v6-c-menu-toggle--hover--BorderColor: var(--mui-palette-action-disabled);
+      --pf-v6-c-menu-toggle--BorderColor: var(--mui-palette-action-disabled);
+    }
+  }
+}
+
+// Split button variant should not get the general border styling
+.mui-theme .pf-v6-c-menu-toggle.pf-m-split-button {
+  border: none;
+  box-shadow: none;
 }
 
 .mui-theme .pf-v6-c-menu-toggle.pf-m-plain {
@@ -1310,9 +1332,6 @@ left: 0;
   --pf-v6-c-button--PaddingInlineEnd: 6px;
 }
 
-.mui-theme .pf-v6-c-toolbar__item.kubeflow-u-namespace-select>.pf-v6-c-menu-toggle.pf-m-disabled {
-  border: none;
-}
 
 .mui-theme .pf-v6-c-label {
   --pf-v6-c-label--BorderRadius: 16px;
@@ -1350,9 +1369,6 @@ left: 0;
   box-shadow: var(--mui-shadows-1);
 }
 
-.mui-theme .pf-v6-c-toolbar__item.kubeflow-u-namespace-select > .pf-v6-c-menu-toggle.pf-m-disabled {
-  border: none;
-}
 
 .mui-theme .pf-v6-c-label.pf-m-outline {
   --pf-v6-c-label--BorderColor: none;
@@ -1646,15 +1662,6 @@ left: 0;
   color: var(--pf-t--color--black);
 }
 
-
-.mui-theme button.pf-v6-c-menu-toggle {
-  // Use box-shadow to create a border effect without affecting the layout
-  &.pf-m-expanded,
-  &:focus {
-    box-shadow: 0 0 0 2px var(--mui-palette-primary-main);
-    outline: none; // Remove default browser outline
-  }
-}
 
 // Grid view: Position action cell (Actions kebab) on the right
 // The Connect button is a regular cell and will appear with other row content on the left
