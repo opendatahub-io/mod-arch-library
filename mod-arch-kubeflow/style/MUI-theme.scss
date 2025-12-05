@@ -41,7 +41,7 @@
   --mui-form--focus--Padding: 7px;
   
   // Form fieldset styling (MUI input border defaults)
-  --mui-form-fieldset--BorderColor: var(--pf-t--global--border--color--default); // Uses global token
+  --mui-form-fieldset--BorderColor: rgba(0, 0, 0, 0.23);
   --mui-form-fieldset--Padding: var(--mui-spacing-8px); // 8px
   --mui-form-fieldset--InsetTop: calc(-1 * var(--mui-spacing-8px)); // -8px for label positioning
   --mui-form-fieldset--LegendPadding: var(--mui-spacing-4px); // 4px horizontal padding
@@ -128,7 +128,7 @@
   --mui-tabs__link--PaddingBlockEnd: 12px;
   --mui-tabs__link--PaddingInlineStart: 16px;
   --mui-tabs__link--PaddingInlineEnd: 16px;
-  --mui-tabs__item--m-current__link--Color: var(--pf-t--global--text--color--brand--default);
+  --mui-tabs__item--m-current__link--Color: var(--mui-palette-primary-main);
   --mui-tabs__item--m-current__link--after--BorderWidth: 2px;
   --mui-tabs__link--FontSize: 0.875rem;
 
@@ -139,31 +139,146 @@
   --mui-spacing-16px: calc(2 * var(--mui-spacing));
   --mui-spacing-32px: calc(4 * var(--mui-spacing));
 
-  --pf-t--global--spacer--gap--group-to-group--vertical--default: var(--pf-t--global--spacer--sm);
-  --pf-t--global--border--width--box--status--default: var(--pf-t--global--border--width--regular);
-  --pf-t--global--border--radius--pill: var(--mui-shape-borderRadius);
-  --pf-t--global--text--color--brand--default: var(--mui-palette-primary-main);
-
-  --pf-t--global--color--nonstatus--blue--default: var(--mui-palette-primary-main);
-  --pf-t--global--text--color--inverse: var(--mui-palette-common-white);
-
-  --pf-t--global--font--family--100: Roboto, Helvetica, Arial, sans-serif;
-  --pf-t--global--font--family--200: Roboto, Helvetica, Arial, sans-serif;
-  --pf-t--global--font--family--300: Roboto, Courier, monospace;
-
   /*
-  ┌────────────────────────────────────────────────────────────────┐
-  │ PATTERNFLY GLOBAL TOKEN OVERRIDES - BORDER SYSTEM              │
-  │ These semantic tokens affect ALL components automatically      │
-  │ Mapped from MUI default theme values                           │
-  └────────────────────────────────────────────────────────────────┘
+  ╔════════════════════════════════════════════════════════════════════════════╗
+  ║ PATTERNFLY GLOBAL TOKEN TRANSLATION LAYER                                  ║
+  ║                                                                            ║
+  ║ This is the CORE of the MUI theming strategy. These overrides cascade      ║
+  ║ down to ALL PatternFly components automatically.                           ║
+  ║                                                                            ║
+  ║ Impact Analysis (from pf-tokens-SSOT.json):                                ║
+  ║   • --pf-t--global--text--color--regular: 64 components                    ║
+  ║   • --pf-t--global--background--color--primary--default: 47 components     ║
+  ║   • --pf-t--global--font--size--body--default: 42 components               ║
+  ║   • --pf-t--global--text--color--subtle: 37 components                     ║
+  ║   • --pf-t--global--border--radius--small: 26 components                   ║
+  ║   • --pf-t--global--font--weight--body--bold: 25 components                ║
+  ║                                                                            ║
+  ║ Reference: https://www.patternfly.org/tokens/all-patternfly-tokens         ║
+  ╚════════════════════════════════════════════════════════════════════════════╝
   */
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TEXT COLORS (64+ components affected)
+  // ═══════════════════════════════════════════════════════════════════════════
+  --pf-t--global--text--color--regular: var(--mui-palette-text-primary); // rgba(0,0,0,0.87)
+  --pf-t--global--text--color--subtle: var(--mui-palette-text-secondary); // rgba(0,0,0,0.6)
+  --pf-t--global--text--color--on-disabled: var(--mui-palette-text-disabled); // rgba(0,0,0,0.38)
+  --pf-t--global--text--color--placeholder: var(--mui-palette-text-secondary);
+  --pf-t--global--text--color--inverse: var(--mui-palette-common-white);
   
-  // Border Colors - MUI Input System
-  --pf-t--global--border--color--default: rgba(0, 0, 0, 0.23); // MUI input default border
+  // Brand Text Colors
+  --pf-t--global--text--color--brand--default: var(--mui-palette-primary-main);
+  --pf-t--global--text--color--brand--hover: var(--mui-palette-primary-dark);
+  --pf-t--global--text--color--brand--clicked: var(--mui-palette-primary-dark);
+  --pf-t--global--text--color--on-brand--default: var(--mui-palette-primary-contrastText);
+  --pf-t--global--text--color--on-brand--hover: var(--mui-palette-primary-contrastText);
+  --pf-t--global--text--color--on-brand--clicked: var(--mui-palette-primary-contrastText);
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // BRAND/PRIMARY COLORS (Used by buttons, links, active states)
+  // ═══════════════════════════════════════════════════════════════════════════
+  --pf-t--global--color--brand--default: var(--mui-palette-primary-main);
+  --pf-t--global--color--brand--hover: var(--mui-palette-primary-dark);
+  --pf-t--global--color--brand--clicked: var(--mui-palette-primary-dark);
+  --pf-t--global--color--nonstatus--blue--default: var(--mui-palette-primary-main);
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // BACKGROUND COLORS (47+ components affected)
+  // ═══════════════════════════════════════════════════════════════════════════
+  --pf-t--global--background--color--primary--default: var(--mui-palette-background-paper); // #fff
+  --pf-t--global--background--color--secondary--default: var(--mui-palette-grey-100);
+  --pf-t--global--background--color--floating--default: var(--mui-palette-background-paper);
+  --pf-t--global--background--color--action--plain--hover: var(--mui-palette-action-hover);
+  --pf-t--global--background--color--control--default: var(--mui-palette-common-white);
+  --pf-t--global--background--color--disabled--default: var(--mui-palette-action-disabledBackground);
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ICON COLORS (Affects all icons in components)
+  // ═══════════════════════════════════════════════════════════════════════════
+  --pf-t--global--icon--color--regular: var(--mui-palette-action-active); // rgba(0,0,0,0.54)
+  --pf-t--global--icon--color--subtle: var(--mui-palette-text-secondary);
+  --pf-t--global--icon--color--disabled: var(--mui-palette-action-disabled);
+  --pf-t--global--icon--color--brand--default: var(--mui-palette-primary-main);
+  --pf-t--global--icon--color--brand--hover: var(--mui-palette-primary-dark);
+  --pf-t--global--icon--color--on-brand--default: var(--mui-palette-primary-contrastText);
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // BORDER COLORS & STYLES
+  // ═══════════════════════════════════════════════════════════════════════════
+  --pf-t--global--border--color--default: rgba(0, 0, 0, 0.23); // MUI input default
   --pf-t--global--border--color--hover: var(--mui-palette-common-black); // MUI input hover
   --pf-t--global--border--color--clicked: var(--mui-palette-primary-main); // MUI focus/active
-  --pf-t--global--border--color--disabled: var(--mui-palette-action-disabled); // Disabled state
+  --pf-t--global--border--color--disabled: var(--mui-palette-action-disabled);
+  
+  // Brand Border Colors
+  --pf-t--global--border--color--brand--default: var(--mui-palette-primary-main);
+  --pf-t--global--border--color--brand--hover: var(--mui-palette-primary-dark);
+  --pf-t--global--border--color--brand--clicked: var(--mui-palette-primary-dark);
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // BORDER RADIUS (26+ components affected)
+  // ═══════════════════════════════════════════════════════════════════════════
+  --pf-t--global--border--radius--small: var(--mui-shape-borderRadius); // 4px
+  --pf-t--global--border--radius--medium: var(--mui-shape-borderRadius); // 4px (MUI uses same)
+  --pf-t--global--border--radius--large: var(--mui-shape-borderRadius); // 4px (MUI uses same for modals)
+  --pf-t--global--border--radius--pill: var(--mui-shape-borderRadius); // MUI uses same for dropdowns
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TYPOGRAPHY (42+ components affected for font-size, 25+ for font-weight)
+  // ═══════════════════════════════════════════════════════════════════════════
+  // Font families - use explicit values since --mui-typography-fontFamily may not be available as CSS var
+  --pf-t--global--font--family--body: "Roboto", "Helvetica", "Arial", sans-serif;
+  --pf-t--global--font--family--heading: "Roboto", "Helvetica", "Arial", sans-serif;
+  --pf-t--global--font--family--100: "Roboto", "Helvetica", "Arial", sans-serif;
+  --pf-t--global--font--family--200: "Roboto", "Helvetica", "Arial", sans-serif;
+  --pf-t--global--font--family--300: "Roboto", "Courier", monospace;
+  
+  // Font sizes (MUI base is 14px = 0.875rem, PF base is 1rem = 16px)
+  --pf-t--global--font--size--body--default: 0.875rem; // 14px - MUI body1
+  --pf-t--global--font--size--body--sm: 0.75rem; // 12px - MUI caption
+  --pf-t--global--font--size--body--lg: 1rem; // 16px
+  
+  // Font weights (MUI: 300=light, 400=regular, 500=medium, 700=bold)
+  --pf-t--global--font--weight--body--default: 400;
+  --pf-t--global--font--weight--body--bold: 500;
+  --pf-t--global--font--weight--heading--default: 500;
+  
+  // Line heights
+  --pf-t--global--font--line-height--body: 1.5; // MUI default
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // BOX SHADOWS (18+ components affected)
+  // ═══════════════════════════════════════════════════════════════════════════
+  --pf-t--global--box-shadow--sm: var(--mui-shadows-1);
+  --pf-t--global--box-shadow--md: var(--mui-shadows-4);
+  --pf-t--global--box-shadow--lg: var(--mui-shadows-8);
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SPACING (PF and MUI both use 8px base - mostly compatible)
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PF tokens already match MUI's 8px system:
+  // --pf-t--global--spacer--xs: 4px  (0.5 * 8px)
+  // --pf-t--global--spacer--sm: 8px  (1 * 8px)
+  // --pf-t--global--spacer--md: 16px (2 * 8px)
+  // --pf-t--global--spacer--lg: 24px (3 * 8px)
+  // --pf-t--global--spacer--xl: 32px (4 * 8px)
+  
+  --pf-t--global--spacer--gap--group-to-group--vertical--default: var(--pf-t--global--spacer--sm);
+  --pf-t--global--border--width--box--status--default: var(--pf-t--global--border--width--regular);
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // STATUS COLORS (Semantic - for alerts, badges, status indicators)
+  // ═══════════════════════════════════════════════════════════════════════════
+  --pf-t--global--color--status--danger--default: var(--mui-palette-error-main);
+  --pf-t--global--color--status--warning--default: var(--mui-palette-warning-main);
+  --pf-t--global--color--status--success--default: var(--mui-palette-success-main);
+  --pf-t--global--color--status--info--default: var(--mui-palette-info-main);
+  
+  --pf-t--global--icon--color--status--danger--default: var(--mui-palette-error-main);
+  --pf-t--global--icon--color--status--warning--default: var(--mui-palette-warning-main);
+  --pf-t--global--icon--color--status--success--default: var(--mui-palette-success-main);
+  --pf-t--global--icon--color--status--info--default: var(--mui-palette-info-main);
 }
 
 .mui-theme .pf-v6-c-action-list__item .pf-v6-c-button {
@@ -198,12 +313,12 @@
 
 .mui-theme .pf-v6-c-alert.pf-m-danger .pf-v6-c-alert__description {
   color: var(--mui-palette-Alert-errorColor);
-  padding-block-end: var(--mui-spacing);
+  padding-block-end: var(--pf-t--global--spacer--sm);
 }
 
 
 .mui-theme .pf-v6-c-alert__title {
-  padding-block: var(--mui-spacing);
+  padding-block: var(--pf-t--global--spacer--sm);
 }
 
 .mui-theme .pf-v6-c-alert__icon {
@@ -229,7 +344,6 @@
 }
 
 .mui-theme .pf-v6-c-button.pf-m-link.pf-m-inline {
-  --pf-v6-c-button--hover--Color: var(--mui-palette-primary-main);
   text-decoration-color: var(--mui-link-underlineColor);
 
   &:hover {
@@ -254,14 +368,14 @@
 
 .mui-theme .pf-v6-c-card {
   --pf-v6-c-card--BorderWidth: var(--pf-t--global--border--width--regular);
-  --pf-v6-c-card--BorderRadius: var(--mui-shape-borderRadius);
-  --pf-v6-c-card--BorderColor: var(--mui-palette-divider);
+  // BorderRadius inherited from --pf-t--global--border--radius--medium (set to MUI shape-borderRadius)
+  // BorderColor inherited from --pf-t--global--border--color--default (set to MUI divider)
   border: var(--pf-v6-c-card--BorderWidth) solid var(--pf-v6-c-card--BorderColor);
 }
 
 .mui-theme .pf-v6-c-card.pf-m-compact.pf-m-selectable {
   --pf-v6-c-card--BorderWidth: var(--pf-t--global--border--width--regular);
-  --pf-v6-c-card--BorderColor: var(--mui-palette-divider);
+  // BorderColor inherited from --pf-t--global--border--color--default (already set to MUI divider)
 }
 
 .mui-theme .pf-v6-c-card__selectable-actions
@@ -276,12 +390,12 @@
 
 .mui-theme .pf-v6-c-card.pf-m-selected {
   --pf-v6-c-card--BackgroundColor: var(--mui-palette-grey-200);
-  --pf-v6-c-card--m-selectable--m-selected--BorderColor: var(--mui-palette-divider);
+  // Border color inherited from --pf-t--global--border--color--default (already set to MUI divider)
 }
 
 .mui-theme .pf-v6-c-card.pf-m-selected:hover {
   --pf-v6-c-card--BackgroundColor: var(--mui-palette-grey-300);
-  --pf-v6-c-card--m-selectable--m-selected--BorderColor: var(--mui-palette-divider);
+  // Border color inherited from --pf-t--global--border--color--default (already set to MUI divider)
 }
 
 .mui-theme .pf-v6-c-description-list__term {
@@ -430,7 +544,7 @@
 
 .mui-theme .pf-v6-c-form-control {
   --pf-v6-c-form-control--m-disabled--BackgroundColor: var(--mui-palette-common-white);
-  --pf-v6-c-form-control--m-disabled--Color: var(--mui-palette-text-disabled);
+  // Disabled color inherited from --pf-t--global--text--color--on-disabled (set to MUI text-disabled)
   --pf-v6-c-form-control--m-error--after--BorderColor: var(--mui-palette-error-main);
   --pf-v6-c-form-control--m-error--hover--after--BorderColor: var(--mui-palette-error-main);
 }
@@ -690,8 +804,8 @@
 
 .mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper .pf-v6-c-input-group__item button {
   // Aligns EyeIcon in password input
-  --pf-v6-c-button--PaddingBlockStart: var(--mui-spacing-16px);
-  --pf-v6-c-button--PaddingBlockEnd: var(--mui-spacing-16px);
+  --pf-v6-c-button--PaddingBlockStart: var(--pf-t--global--spacer--md);
+  --pf-v6-c-button--PaddingBlockEnd: var(--pf-t--global--spacer--md);
   --pf-v6-c-button--BorderColor: var(--mui-palette-common-white);
   --pf-v6-c-button--BorderRadius: 50%;
 }
@@ -879,7 +993,7 @@
 
 .mui-theme .pf-v6-c-menu {
   --pf-v6-c-menu--BoxShadow: var(--mui-shadows-8);
-  --pf-v6-c-menu--BorderRadius: var(--mui-shape-borderRadius);
+  // BorderRadius inherited from --pf-t--global--border--radius--small (set to MUI shape-borderRadius)
   --pf-v6-c-menu--PaddingBlockStart: 0;
   --pf-v6-c-menu--PaddingBlockEnd: 0;
   --pf-v6-c-menu--PaddingInlineStart: 0;
@@ -923,7 +1037,7 @@
     --pf-t--global--background--color--action--plain--hover
   );
   --pf-v6-c-menu-toggle--m-split-button--m-action--m-primary--expanded--child--BackgroundColor: var(
-    --pf-t--global--color--brand--default
+    --mui-palette-primary-main
   );
   --pf-v6-c-menu-toggle--m-split-button--m-action--m-primary--child--BorderInlineStartColor: var(
     --mui-palette-primary-dark
@@ -943,10 +1057,6 @@
   --pf-v6-c-menu-toggle--BorderStyle: solid;
   // Border colors now inherited from global tokens
   --pf-v6-c-menu-toggle--BackgroundColor: var(--mui-palette-common-white);
-
-  &:hover {
-    // Hover border color inherited from --pf-t--global--border--color--hover
-  }
 
   &:focus-within {
     // Keep border width consistent to prevent layout shift
@@ -978,8 +1088,9 @@
 
 .mui-theme .pf-v6-c-menu-toggle.pf-m-primary {
   --pf-v6-c-menu-toggle--expanded--Color: var(--mui-palette-common-white);
-  --pf-v6-c-menu-toggle--expanded--BackgroundColor: var(--mui-palette-primary-main);
-  --pf-v6-c-menu-toggle--hover--BackgroundColor: var(--mui-palette-primary-dark);
+  // BackgroundColor colors inherited from global brand tokens:
+  // --pf-v6-c-menu-toggle--m-primary--BackgroundColor uses --pf-t--global--color--brand--default
+  // --pf-v6-c-menu-toggle--m-primary--hover--BackgroundColor uses --pf-t--global--color--brand--hover
 }
 
 .mui-theme .pf-v6-c-menu-toggle.pf-m-primary.pf-m-split-button {
@@ -995,10 +1106,11 @@
 }
 
 .mui-theme .pf-v6-c-menu-toggle.pf-m-secondary.pf-m-split-button {
-  --pf-v6-c-menu-toggle--BorderColor: var(--mui-palette-primary-main);
+  // Border and text colors inherited from global brand tokens:
+  // --pf-v6-c-menu-toggle--m-secondary--BorderColor uses --pf-t--global--border--color--brand--default
+  // --pf-v6-c-menu-toggle--m-secondary--expanded--Color uses --pf-t--global--text--color--brand--clicked
   --pf-v6-c-menu-toggle--BorderWidth: var(--mui-button--BorderWidth);
   --pf-v6-c-menu-toggle--BorderStyle: solid;
-  --pf-v6-c-menu-toggle--expanded--Color: var(--mui-palette-primary-dark);
 }
 
 .mui-theme .pf-v6-c-menu-toggle__button:has(.pf-v6-c-menu-toggle__toggle-icon) {
@@ -1015,9 +1127,9 @@
 // Specific styling for workspace details actions menu - minimal overrides only
 .mui-theme .workspace-details-action-toggle.pf-m-primary {
   // Override the white background that gets applied to all menu toggles
+  // Background color inherited from global brand token:
+  // --pf-v6-c-menu-toggle--m-primary--BackgroundColor uses --pf-t--global--color--brand--default
   --pf-v6-c-menu-toggle--BackgroundColor: var(--pf-t--global--color--brand--default);
-  // Use the proper PatternFly menu toggle variable for primary background color
-  --pf-v6-c-menu-toggle--m-primary--BackgroundColor: var(--pf-t--global--color--brand--default);
 }
 
 // Prevent text wrapping in Connect split button
@@ -1167,13 +1279,12 @@ left: 0;
   overflow-y: auto;
 }
 
-.mui-theme .pf-v6-c-progress-stepper__step.pf-m-info {
-  --pf-v6-c-progress-stepper__step-icon--Color: var(--mui-palette-primary-main);
-}
-
 .mui-theme .pf-v6-c-progress-stepper__step.pf-m-success {
   --pf-v6-c-progress-stepper__step-icon--Color: var(--mui-palette-success-main);
 }
+
+// Note: .pf-m-info progress stepper inherits its color from --pf-t--global--color--brand--default
+// which we've set to MUI primary in the translation layer, so no override needed
 
 .mui-theme .pf-v6-c-radio.pf-m-standalone:not(.workspace-kind-form-radio) .pf-v6-c-radio__input {
   display: none;
@@ -1196,13 +1307,17 @@ left: 0;
 }
 
 .mui-theme .pf-v6-c-table {
-  --pf-v6-c-table__sort--m-selected__button--Color: var(--mui-palette-text-primary);
-  --pf-v6-c-table__sort-indicator--Color: var(--mui-palette-text-secondary);
+  // Colors now inherited from global tokens:
+  // --pf-v6-c-table--cell--Color uses --pf-t--global--text--color--regular (set to MUI text-primary)
+  // --pf-v6-c-table__sort-indicator--Color uses --pf-t--global--icon--color--subtle (set to MUI text-secondary)
+  
+  // Intentional overrides for MUI-specific styling:
+  --pf-v6-c-table__sort--m-selected__button--Color: var(--mui-palette-text-primary); // MUI uses black, not brand color
   --pf-v6-c-table__sort__button--hover__sort-indicator--Color: var(--mui-palette-text-secondary);
   --pf-v6-c-table__sort__button--hover__text--Color: var(--mui-palette-text-secondary);
-  --pf-v6-c-table--cell--Color: var(--mui-palette-text-primary);
+  
+  // Padding/spacing overrides (component-specific values not in global tokens)
   --pf-v6-c-table__button--hover--BackgroundColor: var(--mui-table__button--BackgroundColor);
-  --pf-v6-c-table__button--Color: var(--pf-v6-c-table--cell--Color);
   --pf-v6-c-table__button--PaddingBlockStart: var(--mui-table__button--PaddingBlockStart);
   --pf-v6-c-table__button--PaddingBlockEnd: var(--mui-table__button--PaddingBlockEnd);
   --pf-v6-c-table__button--PaddingInlineStart: var(--mui-table__button--PaddingInlineStart);
@@ -1294,7 +1409,7 @@ left: 0;
   --pf-v6-c-tabs__link--PaddingBlockEnd: var(--mui-tabs__link--PaddingBlockEnd);
   --pf-v6-c-tabs__link--PaddingInlineStart: var(--mui-tabs__link--PaddingInlineStart);
   --pf-v6-c-tabs__link--PaddingInlineEnd: var(--mui-tabs__link--PaddingInlineEnd);
-  --pf-v6-c-tabs__item--m-current__link--Color: var(--pf-t--global--text--color--brand--default);
+  --pf-v6-c-tabs__item--m-current__link--Color: var(--mui-tabs__item--m-current__link--Color);
   --pf-v6-c-tabs__item--m-current__link--after--BorderWidth: var(
     --mui-tabs__item--m-current__link--after--BorderWidth
   );
@@ -1360,7 +1475,7 @@ left: 0;
 
 .mui-theme .pf-v6-c-label-group.pf-m-category {
   --pf-v6-c-label-group--m-category--BorderWidth: 0px;
-  --pf-v6-c-label-group--m-category--BorderRadius: var(--mui-shape-borderRadius);
+  // Border radius inherited from --pf-t--global--border--radius--small (set to MUI shape-borderRadius)
   box-shadow: var(--mui-shadows-1);
 }
 
@@ -1380,7 +1495,7 @@ left: 0;
 }
 
 .mui-theme .pf-v6-c-modal-box {
-  --pf-v6-c-modal-box--BorderRadius: var(--mui-shape-borderRadius);
+  // BorderRadius inherited from --pf-t--global--border--radius--large (set to MUI shape-borderRadius)
   --pf-v6-c-modal-box--BoxShadow: var(--mui-shadows-24);
 }
 
@@ -1421,7 +1536,7 @@ left: 0;
 }
 
 .mui-theme .pf-v6-c-page__main-body {
-  margin-left: var(--mui-spacing-4px);
+  margin-left: var(--pf-t--global--spacer--xs);
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -1556,7 +1671,7 @@ left: 0;
   --pf-v6-c-menu-toggle--BorderWidth: var(--pf-t--global--border--width--regular);
   --pf-v6-c-menu-toggle--BorderStyle: solid;
   // Border color inherited from --pf-t--global--border--color--default
-  --pf-v6-c-menu-toggle--BorderRadius: var(--mui-shape-borderRadius);
+  // Border radius inherited from --pf-t--global--border--radius--small (set to MUI shape-borderRadius)
   --pf-v6-c-menu-toggle--BackgroundColor: var(--mui-palette-common-white);
   height: 54px;
 
