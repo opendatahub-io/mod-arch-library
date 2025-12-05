@@ -133,6 +133,12 @@
   --pf-t--global--icon--color--status--warning--default: var(--mui-palette-warning-main);
   --pf-t--global--icon--color--status--success--default: var(--mui-palette-success-main);
   --pf-t--global--icon--color--status--info--default: var(--mui-palette-info-main);
+  
+  // Status Border Colors (for alerts, form validation, etc.)
+  --pf-t--global--border--color--status--danger--default: var(--mui-palette-error-main);
+  --pf-t--global--border--color--status--warning--default: var(--mui-palette-warning-main);
+  --pf-t--global--border--color--status--success--default: var(--mui-palette-success-main);
+  --pf-t--global--border--color--status--info--default: var(--mui-palette-info-main);
 
   // ═══════════════════════════════════════════════════════════════════════════
   // MUI CUSTOM VARIABLES
@@ -154,8 +160,7 @@
   --mui-alert__icon--MarginBlockStart: 7px;
   --mui-alert__icon--MarginBlockEnd: 7px;
   --mui-alert__icon--FontSize: 22px;
-  --mui-alert__icon--Color: var(--mui-palette-error-main);
-  --mui-alert__border-danger-color: var(--mui-palette-error-main);
+  // Icon and border colors now handled by global status tokens
   --mui-alert__title--FontWeight: 500;
 
   // Backdrop
@@ -181,12 +186,9 @@
   --mui-form--focus--BorderWidth: 2px;
   --mui-form--focus--Padding: 7px;
 
-  // MUI default border color for inputs, selects, and menu toggles
-  // MUI OutlinedInput default - not exposed as a palette token in MUI's theme
-  --mui-input--BorderColor: rgba(0, 0, 0, 0.23);
-  
   // Form fieldset styling (MUI input border defaults)
-  --mui-form-fieldset--BorderColor: var(--mui-input--BorderColor); // Reference shared border color
+  // Uses global border color: --pf-t--global--border--color--default
+  --mui-form-fieldset--BorderColor: var(--pf-t--global--border--color--default);
   --mui-form-fieldset--Padding: var(--mui-spacing-8px); // 8px
   --mui-form-fieldset--InsetTop: calc(-1 * var(--mui-spacing-8px)); // -8px for label positioning
   --mui-form-fieldset--LegendPadding: var(--mui-spacing-4px); // 4px horizontal padding
@@ -327,8 +329,9 @@
 }
 
 .mui-theme .pf-v6-c-alert.pf-m-danger {
-  --pf-v6-c-alert--BorderColor: var(--mui-alert__border-danger-color);
-  --pf-v6-c-alert__icon--Color: var(--mui-alert__icon--Color);
+  // BorderColor inherited from --pf-t--global--border--color--status--danger--default
+  // Icon color inherited from --pf-t--global--icon--color--status--danger--default
+  // Title color: MUI uses error color (not PF default of regular text)
   --pf-v6-c-alert__title--Color: var(--mui-palette-Alert-errorColor);
 }
 
@@ -662,6 +665,15 @@
   border-color: var(--pf-t--global--border--color--default);
 }
 
+// Disabled menu toggle inside fieldset wrapper - use disabled border color
+.form-fieldset-wrapper:has(.pf-v6-c-menu-toggle.pf-m-disabled) .form-fieldset {
+  border-color: var(--mui-palette-action-disabled);
+}
+
+.form-fieldset-wrapper:has(.pf-v6-c-menu-toggle.pf-m-disabled):hover .form-fieldset {
+  border-color: var(--mui-palette-action-disabled);
+}
+
 .form-fieldset-wrapper span.pf-v6-c-form-control.pf-m-error ~ .form-fieldset {
   border-color: var(--mui-palette-error-main);
 }
@@ -726,6 +738,15 @@
 .mui-theme .pf-v6-c-form .form-fieldset-wrapper:focus-within span.pf-v6-c-form-control.pf-m-disabled ~ .form-fieldset,
 .mui-theme .pf-v6-c-form .form-fieldset-wrapper:hover span.pf-v6-c-form-control.pf-m-disabled ~ .form-fieldset {
   border-color: var(--mui-form-fieldset--BorderColor);
+}
+
+// Disabled menu toggle inside fieldset wrapper - use disabled border color
+.mui-theme .pf-v6-c-form .form-fieldset-wrapper:has(.pf-v6-c-menu-toggle.pf-m-disabled) .form-fieldset {
+  border-color: var(--mui-palette-action-disabled);
+}
+
+.mui-theme .pf-v6-c-form .form-fieldset-wrapper:has(.pf-v6-c-menu-toggle.pf-m-disabled):hover .form-fieldset {
+  border-color: var(--mui-palette-action-disabled);
 }
 
 .mui-theme .pf-v6-c-form .form-fieldset-wrapper span.pf-v6-c-form-control.pf-m-error ~ .form-fieldset {
@@ -804,6 +825,15 @@
 .mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper:focus-within span.pf-v6-c-form-control.pf-m-disabled ~ .form-fieldset,
 .mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper:hover span.pf-v6-c-form-control.pf-m-disabled ~ .form-fieldset {
   border-color: var(--mui-form-fieldset--BorderColor);
+}
+
+// Disabled menu toggle inside fieldset wrapper - use disabled border color
+.mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper:has(.pf-v6-c-menu-toggle.pf-m-disabled) .form-fieldset {
+  border-color: var(--mui-palette-action-disabled);
+}
+
+.mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper:has(.pf-v6-c-menu-toggle.pf-m-disabled):hover .form-fieldset {
+  border-color: var(--mui-palette-action-disabled);
 }
 
 .mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper span.pf-v6-c-form-control.pf-m-error ~ .form-fieldset {
@@ -949,6 +979,15 @@
   border-color: var(--pf-t--global--border--color--default);
 }
 
+// Disabled menu toggle inside fieldset wrapper - use disabled border color
+.mui-theme .pf-v6-c-expandable-section .form-fieldset-wrapper:has(.pf-v6-c-menu-toggle.pf-m-disabled) .form-fieldset {
+  border-color: var(--mui-palette-action-disabled);
+}
+
+.mui-theme .pf-v6-c-expandable-section .form-fieldset-wrapper:has(.pf-v6-c-menu-toggle.pf-m-disabled):hover .form-fieldset {
+  border-color: var(--mui-palette-action-disabled);
+}
+
 .mui-theme .pf-v6-c-form__field-group-body {
   --pf-v6-c-form__field-group-body--PaddingBlockStart: 8px;
 }
@@ -1067,11 +1106,11 @@
   box-sizing: border-box;
   --pf-v6-c-menu-toggle--BorderWidth: var(--pf-t--global--border--width--regular);
   --pf-v6-c-menu-toggle--BorderStyle: solid;
-  --pf-v6-c-menu-toggle--BorderColor: var(--mui-input--BorderColor);
+  // BorderColor inherited from --pf-t--global--border--color--default
   --pf-v6-c-menu-toggle--BackgroundColor: var(--mui-palette-common-white);
 
   &:hover:not(.pf-m-primary) {
-    --pf-v6-c-menu-toggle--hover--BorderColor: var(--mui-palette-common-black);
+    // Hover border color inherited from --pf-t--global--border--color--hover
     --pf-v6-c-menu-toggle--hover--BorderWidth: var(--pf-t--global--border--width--regular);
     background-color: transparent;
   }
@@ -1079,12 +1118,11 @@
   &:focus,
   &:focus-within,
   &:active {
+    // Focus border color - no dedicated PF variable, using BorderColor directly
     --pf-v6-c-menu-toggle--BorderColor: var(--mui-palette-primary-main);
   }
 
-  &.pf-m-expanded {
-    --pf-v6-c-menu-toggle--expanded--BorderColor: var(--mui-palette-primary-main);
-  }
+  // &.pf-m-expanded - Expanded border color inherited from --pf-t--global--border--color--clicked
 
   // Disabled state theming
   &.pf-m-disabled {
@@ -1100,6 +1138,14 @@
       --pf-v6-c-menu-toggle--BorderColor: var(--mui-palette-action-disabled);
     }
   }
+}
+
+// Disabled menu toggle inside fieldset wrapper - border handled by fieldset, not toggle
+.form-fieldset-wrapper .pf-v6-c-menu-toggle.pf-m-disabled,
+.mui-theme .pf-v6-c-form .form-fieldset-wrapper .pf-v6-c-menu-toggle.pf-m-disabled,
+.mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper .pf-v6-c-menu-toggle.pf-m-disabled,
+.mui-theme .pf-v6-c-expandable-section .form-fieldset-wrapper .pf-v6-c-menu-toggle.pf-m-disabled {
+  border: none;
 }
 
 // Split button variant should not get the general border styling
@@ -1701,13 +1747,13 @@ left: 0;
   position: relative;
   --pf-v6-c-menu-toggle--BorderWidth: var(--pf-t--global--border--width--regular);
   --pf-v6-c-menu-toggle--BorderStyle: solid;
-  --pf-v6-c-menu-toggle--BorderColor: rgba(0, 0, 0, 0.23);
-  --pf-v6-c-menu-toggle--BorderRadius: var(--mui-shape-borderRadius);
+  // BorderColor inherited from --pf-t--global--border--color--default
+  // BorderRadius inherited from --pf-t--global--border--radius--small
   --pf-v6-c-menu-toggle--BackgroundColor: var(--mui-palette-common-white);
   height: 54px;
 
   &:hover {
-    --pf-v6-c-menu-toggle--hover--BorderColor: var(--mui-palette-common-black);
+    // Hover border color inherited from --pf-t--global--border--color--hover
     --pf-v6-c-menu-toggle--hover--BackgroundColor: var(--mui-palette-common-white);
   }
 
