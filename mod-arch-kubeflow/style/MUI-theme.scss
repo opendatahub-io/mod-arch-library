@@ -40,8 +40,12 @@
   --mui-form--focus--BorderWidth: 2px;
   --mui-form--focus--Padding: 7px;
   
+  // MUI default border color for inputs, selects, and menu toggles
+  // MUI OutlinedInput default - not exposed as a palette token in MUI's theme
+  --mui-input--BorderColor: rgba(0, 0, 0, 0.23);
+  
   // Form fieldset styling (MUI input border defaults)
-  --mui-form-fieldset--BorderColor: rgba(0, 0, 0, 0.23); // MUI default input border
+  --mui-form-fieldset--BorderColor: var(--mui-input--BorderColor); // Reference shared border color
   --mui-form-fieldset--Padding: var(--mui-spacing-8px); // 8px
   --mui-form-fieldset--InsetTop: calc(-1 * var(--mui-spacing-8px)); // -8px for label positioning
   --mui-form-fieldset--LegendPadding: var(--mui-spacing-4px); // 4px horizontal padding
@@ -605,14 +609,7 @@
   color: var(--mui-palette-primary-main);
 }
 
-// Indentation for secret key-value pairs
-.mui-theme .pf-v6-l-grid.secret-key-grid {
-  margin-left: var(--pf-t--global--spacer--xl);
-}
 
-.mui-theme .pf-v6-c-form .pf-v6-c-form__group.secret-value-indented {
-  margin-left: var(--pf-t--global--spacer--xl);
-}
 
 .mui-theme .pf-v6-l-grid__item.secret-remove-button-container {
   display: flex;
@@ -927,7 +924,7 @@
   box-sizing: border-box;
   --pf-v6-c-menu-toggle--BorderWidth: var(--pf-t--global--border--width--regular);
   --pf-v6-c-menu-toggle--BorderStyle: solid;
-  --pf-v6-c-menu-toggle--BorderColor: rgba(0, 0, 0, 0.23);
+  --pf-v6-c-menu-toggle--BorderColor: var(--mui-input--BorderColor);
   --pf-v6-c-menu-toggle--BackgroundColor: var(--mui-palette-common-white);
 
   &:hover:not(.pf-m-primary) {
@@ -950,16 +947,14 @@
   &.pf-m-disabled {
     --pf-v6-c-menu-toggle--disabled--BackgroundColor: transparent;
     --pf-v6-c-menu-toggle--Color: var(--mui-palette-text-disabled);
-    --pf-v6-c-menu-toggle--disabled--Color: var(--mui-palette-text-disabled);
     --pf-v6-c-menu-toggle--disabled__toggle-icon--Color: var(--mui-palette-text-disabled);
-    background-color: transparent;
+    // No PF variable exists for disabled border; using direct CSS
+    background-color: var(--pf-v6-c-menu-toggle--disabled--BackgroundColor);
     border: 1px solid var(--mui-palette-action-disabled);
     
     &:hover {
       --pf-v6-c-menu-toggle--hover--BorderColor: var(--mui-palette-action-disabled);
       --pf-v6-c-menu-toggle--BorderColor: var(--mui-palette-action-disabled);
-      background-color: transparent;
-      border: 1px solid var(--mui-palette-action-disabled);
     }
   }
 }
