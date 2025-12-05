@@ -1,158 +1,12 @@
 .mui-theme:root {
-  // Alert
-  --mui-alert--BoxShadow: none;
-  --mui-alert--BorderRadius: var(--mui-shape-borderRadius);
-  --mui-alert-warning-text: #663c00;
-  --mui-alert-warning-FontWeight: 400;
-  --mui-alert--PaddingBlockStart: 6px;
-  --mui-alert--PaddingBlockEnd: 6px;
-  --mui-alert--PaddingInlineStart: 16px;
-  --mui-alert--PaddingInlineEnd: 16px;
-  --mui-alert__icon--MarginInlineEnd: 12px;
-  --mui-alert__icon--MarginBlockStart: 7px;
-  --mui-alert__icon--MarginBlockStart: 7px;
-  --mui-alert__icon--MarginBlockEnd: 7px;
-  --mui-alert__icon--FontSize: 22px;
-  --mui-alert__icon--Color: var(--mui-palette-error-main);
-  --mui-alert__border-danger-color: var(--mui-palette-error-main);
-  --mui-alert__title--FontWeight: 500;
 
-  // Backdrop
-  --mui-backdrop-BackgroundColor: rgba(0, 0, 0, 0.5);
-
-  // Button
-  --mui-button-FontWeight: 500;
-  --mui-button--BorderWidth: var(--pf-t--global--border--width--regular);
-  --mui-button--hover--BorderWidth: var(--pf-t--global--border--width--regular);
-  --mui-button--PaddingBlockStart: 6px;
-  --mui-button--PaddingBlockEnd: 6px;
-  --mui-button--PaddingInlineStart: 16px;
-  --mui-button--PaddingInlineEnd: 16px;
-  --mui-button--LineHeight: 1.75;
-  --mui-link-underlineColor: rgba(33, 150, 243, 0.4);
-
-  // Drawer
-  --mui-drawer-BorderLeft: var(--mui-palette-grey-300);
-  --mui-drawer__panel--MaxWidth: 600px;
-  --mui-drawer__panel--MinWidth: 400px;
-
-  // Form focus states (thicker border for emphasis, adjusted padding to prevent layout shift)
-  --mui-form--focus--BorderWidth: 2px;
-  --mui-form--focus--Padding: 7px;
-  
-  // Form fieldset styling (MUI input border defaults)
-  --mui-form-fieldset--BorderColor: rgba(0, 0, 0, 0.23);
-  --mui-form-fieldset--Padding: var(--mui-spacing-8px); // 8px
-  --mui-form-fieldset--InsetTop: calc(-1 * var(--mui-spacing-8px)); // -8px for label positioning
-  --mui-form-fieldset--LegendPadding: var(--mui-spacing-4px); // 4px horizontal padding
-  --mui-form-fieldset--LegendFontSize: var(--pf-t--global--font--size--body--sm); // 0.75rem
-
-  // Helper text
-  --mui-helper-text__item--FontWeight: 400;
-
-  // Menu item
-  --mui-menu__item--PaddingBlockStart: 6px;
-  --mui-menu__item--PaddingBlockEnd: 6px;
-  --mui-menu__item--PaddingInlineStart: 16px;
-  --mui-menu__item--PaddingInlineEnd: 16px;
-  --mui-menu__item--FontSize: 1rem;
-  --mui-menu__item--selected--BackgroundColor: rgb(var(--mui-palette-primary-mainChannel) / calc(var(--mui-palette-action-selectedOpacity, 0.08)));
-
-
-  // Menu toggle
-  --mui-menu-toggle__toggle-icon--MinHeight: auto;
-  --mui-menu-toggle__controls--MinWidth: 0;
-  --mui-menu-toggle--expanded--BackgroundColor: transparent;
-  --mui-menu-toggle--expanded--BorderColor: transparent;
-  --mui-menu-toggle--LineHeight: 1.75;
-  --mui-menu-toggle--PaddingBlockStart: 6px;
-  --mui-menu-toggle--PaddingBlockEnd: 6px;
-  --mui-menu-toggle--PaddingInlineStart: 16px;
-  --mui-menu-toggle--PaddingInlineEnd: 16px;
-  --mui-menu-toggle--ColumnGap: 0;
-  --mui-menu-toggle--expanded--Color: black;
-  --mui-menu-toggle--hover--BorderColor: transparent;
-  --mui-menu-toggle--BorderColor: transparent;
-  --mui-menu-toggle--PaddingInlineStart: 10px;
-  --mui-menu-toggle--PaddingInlineEnd: 10px;
-
-  // Nav
-  --mui-nav--current--BackgroundColor: #ffffff1b;
-
-  // Toggle group
-  --mui-toggle-group--selected--BackgroundColor: #e0f0ff;
-
-  // Radio
-  --mui-radio--margin: 10px 0;
-  --mui-radio-PaddingLeft: 30px;
-  --mui-radio__label--Width: 20px;
-  --mui-radio__label--Height: 20px;
-  --mui-radio__input--Width: 10px;
-  --mui-radio__input--Height: 10px;
-
-  // Sidebar from https://github.com/kubeflow/kubeflow/blob/4275d99754ac91f6cf5654b03824a73825e9fe55/components/centraldashboard/public/components/main-page.css#L7C1-L13C51
-  --kf-central-primary-background-color: #0a3b71;
-  --kf-central-sidebar-default-color: rgba(255, 255, 255, 0.7);
-  --kf-central-app-drawer-width: 240px;
-  --kf-central-app-bar-height: 64px;
-
-
-  // Pagination
-  --mui-pagination--zIndex: 100;
-
-  // Table
-  --mui-table__button--BackgroundColor: transparent;
-  --mui-table__button--hover--BackgroundColor: transparent;
-  --mui-table__button--Color: var(--pf-v6-c-table--cell--Color);
-  --mui-table__button--PaddingBlockStart: 0;
-  --mui-table__button--PaddingBlockEnd: 0;
-  --mui-table__button--PaddingInlineStart: 0;
-  --mui-table__button--PaddingInlineEnd: 0;
-  --mui-table--cell--PaddingInlineStart: 16px;
-  --mui-table--cell--PaddingInlineEnd: 16px;
-  --mui-table--cell--PaddingBlockStart: 16px;
-  --mui-table--cell--PaddingBlockEnd: 16px;
-  --mui-table--cell--first-last-child--PaddingInline: 8px;
-  --mui-table__thead--cell--FontSize: 14px;
-  --mui-table__sort-indicator--MarginInlineStart: 4px;
-
-  letter-spacing: 0.01071em;
-
-  // Tabs
-  --mui-tabs__link--hover--BackgroundColor: transparent;
-  --mui-tabs__item--PaddingBlockStart: 0;
-  --mui-tabs__item--PaddingBlockEnd: 0;
-  --mui-tabs__item--PaddingInlineStart: 0;
-  --mui-tabs__item--PaddingInlineEnd: 0;
-  --mui-tabs__link--PaddingBlockStart: 12px;
-  --mui-tabs__link--PaddingBlockEnd: 12px;
-  --mui-tabs__link--PaddingInlineStart: 16px;
-  --mui-tabs__link--PaddingInlineEnd: 16px;
-  --mui-tabs__item--m-current__link--Color: var(--mui-palette-primary-main);
-  --mui-tabs__item--m-current__link--after--BorderWidth: 2px;
-  --mui-tabs__link--FontSize: 0.875rem;
-
-  --mui-text-transform: uppercase;
-
-  --mui-spacing-4px: calc(0.5 * var(--mui-spacing));
-  --mui-spacing-8px: var(--mui-spacing);
-  --mui-spacing-16px: calc(2 * var(--mui-spacing));
-  --mui-spacing-32px: calc(4 * var(--mui-spacing));
-
-  /*
+    /*
   ╔════════════════════════════════════════════════════════════════════════════╗
   ║ PATTERNFLY GLOBAL TOKEN TRANSLATION LAYER                                  ║
   ║                                                                            ║
   ║ This is the CORE of the MUI theming strategy. These overrides cascade      ║
   ║ down to ALL PatternFly components automatically.                           ║
   ║                                                                            ║
-  ║ Impact Analysis (from pf-tokens-SSOT.json):                                ║
-  ║   • --pf-t--global--text--color--regular: 64 components                    ║
-  ║   • --pf-t--global--background--color--primary--default: 47 components     ║
-  ║   • --pf-t--global--font--size--body--default: 42 components               ║
-  ║   • --pf-t--global--text--color--subtle: 37 components                     ║
-  ║   • --pf-t--global--border--radius--small: 26 components                   ║
-  ║   • --pf-t--global--font--weight--body--bold: 25 components                ║
   ║                                                                            ║
   ║ Reference: https://www.patternfly.org/tokens/all-patternfly-tokens         ║
   ╚════════════════════════════════════════════════════════════════════════════╝
@@ -279,7 +133,174 @@
   --pf-t--global--icon--color--status--warning--default: var(--mui-palette-warning-main);
   --pf-t--global--icon--color--status--success--default: var(--mui-palette-success-main);
   --pf-t--global--icon--color--status--info--default: var(--mui-palette-info-main);
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // MUI CUSTOM VARIABLES
+  // Custom variables for MUI-specific values used in component overrides below.
+  // These define computed values not available in the MUI theme object.
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  // Alert
+  --mui-alert--BoxShadow: none;
+  --mui-alert--BorderRadius: var(--mui-shape-borderRadius);
+  --mui-alert-warning-text: #663c00;
+  --mui-alert-warning-FontWeight: 400;
+  --mui-alert--PaddingBlockStart: 6px;
+  --mui-alert--PaddingBlockEnd: 6px;
+  --mui-alert--PaddingInlineStart: 16px;
+  --mui-alert--PaddingInlineEnd: 16px;
+  --mui-alert__icon--MarginInlineEnd: 12px;
+  --mui-alert__icon--MarginBlockStart: 7px;
+  --mui-alert__icon--MarginBlockStart: 7px;
+  --mui-alert__icon--MarginBlockEnd: 7px;
+  --mui-alert__icon--FontSize: 22px;
+  --mui-alert__icon--Color: var(--mui-palette-error-main);
+  --mui-alert__border-danger-color: var(--mui-palette-error-main);
+  --mui-alert__title--FontWeight: 500;
+
+  // Backdrop
+  --mui-backdrop-BackgroundColor: rgba(0, 0, 0, 0.5);
+
+  // Button
+  --mui-button-FontWeight: 500;
+  --mui-button--BorderWidth: var(--pf-t--global--border--width--regular);
+  --mui-button--hover--BorderWidth: var(--pf-t--global--border--width--regular);
+  --mui-button--PaddingBlockStart: 6px;
+  --mui-button--PaddingBlockEnd: 6px;
+  --mui-button--PaddingInlineStart: 16px;
+  --mui-button--PaddingInlineEnd: 16px;
+  --mui-button--LineHeight: 1.75;
+  --mui-link-underlineColor: rgba(33, 150, 243, 0.4);
+
+  // Drawer
+  --mui-drawer-BorderLeft: var(--mui-palette-grey-300);
+  --mui-drawer__panel--MaxWidth: 600px;
+  --mui-drawer__panel--MinWidth: 400px;
+
+  // Form focus states (thicker border for emphasis, adjusted padding to prevent layout shift)
+  --mui-form--focus--BorderWidth: 2px;
+  --mui-form--focus--Padding: 7px;
+
+  // MUI default border color for inputs, selects, and menu toggles
+  // MUI OutlinedInput default - not exposed as a palette token in MUI's theme
+  --mui-input--BorderColor: rgba(0, 0, 0, 0.23);
+  
+  // Form fieldset styling (MUI input border defaults)
+  --mui-form-fieldset--BorderColor: var(--mui-input--BorderColor); // Reference shared border color
+  --mui-form-fieldset--Padding: var(--mui-spacing-8px); // 8px
+  --mui-form-fieldset--InsetTop: calc(-1 * var(--mui-spacing-8px)); // -8px for label positioning
+  --mui-form-fieldset--LegendPadding: var(--mui-spacing-4px); // 4px horizontal padding
+  --mui-form-fieldset--LegendFontSize: var(--pf-t--global--font--size--body--sm); // 0.75rem
+
+  // Helper text
+  --mui-helper-text__item--FontWeight: 400;
+
+  // Menu item
+  --mui-menu__item--PaddingBlockStart: 6px;
+  --mui-menu__item--PaddingBlockEnd: 6px;
+  --mui-menu__item--PaddingInlineStart: 16px;
+  --mui-menu__item--PaddingInlineEnd: 16px;
+  --mui-menu__item--FontSize: 1rem;
+  --mui-menu__item--selected--BackgroundColor: rgb(var(--mui-palette-primary-mainChannel) / calc(var(--mui-palette-action-selectedOpacity, 0.08)));
+
+
+  // Menu toggle
+  --mui-menu-toggle__toggle-icon--MinHeight: auto;
+  --mui-menu-toggle__controls--MinWidth: 0;
+  --mui-menu-toggle--expanded--BackgroundColor: transparent;
+  --mui-menu-toggle--expanded--BorderColor: transparent;
+  --mui-menu-toggle--LineHeight: 1.75;
+  --mui-menu-toggle--PaddingBlockStart: 6px;
+  --mui-menu-toggle--PaddingBlockEnd: 6px;
+  --mui-menu-toggle--PaddingInlineStart: 16px;
+  --mui-menu-toggle--PaddingInlineEnd: 16px;
+  --mui-menu-toggle--ColumnGap: 0;
+  --mui-menu-toggle--expanded--Color: black;
+  --mui-menu-toggle--hover--BorderColor: transparent;
+  --mui-menu-toggle--BorderColor: transparent;
+  --mui-menu-toggle--PaddingInlineStart: 10px;
+  --mui-menu-toggle--PaddingInlineEnd: 10px;
+
+  // Nav
+  --mui-nav--current--BackgroundColor: #ffffff1b;
+
+  // Toggle group
+  --mui-toggle-group--selected--BackgroundColor: #e0f0ff;
+
+  // Radio
+  --mui-radio--margin: 10px 0;
+  --mui-radio-PaddingLeft: 30px;
+  --mui-radio__label--Width: 20px;
+  --mui-radio__label--Height: 20px;
+  --mui-radio__input--Width: 10px;
+  --mui-radio__input--Height: 10px;
+
+  // Sidebar from https://github.com/kubeflow/kubeflow/blob/4275d99754ac91f6cf5654b03824a73825e9fe55/components/centraldashboard/public/components/main-page.css#L7C1-L13C51
+  --kf-central-primary-background-color: #0a3b71;
+  --kf-central-sidebar-default-color: rgba(255, 255, 255, 0.7);
+  --kf-central-app-drawer-width: 240px;
+  --kf-central-app-bar-height: 64px;
+
+
+  // Pagination
+  --mui-pagination--zIndex: 100;
+
+  // Table
+  --mui-table__button--BackgroundColor: transparent;
+  --mui-table__button--hover--BackgroundColor: transparent;
+  --mui-table__button--Color: var(--pf-v6-c-table--cell--Color);
+  --mui-table__button--PaddingBlockStart: 0;
+  --mui-table__button--PaddingBlockEnd: 0;
+  --mui-table__button--PaddingInlineStart: 0;
+  --mui-table__button--PaddingInlineEnd: 0;
+  --mui-table--cell--PaddingInlineStart: 16px;
+  --mui-table--cell--PaddingInlineEnd: 16px;
+  --mui-table--cell--PaddingBlockStart: 16px;
+  --mui-table--cell--PaddingBlockEnd: 16px;
+  --mui-table--cell--first-last-child--PaddingInline: 8px;
+  --mui-table__thead--cell--FontSize: 14px;
+  --mui-table__sort-indicator--MarginInlineStart: 4px;
+
+  letter-spacing: 0.01071em;
+
+  // Tabs
+  --mui-tabs__link--hover--BackgroundColor: transparent;
+  --mui-tabs__item--PaddingBlockStart: 0;
+  --mui-tabs__item--PaddingBlockEnd: 0;
+  --mui-tabs__item--PaddingInlineStart: 0;
+  --mui-tabs__item--PaddingInlineEnd: 0;
+  --mui-tabs__link--PaddingBlockStart: 12px;
+  --mui-tabs__link--PaddingBlockEnd: 12px;
+  --mui-tabs__link--PaddingInlineStart: 16px;
+  --mui-tabs__link--PaddingInlineEnd: 16px;
+  --mui-tabs__item--m-current__link--Color: var(--mui-palette-primary-main);
+  --mui-tabs__item--m-current__link--after--BorderWidth: 2px;
+  --mui-tabs__link--FontSize: 0.875rem;
+
+  --mui-text-transform: uppercase;
+
+  --mui-spacing-4px: calc(0.5 * var(--mui-spacing));
+  --mui-spacing-8px: var(--mui-spacing);
+  --mui-spacing-16px: calc(2 * var(--mui-spacing));
+  --mui-spacing-32px: calc(4 * var(--mui-spacing));
+
+
 }
+
+/*
+╔════════════════════════════════════════════════════════════════════════════════╗
+║ COMPONENT-SPECIFIC OVERRIDES                                                   ║
+║                                                                                ║
+║ These overrides apply to individual PatternFly components when the global      ║
+║ token translation layer above is not sufficient. Use these for:                ║
+║   • Component-specific spacing/padding adjustments                             ║
+║   • MUI-specific behaviors not covered by PF tokens                            ║
+║   • Layout properties (position, display, flex) that have no PF variables      ║
+║   • State-specific overrides (hover, focus, disabled) with custom behavior     ║
+║                                                                                ║
+║ Before adding new overrides here, check if a global token override would work. ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+*/
 
 .mui-theme .pf-v6-c-action-list__item .pf-v6-c-button {
   --pf-v6-c-button--PaddingInlineStart: 0;
@@ -733,15 +754,6 @@
   color: var(--mui-palette-primary-main);
 }
 
-// Indentation for secret key-value pairs
-.mui-theme .pf-v6-l-grid.secret-key-grid {
-  margin-left: var(--pf-t--global--spacer--xl);
-}
-
-.mui-theme .pf-v6-c-form .pf-v6-c-form__group.secret-value-indented {
-  margin-left: var(--pf-t--global--spacer--xl);
-}
-
 .mui-theme .pf-v6-l-grid__item.secret-remove-button-container {
   display: flex;
   align-items: flex-end;
@@ -1037,7 +1049,7 @@
     --pf-t--global--background--color--action--plain--hover
   );
   --pf-v6-c-menu-toggle--m-split-button--m-action--m-primary--expanded--child--BackgroundColor: var(
-    --mui-palette-primary-main
+    --pf-t--global--color--brand--default
   );
   --pf-v6-c-menu-toggle--m-split-button--m-action--m-primary--child--BorderInlineStartColor: var(
     --mui-palette-primary-dark
@@ -1049,22 +1061,51 @@
 
 }
 
-// Apply the menu toggle styling to all except split button variant
-.mui-theme .pf-v6-c-menu-toggle:not(.pf-m-split-button) {
+// Apply the menu toggle styling to all MenuToggles
+.mui-theme .pf-v6-c-menu-toggle {
   position: relative;
   box-sizing: border-box;
   --pf-v6-c-menu-toggle--BorderWidth: var(--pf-t--global--border--width--regular);
   --pf-v6-c-menu-toggle--BorderStyle: solid;
-  // Border colors now inherited from global tokens
+  --pf-v6-c-menu-toggle--BorderColor: var(--mui-input--BorderColor);
   --pf-v6-c-menu-toggle--BackgroundColor: var(--mui-palette-common-white);
 
-  &:focus-within {
-    // Keep border width consistent to prevent layout shift
-    --pf-v6-c-menu-toggle--BorderWidth: var(--pf-t--global--border--width--regular);
-    // Focus border color inherited from --pf-t--global--border--color--clicked
-    // Use box-shadow to create a thicker border while preventing layout shift
-    box-shadow: 0 0 0 1px var(--mui-palette-primary-main);
+  &:hover:not(.pf-m-primary) {
+    --pf-v6-c-menu-toggle--hover--BorderColor: var(--mui-palette-common-black);
+    --pf-v6-c-menu-toggle--hover--BorderWidth: var(--pf-t--global--border--width--regular);
+    background-color: transparent;
   }
+
+  &:focus,
+  &:focus-within,
+  &:active {
+    --pf-v6-c-menu-toggle--BorderColor: var(--mui-palette-primary-main);
+  }
+
+  &.pf-m-expanded {
+    --pf-v6-c-menu-toggle--expanded--BorderColor: var(--mui-palette-primary-main);
+  }
+
+  // Disabled state theming
+  &.pf-m-disabled {
+    --pf-v6-c-menu-toggle--disabled--BackgroundColor: transparent;
+    --pf-v6-c-menu-toggle--Color: var(--mui-palette-text-disabled);
+    --pf-v6-c-menu-toggle--disabled__toggle-icon--Color: var(--mui-palette-text-disabled);
+    // No PF variable exists for disabled border; using direct CSS
+    background-color: var(--pf-v6-c-menu-toggle--disabled--BackgroundColor);
+    border: 1px solid var(--mui-palette-action-disabled);
+    
+    &:hover {
+      --pf-v6-c-menu-toggle--hover--BorderColor: var(--mui-palette-action-disabled);
+      --pf-v6-c-menu-toggle--BorderColor: var(--mui-palette-action-disabled);
+    }
+  }
+}
+
+// Split button variant should not get the general border styling
+.mui-theme .pf-v6-c-menu-toggle.pf-m-split-button {
+  border: none;
+  box-shadow: none;
 }
 
 .mui-theme .pf-v6-c-menu-toggle.pf-m-plain {
@@ -1088,9 +1129,8 @@
 
 .mui-theme .pf-v6-c-menu-toggle.pf-m-primary {
   --pf-v6-c-menu-toggle--expanded--Color: var(--mui-palette-common-white);
-  // BackgroundColor colors inherited from global brand tokens:
-  // --pf-v6-c-menu-toggle--m-primary--BackgroundColor uses --pf-t--global--color--brand--default
-  // --pf-v6-c-menu-toggle--m-primary--hover--BackgroundColor uses --pf-t--global--color--brand--hover
+  --pf-v6-c-menu-toggle--expanded--BackgroundColor: var(--mui-palette-primary-main);
+  --pf-v6-c-menu-toggle--hover--BackgroundColor: var(--mui-palette-primary-dark);
 }
 
 .mui-theme .pf-v6-c-menu-toggle.pf-m-primary.pf-m-split-button {
@@ -1106,11 +1146,10 @@
 }
 
 .mui-theme .pf-v6-c-menu-toggle.pf-m-secondary.pf-m-split-button {
-  // Border and text colors inherited from global brand tokens:
-  // --pf-v6-c-menu-toggle--m-secondary--BorderColor uses --pf-t--global--border--color--brand--default
-  // --pf-v6-c-menu-toggle--m-secondary--expanded--Color uses --pf-t--global--text--color--brand--clicked
+  --pf-v6-c-menu-toggle--BorderColor: var(--mui-palette-primary-main);
   --pf-v6-c-menu-toggle--BorderWidth: var(--mui-button--BorderWidth);
   --pf-v6-c-menu-toggle--BorderStyle: solid;
+  --pf-v6-c-menu-toggle--expanded--Color: var(--mui-palette-primary-dark);
 }
 
 .mui-theme .pf-v6-c-menu-toggle__button:has(.pf-v6-c-menu-toggle__toggle-icon) {
@@ -1127,9 +1166,9 @@
 // Specific styling for workspace details actions menu - minimal overrides only
 .mui-theme .workspace-details-action-toggle.pf-m-primary {
   // Override the white background that gets applied to all menu toggles
-  // Background color inherited from global brand token:
-  // --pf-v6-c-menu-toggle--m-primary--BackgroundColor uses --pf-t--global--color--brand--default
   --pf-v6-c-menu-toggle--BackgroundColor: var(--pf-t--global--color--brand--default);
+  // Use the proper PatternFly menu toggle variable for primary background color
+  --pf-v6-c-menu-toggle--m-primary--BackgroundColor: var(--pf-t--global--color--brand--default);
 }
 
 // Prevent text wrapping in Connect split button
@@ -1439,10 +1478,6 @@ left: 0;
   --pf-v6-c-button--PaddingInlineEnd: 6px;
 }
 
-.mui-theme .pf-v6-c-toolbar__item.kubeflow-u-namespace-select>.pf-v6-c-menu-toggle.pf-m-disabled {
-  border: none;
-}
-
 .mui-theme .pf-v6-c-label {
   --pf-v6-c-label--BorderRadius: 16px;
   --pf-v6-c-label--FontSize: 0.8125rem;
@@ -1477,10 +1512,6 @@ left: 0;
   --pf-v6-c-label-group--m-category--BorderWidth: 0px;
   // Border radius inherited from --pf-t--global--border--radius--small (set to MUI shape-borderRadius)
   box-shadow: var(--mui-shadows-1);
-}
-
-.mui-theme .pf-v6-c-toolbar__item.kubeflow-u-namespace-select > .pf-v6-c-menu-toggle.pf-m-disabled {
-  border: none;
 }
 
 .mui-theme .pf-v6-c-label.pf-m-outline {
@@ -1670,18 +1701,18 @@ left: 0;
   position: relative;
   --pf-v6-c-menu-toggle--BorderWidth: var(--pf-t--global--border--width--regular);
   --pf-v6-c-menu-toggle--BorderStyle: solid;
-  // Border color inherited from --pf-t--global--border--color--default
-  // Border radius inherited from --pf-t--global--border--radius--small (set to MUI shape-borderRadius)
+  --pf-v6-c-menu-toggle--BorderColor: rgba(0, 0, 0, 0.23);
+  --pf-v6-c-menu-toggle--BorderRadius: var(--mui-shape-borderRadius);
   --pf-v6-c-menu-toggle--BackgroundColor: var(--mui-palette-common-white);
   height: 54px;
 
   &:hover {
-    // Hover border color inherited from --pf-t--global--border--color--hover
+    --pf-v6-c-menu-toggle--hover--BorderColor: var(--mui-palette-common-black);
     --pf-v6-c-menu-toggle--hover--BackgroundColor: var(--mui-palette-common-white);
   }
 
   &:focus-within {
-    // Focus border color inherited from --pf-t--global--border--color--clicked
+    --pf-v6-c-menu-toggle--BorderColor: var(--mui-palette-primary-main);
     border-width: var(--mui-form--focus--BorderWidth); // Thicker border for focus state (intentional for emphasis)
     --pf-v6-c-menu-toggle--BackgroundColor: var(--mui-palette-common-white);
   }
@@ -1773,16 +1804,6 @@ left: 0;
 .mui-theme .workspace-kind-form-header .pf-v6-c-toggle-group__button.pf-m-selected {
   background-color: var(--mui-toggle-group--selected--BackgroundColor);
   color: var(--pf-t--color--black);
-}
-
-
-.mui-theme button.pf-v6-c-menu-toggle {
-  // Use box-shadow to create a border effect without affecting the layout
-  &.pf-m-expanded,
-  &:focus {
-    box-shadow: 0 0 0 2px var(--mui-palette-primary-main);
-    outline: none; // Remove default browser outline
-  }
 }
 
 // Grid view: Position action cell (Actions kebab) on the right
