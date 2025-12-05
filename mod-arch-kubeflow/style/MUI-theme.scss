@@ -41,7 +41,7 @@
   --mui-form--focus--Padding: 7px;
   
   // Form fieldset styling (MUI input border defaults)
-  --mui-form-fieldset--BorderColor: rgba(0, 0, 0, 0.23); // MUI default input border
+  --mui-form-fieldset--BorderColor: var(--pf-t--global--border--color--default); // Uses global token
   --mui-form-fieldset--Padding: var(--mui-spacing-8px); // 8px
   --mui-form-fieldset--InsetTop: calc(-1 * var(--mui-spacing-8px)); // -8px for label positioning
   --mui-form-fieldset--LegendPadding: var(--mui-spacing-4px); // 4px horizontal padding
@@ -150,6 +150,20 @@
   --pf-t--global--font--family--100: Roboto, Helvetica, Arial, sans-serif;
   --pf-t--global--font--family--200: Roboto, Helvetica, Arial, sans-serif;
   --pf-t--global--font--family--300: Roboto, Courier, monospace;
+
+  /*
+  ┌────────────────────────────────────────────────────────────────┐
+  │ PATTERNFLY GLOBAL TOKEN OVERRIDES - BORDER SYSTEM              │
+  │ These semantic tokens affect ALL components automatically      │
+  │ Mapped from MUI default theme values                           │
+  └────────────────────────────────────────────────────────────────┘
+  */
+  
+  // Border Colors - MUI Input System
+  --pf-t--global--border--color--default: rgba(0, 0, 0, 0.23); // MUI input default border
+  --pf-t--global--border--color--hover: var(--mui-palette-common-black); // MUI input hover
+  --pf-t--global--border--color--clicked: var(--mui-palette-primary-main); // MUI focus/active
+  --pf-t--global--border--color--disabled: var(--mui-palette-action-disabled); // Disabled state
 }
 
 .mui-theme .pf-v6-c-action-list__item .pf-v6-c-button {
@@ -510,7 +524,7 @@
 
 .form-fieldset-wrapper:focus-within span.pf-v6-c-form-control.pf-m-disabled ~ .form-fieldset,
 .form-fieldset-wrapper:hover span.pf-v6-c-form-control.pf-m-disabled ~ .form-fieldset {
-  border-color: rgba(0, 0, 0, 0.23);
+  border-color: var(--pf-t--global--border--color--default);
 }
 
 .form-fieldset-wrapper span.pf-v6-c-form-control.pf-m-error ~ .form-fieldset {
@@ -806,7 +820,7 @@
 
 .mui-theme .pf-v6-c-expandable-section .form-fieldset-wrapper:focus-within span.pf-v6-c-form-control.pf-m-disabled ~ .form-fieldset,
 .mui-theme .pf-v6-c-expandable-section .form-fieldset-wrapper:hover span.pf-v6-c-form-control.pf-m-disabled ~ .form-fieldset {
-  border-color: rgba(0, 0, 0, 0.23);
+  border-color: var(--pf-t--global--border--color--default);
 }
 
 .mui-theme .pf-v6-c-form__field-group-body {
@@ -927,17 +941,17 @@
   box-sizing: border-box;
   --pf-v6-c-menu-toggle--BorderWidth: var(--pf-t--global--border--width--regular);
   --pf-v6-c-menu-toggle--BorderStyle: solid;
-  --pf-v6-c-menu-toggle--BorderColor: rgba(0, 0, 0, 0.23);
+  // Border colors now inherited from global tokens
   --pf-v6-c-menu-toggle--BackgroundColor: var(--mui-palette-common-white);
 
   &:hover {
-    --pf-v6-c-menu-toggle--hover--BorderColor: var(--mui-palette-common-black);
+    // Hover border color inherited from --pf-t--global--border--color--hover
   }
 
   &:focus-within {
     // Keep border width consistent to prevent layout shift
     --pf-v6-c-menu-toggle--BorderWidth: var(--pf-t--global--border--width--regular);
-    --pf-v6-c-menu-toggle--BorderColor: var(--mui-palette-primary-main);
+    // Focus border color inherited from --pf-t--global--border--color--clicked
     // Use box-shadow to create a thicker border while preventing layout shift
     box-shadow: 0 0 0 1px var(--mui-palette-primary-main);
   }
@@ -1541,18 +1555,18 @@ left: 0;
   position: relative;
   --pf-v6-c-menu-toggle--BorderWidth: var(--pf-t--global--border--width--regular);
   --pf-v6-c-menu-toggle--BorderStyle: solid;
-  --pf-v6-c-menu-toggle--BorderColor: rgba(0, 0, 0, 0.23);
+  // Border color inherited from --pf-t--global--border--color--default
   --pf-v6-c-menu-toggle--BorderRadius: var(--mui-shape-borderRadius);
   --pf-v6-c-menu-toggle--BackgroundColor: var(--mui-palette-common-white);
   height: 54px;
 
   &:hover {
-    --pf-v6-c-menu-toggle--hover--BorderColor: var(--mui-palette-common-black);
+    // Hover border color inherited from --pf-t--global--border--color--hover
     --pf-v6-c-menu-toggle--hover--BackgroundColor: var(--mui-palette-common-white);
   }
 
   &:focus-within {
-    --pf-v6-c-menu-toggle--BorderColor: var(--mui-palette-primary-main);
+    // Focus border color inherited from --pf-t--global--border--color--clicked
     border-width: var(--mui-form--focus--BorderWidth); // Thicker border for focus state (intentional for emphasis)
     --pf-v6-c-menu-toggle--BackgroundColor: var(--mui-palette-common-white);
   }
