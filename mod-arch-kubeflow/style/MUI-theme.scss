@@ -930,7 +930,7 @@
   --pf-v6-c-menu-toggle--BorderColor: rgba(0, 0, 0, 0.23);
   --pf-v6-c-menu-toggle--BackgroundColor: var(--mui-palette-common-white);
 
-  &:hover {
+  &:hover:not(.pf-m-primary) {
     --pf-v6-c-menu-toggle--hover--BorderColor: var(--mui-palette-common-black);
     --pf-v6-c-menu-toggle--hover--BorderWidth: var(--pf-t--global--border--width--regular);
     background-color: transparent;
