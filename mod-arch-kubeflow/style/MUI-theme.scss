@@ -389,37 +389,33 @@
   --pf-v6-c-button--BackgroundColor: rgba(33, 150, 243, 0.04);
 }
 
-
 .mui-theme .pf-v6-c-card {
   --pf-v6-c-card--BorderWidth: var(--pf-t--global--border--width--regular);
-  // BorderRadius inherited from --pf-t--global--border--radius--medium (set to MUI shape-borderRadius)
-  // BorderColor inherited from --pf-t--global--border--color--default (set to MUI divider)
+  --pf-v6-c-card--BorderRadius: var(--mui-shape-borderRadius);
   border: var(--pf-v6-c-card--BorderWidth) solid var(--pf-v6-c-card--BorderColor);
+  
+  // Hide PF's ::before pseudo-element border to prevent double borders
+  &::before {
+    display: none;
+  }
 }
 
 .mui-theme .pf-v6-c-card.pf-m-compact.pf-m-selectable {
   --pf-v6-c-card--BorderWidth: var(--pf-t--global--border--width--regular);
-  // BorderColor inherited from --pf-t--global--border--color--default (already set to MUI divider)
-}
-
-.mui-theme .pf-v6-c-card__selectable-actions
-  :is(.pf-v6-c-check__label, .pf-v6-c-radio__label, .pf-v6-c-card__clickable-action):hover {
-  --pf-v6-c-card--BorderColor: var(--mui-palette-grey-300);
 }
 
 .mui-theme .pf-v6-c-card.pf-m-selectable:hover {
   --pf-v6-c-card--BackgroundColor: var(--mui-palette-grey-100);
-  --pf-v6-c-card--BorderColor: var(--mui-palette-grey-200);
 }
 
 .mui-theme .pf-v6-c-card.pf-m-selected {
   --pf-v6-c-card--BackgroundColor: var(--mui-palette-grey-200);
-  // Border color inherited from --pf-t--global--border--color--default (already set to MUI divider)
+  --pf-v6-c-card--m-selectable--m-selected--BorderColor: var(--mui-palette-grey-400);
 }
 
 .mui-theme .pf-v6-c-card.pf-m-selected:hover {
   --pf-v6-c-card--BackgroundColor: var(--mui-palette-grey-300);
-  // Border color inherited from --pf-t--global--border--color--default (already set to MUI divider)
+  --pf-v6-c-card--m-selectable--m-selected--BorderColor: var(--mui-palette-grey-400);
 }
 
 .mui-theme .pf-v6-c-description-list__term {
