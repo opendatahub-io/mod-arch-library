@@ -19,9 +19,9 @@ When working with styling in this project:
 
 ## Documentation
 
-- **PatternFly Tokens**: https://www.patternfly.org/tokens/all-patternfly-tokens/
-- **MUI Theming**: https://mui.com/material-ui/customization/theming/
-- **Repository**: https://github.com/opendatahub-io/mod-arch-library
+- **PatternFly Tokens**: <https://www.patternfly.org/tokens/all-patternfly-tokens/>
+- **MUI Theming**: <https://mui.com/material-ui/customization/theming/>
+- **Repository**: <https://github.com/opendatahub-io/mod-arch-library>
 
 ## Compliance
 
