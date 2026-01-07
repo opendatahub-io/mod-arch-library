@@ -1120,18 +1120,47 @@
 
   // &.pf-m-expanded - Expanded border color inherited from --pf-t--global--border--color--clicked
 
-  // Disabled state theming
+  // Disabled state theming - override PF component variables with MUI values
   &.pf-m-disabled {
     --pf-v6-c-menu-toggle--disabled--BackgroundColor: transparent;
-    --pf-v6-c-menu-toggle--Color: var(--mui-palette-text-disabled);
+    --pf-v6-c-menu-toggle--disabled--Color: var(--mui-palette-text-disabled);
     --pf-v6-c-menu-toggle--disabled__toggle-icon--Color: var(--mui-palette-text-disabled);
-    // No PF variable exists for disabled border; using direct CSS
-    background-color: var(--pf-v6-c-menu-toggle--disabled--BackgroundColor);
-    border: 1px solid var(--mui-palette-action-disabled);
-    
+    --pf-v6-c-menu-toggle--disabled__icon--Color: var(--mui-palette-text-disabled);
+    --pf-v6-c-menu-toggle--BorderColor: var(--mui-palette-action-disabled);
+    --pf-v6-c-menu-toggle--hover--BorderColor: var(--mui-palette-action-disabled);
+    // No PF variable for disabled border rendering; ensuring border is visible
+    border: var(--pf-v6-c-menu-toggle--BorderWidth) solid var(--mui-palette-action-disabled);
+  }
+}
+
+// Secondary variant styling - override PF secondary component variables
+.mui-theme .pf-v6-c-menu-toggle.pf-m-secondary {
+  --pf-v6-c-menu-toggle--m-secondary--Color: var(--mui-palette-primary-main);
+  --pf-v6-c-menu-toggle--m-secondary--BorderColor: var(--mui-palette-primary-main);
+  --pf-v6-c-menu-toggle--m-secondary--BackgroundColor: transparent;
+
+  &:hover {
+    --pf-v6-c-menu-toggle--m-secondary--hover--BorderColor: var(--mui-palette-primary-dark);
+    --pf-v6-c-menu-toggle--m-secondary--hover--Color: var(--mui-palette-primary-dark);
+    // No PF variable for secondary hover background; using direct CSS
+    background-color: var(--mui-palette-action-hover);
+  }
+
+  // Disabled state for secondary variant (higher specificity than base disabled)
+  &.pf-m-disabled {
+    --pf-v6-c-menu-toggle--m-secondary--Color: var(--mui-palette-text-disabled);
+    --pf-v6-c-menu-toggle--m-secondary--BorderColor: var(--mui-palette-action-disabled);
+    --pf-v6-c-menu-toggle--disabled--BackgroundColor: transparent;
+    --pf-v6-c-menu-toggle--disabled__toggle-icon--Color: var(--mui-palette-text-disabled);
+    --pf-v6-c-menu-toggle--disabled__icon--Color: var(--mui-palette-text-disabled);
+    // No PF variable for disabled border rendering; ensuring border is visible
+    border: var(--pf-v6-c-menu-toggle--BorderWidth) solid var(--mui-palette-action-disabled);
+
     &:hover {
+      --pf-v6-c-menu-toggle--m-secondary--hover--BorderColor: var(--mui-palette-action-disabled);
       --pf-v6-c-menu-toggle--hover--BorderColor: var(--mui-palette-action-disabled);
-      --pf-v6-c-menu-toggle--BorderColor: var(--mui-palette-action-disabled);
+      // No PF variable for disabled hover background; using direct CSS
+      background-color: transparent;
     }
   }
 }
