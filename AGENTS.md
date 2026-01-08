@@ -4,9 +4,9 @@ This repository uses AI coding assistants to maintain code quality and consisten
 
 ## Rule Organization
 
-- **[patternfly-design-tokens.mdc](rules/patternfly-design-tokens.mdc)** - PatternFly design token usage and MUI theme integration
-- **[scss-architecture.mdc](rules/scss-architecture.mdc)** - SCSS architecture patterns and best practices
-- **[workflow.mdc](rules/workflow.mdc)** - Development workflow and decision trees
+- **[patternfly-design-tokens.mdc](.cursor/rules/patternfly-design-tokens.mdc)** - PatternFly design token usage and MUI theme integration
+- **[scss-architecture.mdc](.cursor/rules/scss-architecture.mdc)** - SCSS architecture patterns and best practices
+- **[workflow.mdc](.cursor/rules/workflow.mdc)** - Development workflow and decision trees
 
 ## Quick Reference
 
@@ -25,5 +25,5 @@ When working with styling in this project:
 
 ## Compliance
 
-All styling changes must follow the rules defined in `rules/`. Code reviewers should verify compliance with the design token usage guidelines before approving PRs.
+All styling changes must follow the rules defined in `.cursor/rules/`. Code reviewers should verify compliance with the design token usage guidelines before approving PRs.
 
