@@ -1,0 +1,252 @@
+# Development Workflow & Decision Trees
+
+## Decision Process for Styling Overrides
+
+```text
+Need to style a component?
+│
+├─ Step 1: Identify the PF variable to override
+│  │        Check pf-tokens-SSOT.json or inspect DOM
+│  │
+│  ├─ Found global token (--pf-t--global--*)?
+│  │  └─ Use this! (affects all components)
+│  │
+│  └─ Found component variable (--pf-v6-c-{component}--*)?
+│     └─ Use this (component-specific)
+│
+├─ Step 2: Find the MUI equivalent value
+│  │        Check MUI-default-theme-object.json OR inspect MUI component in DOM
+│  │
+│  ├─ Is it a standard MUI theme property?
+│  │  └─ YES → Use auto-available variable (from ThemeProvider)
+│  │     Example: var(--mui-palette-primary-main)
+│  │     .mui-theme:root {
+│  │       --pf-t--global--color--brand--default: var(--mui-palette-primary-main);
+│  │     }
+│  │
+│  └─ Is it a custom/computed value?
+│     └─ YES → Define custom MUI variable first
+│        Example: Button padding from inspecting MUI button
+│        .mui-theme:root {
+│          --mui-button--PaddingBlockStart: 6px; // Custom: spacing(0.75)
+│        }
+│        .mui-theme .pf-v6-c-button {
+│          --pf-v6-c-button--PaddingBlockStart: var(--mui-button--PaddingBlockStart);
+│        }
+│
+└─ Step 3: No PF variable exists?
+   Use direct CSS as last resort (document with comment)
+   .mui-theme .pf-v6-c-component {
+     position: relative; // No PF variable exists
+   }
+```
+
+## Complete Workflow Example
+
+```scss
+// SCENARIO: Need to style a button's color and padding
+
+// Step 1: Check for PF global token (most efficient - affects all components)
+// Search pf-tokens-SSOT.json for color tokens
+// Found: --pf-t--global--color--brand--default
+
+// Step 2: Determine MUI equivalent
+// Check MUI-default-theme-object.json → palette.primary.main exists
+// This is auto-available from ThemeProvider!
+
+.mui-theme:root {
+  // Map PF global token to auto-available MUI variable
+  --pf-t--global--color--brand--default: var(--mui-palette-primary-main);
+}
+
+// Step 3: Check for PF component variable for padding
+// Inspect DOM → Found: --pf-v6-c-button--PaddingBlockStart
+
+// Step 4: Determine MUI equivalent for padding
+// Check MUI-default-theme-object.json → no exact padding for buttons
+// Inspect MUI button in DOM → uses spacing(0.75, 2) = 6px 16px
+// This is CUSTOM - need to define it
+
+.mui-theme:root {
+  // Define custom MUI variable (not in default theme)
+  --mui-button--PaddingBlockStart: 6px;  // Custom: spacing(0.75)
+  --mui-button--PaddingInlineStart: 16px; // Custom: spacing(2)
+}
+
+.mui-theme .pf-v6-c-button {
+  // Map PF component variable to custom MUI variable
+  --pf-v6-c-button--PaddingBlockStart: var(--mui-button--PaddingBlockStart);
+  --pf-v6-c-button--PaddingInlineStart: var(--mui-button--PaddingInlineStart);
+}
+```
+
+## Quick Decision Tree for Adding Overrides
+
+```text
+Need to add styling/override for a component?
+│
+├─ Step 1: Check if PF global token exists (--pf-t--global--*)
+│  │        Look in pf-tokens-SSOT.json or PF docs
+│  │
+│  └─ YES → Find MUI equivalent value
+│     │     • Check MUI-default-theme-object.json OR inspect DOM
+│     │     • Is it standard theme property? Use auto-available var
+│     │     • Is it custom/computed? Define custom MUI var
+│     │
+│     │     .mui-theme:root {
+│     │       // Option A: Use auto-available MUI variable
+│     │       --pf-t--global--color--brand--default: var(--mui-palette-primary-main);
+│     │
+│     │       // Option B: Define custom MUI variable first
+│     │       --mui-custom-spacing: 6px; // Custom: spacing(0.75)
+│     │       --pf-t--global--spacer--sm: var(--mui-custom-spacing);
+│     │     }
+│     └─ This affects ALL components - MOST EFFICIENT!
+│  └─ NO  → Continue to Step 2 ↓
+│
+├─ Step 2: Check if PF component variable exists (--pf-v6-c-{component}--*)
+│  │        Inspect DOM element or check PF component docs
+│  │
+│  └─ YES → Find MUI equivalent value
+│     │     • Check MUI-default-theme-object.json OR inspect DOM
+│     │     • Is it standard theme property? Use auto-available var
+│     │     • Is it custom/computed? Define custom MUI var at :root
+│     │
+│     │     // If custom MUI variable needed:
+│     │     .mui-theme:root {
+│     │       --mui-button--PaddingBlockStart: 6px; // Custom: spacing(0.75)
+│     │     }
+│     │
+│     │     // Map to PF component variable:
+│     │     .mui-theme .pf-v6-c-button {
+│     │       // Option A: Use auto-available MUI variable
+│     │       --pf-v6-c-button--Color: var(--mui-palette-primary-main);
+│     │
+│     │       // Option B: Use custom MUI variable
+│     │       --pf-v6-c-button--PaddingBlockStart: var(--mui-button--PaddingBlockStart);
+│     │     }
+│  └─ NO  → Continue to Step 3 ↓
+│
+├─ Step 3: Is it a layout/positioning/descriptive property?
+│  └─ YES → Direct CSS is acceptable (document with comment)
+│     │     .mui-theme .pf-v6-c-form {
+│     │       position: relative; // No PF variable exists
+│     │     }
+│  └─ NO  → Continue to Step 4 ↓
+│
+└─ Step 4: Last resort - direct CSS with documentation
+   Document why no PF variable exists
+   .mui-theme .pf-v6-c-component {
+     // No PF variable for disabled border rendering; ensuring border is visible
+     border: var(--pf-v6-c-component--BorderWidth) solid var(--mui-palette-action-disabled);
+   }
+```
+
+## Best Practice Workflow
+
+1. **Open `MUI-default-theme-object.json`** to check what values exist
+2. **Determine if the variable already exists from ThemeProvider**:
+   - If it's a standard MUI theme value (palette, typography, spacing, shape, shadows) → **Use directly, don't define**
+   - If it's a custom/computed value → **Define in SCSS**
+3. **Use the MUI variable** (either existing or custom) in your PF overrides
+
+## Finding Component-Scoped PF Variables
+
+When you need to override a component-specific property:
+
+1. **Check PatternFly documentation** or inspect the component in browser DevTools
+2. **Look for the pattern**: `--pf-v6-c-{component}--{property}--{modifier}`
+   - Example: `--pf-v6-c-form-control--FontSize`
+   - Example: `--pf-v6-c-form-control--m-placeholder--Color`
+   - Example: `--pf-v6-c-button--hover--BackgroundColor`
+   - Example: `--pf-v6-c-menu-toggle--disabled--Color`
+
+3. **Common component variable patterns**:
+   ```scss
+   // Basic property
+   --pf-v6-c-{component}--{Property}
+
+   // With modifier
+   --pf-v6-c-{component}--m-{modifier}--{Property}
+
+   // With state
+   --pf-v6-c-{component}--{state}--{Property}
+
+   // With element
+   --pf-v6-c-{component}__{element}--{Property}
+   ```
+
+4. **Set the value to a MUI variable**:
+   ```scss
+   // ✅ Use auto-available MUI variables (don't define)
+   .mui-theme .pf-v6-c-button {
+     --pf-v6-c-button--BackgroundColor: var(--mui-palette-primary-main); // Auto-available!
+   }
+
+   // ✅ Or define custom MUI variables when needed
+   .mui-theme:root {
+     --mui-button--custom-padding: 6px; // Custom: not in default theme
+   }
+
+   .mui-theme .pf-v6-c-button {
+     --pf-v6-c-button--PaddingBlockStart: var(--mui-button--custom-padding);
+   }
+   ```
+
+## Methods to Find MUI Values
+
+1. **JSON Reference File**: Check `MUI-default-theme-object.json`
+2. **Browser Console**: `console.log(theme)` in dev mode
+3. **MUI Documentation**: https://mui.com/material-ui/customization/default-theme/
+4. **React DevTools**: Inspect ThemeProvider context
+5. **DOM Inspection**: Inspect MUI components to see computed CSS variable values
+
+## Key Principles
+
+1. **Find PF variable first** - Check global tokens, then component variables
+2. **Then find MUI value** - Check theme object or inspect DOM
+3. **Use auto-available when possible** - Don't redefine standard MUI theme properties
+4. **Define custom only when needed** - For computed/non-standard values
+5. **Document direct CSS** - Always add comments explaining why no PF variable exists
+
+## Summary: The Correct Workflow
+
+**The key**: PF variable → MUI value → Mapping (not the other way around!)
+
+### 1. Find the PF Variable (PatternFly First!)
+
+- **Global token** (`--pf-t--global--*`) → Check `pf-tokens-SSOT.json`
+- **Component variable** (`--pf-v6-c-{component}--*`) → Inspect DOM or check PF docs
+
+### 2. Find the MUI Value (After finding PF variable)
+
+- **Check** `MUI-default-theme-object.json` for equivalent value
+- **OR** inspect the MUI component in the DOM
+
+### 3. Determine if MUI Variable is Auto-Available or Custom
+
+- **Auto-available**: Standard theme properties (palette, typography, spacing, shape, shadows)
+  - Use directly: `var(--mui-palette-primary-main)`
+  - Don't redefine in SCSS
+- **Custom**: Computed/derived values not in default theme
+  - Define in SCSS: `--mui-button--PaddingBlockStart: 6px;`
+  - Document the source
+
+### 4. Map MUI Variable to PF Variable
+
+```scss
+.mui-theme:root {
+  // Global tokens (affects all components)
+  --pf-t--global--color--brand--default: var(--mui-palette-primary-main);
+
+  // Custom MUI variables for component-specific use
+  --mui-button--PaddingBlockStart: 6px; // Custom: spacing(0.75)
+}
+
+.mui-theme .pf-v6-c-button {
+  // Component variables (component-specific)
+  --pf-v6-c-button--PaddingBlockStart: var(--mui-button--PaddingBlockStart);
+}
+```
+
+**Remember**: Always scope to `.mui-theme`, always prefer overriding PF global tokens at `:root` first (most efficient), then use component variables only when needed.

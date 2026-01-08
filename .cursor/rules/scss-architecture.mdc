@@ -1,0 +1,249 @@
+# SCSS Architecture: MUI-theme.scss Pattern
+
+This project follows a specific pattern for styling PatternFly components to match Material UI design.
+
+## Architecture Overview
+
+```scss
+// 1. Define MUI design values as custom variables (top of file)
+.mui-theme:root {
+  --mui-button-FontWeight: 500;
+  --mui-button--PaddingBlockStart: 6px;
+  --mui-spacing-8px: var(--mui-spacing);
+  
+  // 2. Override PF global tokens with MUI equivalents (affects ALL components)
+  --pf-t--global--border--width--regular: 1px;
+  --pf-t--global--color--brand--default: var(--mui-palette-primary-main);
+  --pf-t--global--text--color--brand--default: var(--mui-palette-primary-main);
+}
+
+// 3. Only override component variables when they need different values from globals
+.mui-theme .pf-v6-c-button {
+  --pf-v6-c-button--FontWeight: var(--mui-button-FontWeight);
+  --pf-v6-c-button--PaddingBlockStart: var(--mui-button--PaddingBlockStart);
+}
+```
+
+## Hierarchy of Variable Usage (Priority Order)
+
+**MOST EFFICIENT: Override PF global tokens at :root (affects all components automatically)**
+
+### 1. First Priority: Override PF Global Tokens at :root
+
+```scss
+.mui-theme:root {
+  // Step 1: Use auto-available MUI variables from ThemeProvider
+  // (These already exist from <MUIThemeProvider> - don't redefine)
+  --pf-t--global--color--brand--default: var(--mui-palette-primary-main);
+  --pf-t--global--border--color--default: var(--mui-palette-divider);
+  --pf-t--global--border--color--disabled: var(--mui-palette-action-disabled);
+
+  // Step 2: Only define custom MUI variables when needed
+  --mui-custom-spacing: 6px; // Custom: computed value not in theme
+  --pf-t--global--border--width--regular: var(--mui-custom-spacing);
+}
+```
+
+**Why**: One override affects all components. Scalable and efficient.
+
+**Value Source**:
+- Auto-available: ThemeProvider → MUI variable (already exists) → PF global token
+- Custom: Define MUI variable → PF global token
+
+### 2. Second Priority: PF Component Variables (only when different from global)
+
+```scss
+// At top of file - only define custom MUI variables
+.mui-theme:root {
+  --mui-button--PaddingBlockStart: 6px; // Custom: computed from spacing
+  --mui-button--PaddingInlineStart: 16px; // Custom: computed from spacing
+}
+
+// In component section - use both auto-available and custom MUI variables
+.mui-theme .pf-v6-c-button {
+  // Use auto-available MUI variable (don't define it)
+  --pf-v6-c-button--FontWeight: var(--mui-typography-fontWeightMedium);
+
+  // Use custom MUI variable (defined above)
+  --pf-v6-c-button--PaddingBlockStart: var(--mui-button--PaddingBlockStart);
+}
+```
+
+**Why**: Component-specific overrides when global tokens aren't appropriate.
+
+**Value Source**:
+- Auto-available MUI variables from ThemeProvider (use directly)
+- Custom MUI variables (define only when needed)
+
+### 3. Third Priority: Direct CSS (only when no PF token/variable exists)
+
+```scss
+.mui-theme .pf-v6-c-form {
+  position: relative; // No PF variable for this
+  letter-spacing: 0.02857em; // MUI-specific, no PF equivalent
+}
+
+.mui-theme .pf-v6-c-menu-toggle.pf-m-secondary.pf-m-disabled {
+  // No PF variable for disabled border rendering; ensuring border is visible
+  border: var(--pf-v6-c-menu-toggle--BorderWidth) solid var(--mui-palette-action-disabled);
+}
+```
+
+**Why**: Layout/positioning properties or properties without PF equivalents.
+
+**Value Source**: Hardcoded (only when necessary, always document with comment)
+
+## Critical Rules
+
+### ✅ DO: Use PF component variables or tokens
+
+```scss
+.mui-theme .pf-v6-c-button {
+  --pf-v6-c-button--PaddingBlockStart: var(--mui-button--PaddingBlockStart);
+  --pf-v6-c-button--PaddingBlockEnd: var(--mui-button--PaddingBlockEnd);
+}
+
+.mui-theme .pf-v6-c-text-input-group::before {
+  border: none; // ✅ OK - no PF variable exists for ::before border
+}
+```
+
+### ✅ DO: Always scope to `.mui-theme`
+
+```scss
+.mui-theme .pf-v6-c-button {
+  --pf-v6-c-button--FontWeight: var(--mui-button-FontWeight); // ✅ GOOD
+}
+```
+
+### ✅ DO: Use PF variable references in direct CSS when applicable
+
+```scss
+.mui-theme .pf-v6-c-menu-toggle.pf-m-disabled {
+  // Use PF variable for width, MUI for color
+  border: var(--pf-v6-c-menu-toggle--BorderWidth) solid var(--mui-palette-action-disabled);
+}
+```
+
+### ❌ DON'T: Use direct CSS properties when PF variables exist
+
+```scss
+.mui-theme .pf-v6-c-button {
+  padding: 6px 16px; // ❌ BAD
+  border: 1px solid #ccc;      // ❌ BAD
+  inset: 0px;        // ❌ BAD
+}
+```
+
+### ❌ DON'T: Forget `.mui-theme` scope
+
+```scss
+.pf-v6-c-button {
+  --pf-v6-c-button--FontWeight: 500; // ❌ BAD - not scoped
+}
+```
+
+## When Direct CSS Properties Are Acceptable
+
+### ✅ Acceptable Use Cases:
+
+1. **Properties with no PF variable equivalent**
+   ```scss
+   .mui-theme .pf-v6-c-form__group {
+     position: relative; // No --pf-v6-c-form__group--Position exists
+   }
+   ```
+
+2. **Pseudo-elements without PF variable support**
+   ```scss
+   .mui-theme .pf-v6-c-text-input-group::before {
+     border: none; // No PF variable for ::before border
+   }
+   ```
+
+3. **Layout properties (display, flex, grid)**
+   ```scss
+   .mui-theme .pf-v6-c-page__sidebar {
+     display: flex;
+     flex-direction: column;
+   }
+   ```
+
+4. **Descriptive properties (letter-spacing, text-transform)**
+   ```scss
+   .mui-theme .pf-v6-c-button {
+     letter-spacing: 0.02857em; // MUI-specific, no PF equivalent
+     text-transform: none;
+   }
+   ```
+
+5. **Missing PF variables (document with comment)**
+   ```scss
+   .mui-theme .pf-v6-c-menu-toggle.pf-m-disabled {
+     // No PF variable for disabled border rendering; ensuring border is visible
+     border: var(--pf-v6-c-menu-toggle--BorderWidth) solid var(--mui-palette-action-disabled);
+   }
+   ```
+
+### ❌ Unacceptable Use Cases:
+
+- ❌ Padding/margin when `--pf-v6-c-*--Padding*` variables exist
+- ❌ Colors when PF tokens or variables exist
+- ❌ Border width/radius when PF variables exist  
+- ❌ Font properties when PF variables exist
+- ❌ Any property where a PF component variable exists
+
+## Example: Converting Hardcoded Styles
+
+### Before (❌ Bad - Direct CSS):
+
+```scss
+.mui-theme .pf-v6-c-card {
+  background: #fff;
+  border: 1px solid #d2d2d2;
+  border-radius: 3px;
+  padding: 16px;
+}
+
+.mui-theme .pf-v6-c-card:hover {
+  border-color: #000;
+}
+```
+
+### After (✅ Good - PF Component Variables):
+
+```scss
+// Step 1: Define MUI values at top of file (if needed)
+.mui-theme:root {
+  --mui-card--BorderWidth: 1px;
+  --mui-shape-borderRadius: 4px;
+}
+
+// Step 2: Use PF component variables, mapped to MUI or PF tokens
+.mui-theme .pf-v6-c-card {
+  --pf-v6-c-card--BackgroundColor: var(--mui-palette-background-paper);
+  --pf-v6-c-card--BorderWidth: var(--mui-card--BorderWidth);
+  --pf-v6-c-card--BorderColor: var(--mui-palette-divider);
+  --pf-v6-c-card--BorderRadius: var(--mui-shape-borderRadius);
+  --pf-v6-c-card--PaddingBlockStart: var(--pf-t--global--spacer--md);
+  --pf-v6-c-card--PaddingBlockEnd: var(--pf-t--global--spacer--md);
+}
+
+.mui-theme .pf-v6-c-card:hover {
+  --pf-v6-c-card--BorderColor: var(--mui-palette-grey-300);
+}
+```
+
+## Code Review Checklist
+
+Before submitting styling changes, verify:
+
+- [ ] No hardcoded color values (use PF color tokens)
+- [ ] No hardcoded spacing values (use PF spacer tokens)
+- [ ] Border styles use PF border tokens or variables
+- [ ] Interactive states (hover, active, focus, disabled) use appropriate token variants
+- [ ] Typography uses PF font tokens
+- [ ] Shadows use PF box-shadow tokens
+- [ ] All tokens referenced exist in `pf-tokens-SSOT.json`
+- [ ] Direct CSS only used when no PF variable exists (documented with comment)
+- [ ] All overrides scoped to `.mui-theme`
