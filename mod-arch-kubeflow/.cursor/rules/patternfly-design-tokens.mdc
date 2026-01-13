@@ -66,8 +66,8 @@ Only when no PF variable (global OR component) exists (e.g., layout properties l
 
 ## Design Token Reference Files
 
-- **MUI Theme Values**: `mod-arch-kubeflow/style/MUI-default-theme-object.json` - CHECK THIS FIRST for all values
-- **PF Design Tokens**: `mod-arch-kubeflow/style/pf-tokens-SSOT.json` - Single Source of Truth (SSOT) for all PatternFly v6 design tokens
+- **MUI Theme Values**: `style/MUI-default-theme-object.json` - CHECK THIS FIRST for all values
+- **PF Design Tokens**: `style/pf-tokens-SSOT.json` - Single Source of Truth (SSOT) for all PatternFly v6 design tokens
 - **Token Values**: https://www.patternfly.org/tokens/all-patternfly-tokens/ - Official documentation showing computed values
 
 ## PatternFly Variable Naming Patterns
