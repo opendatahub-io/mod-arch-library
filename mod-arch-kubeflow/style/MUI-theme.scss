@@ -672,7 +672,7 @@
   border-color: var(--mui-palette-error-main);
 }
 
-.mui-theme .form-fieldset-wrapper .pf-v6-c-input-group span.pf-v6-c-form-control .pf-m-error ~ .form-fieldset {
+.mui-theme .form-fieldset-wrapper .pf-v6-c-input-group span.pf-v6-c-form-control.pf-m-error ~ .form-fieldset {
   border-color: var(--mui-palette-error-main);
 }
 
@@ -747,7 +747,7 @@
   border-color: var(--mui-palette-error-main);
 }
 
-.mui-theme .pf-v6-c-form .form-fieldset-wrapper .pf-v6-c-input-group span.pf-v6-c-form-control .pf-m-error ~ .form-fieldset {
+.mui-theme .pf-v6-c-form .form-fieldset-wrapper .pf-v6-c-input-group span.pf-v6-c-form-control.pf-m-error ~ .form-fieldset {
   border-color: var(--mui-palette-error-main);
 }
 
@@ -834,7 +834,7 @@
   border-color: var(--mui-palette-error-main);
 }
 
-.mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper .pf-v6-c-input-group span.pf-v6-c-form-control .pf-m-error ~ .form-fieldset {
+.mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper .pf-v6-c-input-group span.pf-v6-c-form-control.pf-m-error ~ .form-fieldset {
   border-color: var(--mui-palette-error-main);
 }
 
@@ -1518,7 +1518,7 @@ left: 0;
 
 /* Remove bottom border from table rows/cells when pf-m-no-border-bottom class is applied */
 /* Border property - using PF border width variable for consistency */
-.pf-v6-c-table .pf-m-no-border-bottom {
+.mui-theme .pf-v6-c-table .pf-m-no-border-bottom {
   border-block-end: none;
 }
 
@@ -1530,7 +1530,7 @@ left: 0;
 
 /* Add top border and remove bottom border for table rows when pf-m-border-top-only class is applied */
 /* Border properties - using PF border width and color variables for consistency */
-.pf-v6-c-table .pf-m-border-top-only {
+.mui-theme .pf-v6-c-table .pf-m-border-top-only {
   border-block-start: var(--pf-v6-c-table__tr--BorderBlockEndWidth) solid var(--pf-v6-c-table__tr--BorderBlockEndColor);
   border-block-end: none;
 }
@@ -1746,7 +1746,7 @@ left: 0;
 }
 
 // TODO: Remove when https://github.com/patternfly/patternfly-react/issues/11826 is resolved.
-.pf-v6-c-page__main-section .pf-v6-c-page__main-body {
+.mui-theme .pf-v6-c-page__main-section .pf-v6-c-page__main-body {
   height: 100%;
   --pf-v6-c-page__main-section--PaddingInlineStart: 0px;
 }
