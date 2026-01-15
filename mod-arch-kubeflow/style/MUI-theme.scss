@@ -1433,22 +1433,18 @@ left: 0;
 }
 
 /* CSS workaround for spacing in labels in Workspace Kind */
-.form-label-field-group .pf-v6-c-table tr:where(.pf-v6-c-table__tr) > :where(th, td) {
-  padding-block-start: 0px;
-}
-
 /* Special handling for form fields in table cells - remove extra top spacing */
 /* Layout properties (vertical-align, display, overflow) - no PF variables exist */
-.form-label-field-group .pf-v6-c-table tr:where(.pf-v6-c-table__tr) > :where(th, td) {
+.mui-theme .form-label-field-group .pf-v6-c-table tr:where(.pf-v6-c-table__tr) > :where(th, td) {
   /* Layout property - no PF variable exists */
   vertical-align: middle;
   /* Balance padding - use PF component variable for consistency */
-  padding-block-start: var(--pf-v6-c-table--cell--PaddingBlockEnd);
+  --pf-v6-c-table--cell--PaddingBlockStart: 0px;
 }
 
 /* Remove spacing to align form elements at top of table cells */
 /* Margin/padding: No PF variables exist for zero values - using direct CSS */
-.form-label-field-group .pf-v6-c-table tr:where(.pf-v6-c-table__tr) > :where(th, td) .pf-v6-c-form__group {
+.mui-theme .form-label-field-group .pf-v6-c-table tr:where(.pf-v6-c-table__tr) > :where(th, td) .pf-v6-c-form__group {
   /* No PF variables for zero margin/padding - layout constraint */
   margin: 0;
   padding: 0;
@@ -1458,7 +1454,7 @@ left: 0;
   align-self: flex-start;
 }
 
-.form-label-field-group .pf-v6-c-table tr:where(.pf-v6-c-table__tr) > :where(th, td) .pf-v6-c-form__group-control {
+.mui-theme .form-label-field-group .pf-v6-c-table tr:where(.pf-v6-c-table__tr) > :where(th, td) .pf-v6-c-form__group-control {
   /* No PF variables for zero margin/padding - layout constraint */
   margin: 0;
   padding: 0;
@@ -1468,7 +1464,7 @@ left: 0;
   height: auto;
 }
 
-.form-label-field-group .pf-v6-c-table .form-fieldset-wrapper {
+.mui-theme .form-label-field-group .pf-v6-c-table .form-fieldset-wrapper {
   /* No PF variables for zero margin/padding - layout constraint */
   margin: 0;
   padding: 0;
@@ -1483,7 +1479,7 @@ left: 0;
   overflow: visible;
 }
 
-.form-label-field-group .pf-v6-c-table .form-fieldset-wrapper .pf-v6-c-form-control {
+.mui-theme .form-label-field-group .pf-v6-c-table .form-fieldset-wrapper .pf-v6-c-form-control {
   /* No PF variables for zero margin/padding - layout constraint */
   margin: 0;
   padding: 0;
@@ -1499,14 +1495,14 @@ left: 0;
 
 /* Ensure input elements inside table cells can display full text */
 /* Layout/text properties - no PF variables exist */
-.form-label-field-group .pf-v6-c-table .form-fieldset-wrapper input {
+.mui-theme .form-label-field-group .pf-v6-c-table .form-fieldset-wrapper input {
   overflow: visible;
   text-overflow: clip;
   white-space: normal;
   width: 100%;
 }
 
-.form-label-field-group .pf-v6-c-table .form-fieldset-wrapper .form-fieldset {
+.mui-theme .form-label-field-group .pf-v6-c-table .form-fieldset-wrapper .form-fieldset {
   /* Position properties - using PF border width variable */
   top: var(--pf-t--global--border--width--regular);
   /* Layout properties - no PF variables exist */
