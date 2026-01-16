@@ -5,6 +5,7 @@ export type GenericObjectState<T> = [
   data: T,
   setData: UpdateObjectAtPropAndValue<T>,
   resetDefault: () => void,
+  replace: (newValue: T) => void,
 ];
 
 const useGenericObjectState = <T>(defaultData: T): GenericObjectState<T> => {
@@ -19,7 +20,11 @@ const useGenericObjectState = <T>(defaultData: T): GenericObjectState<T> => {
     setValue(defaultDataRef.current);
   }, []);
 
-  return [value, setPropValue, resetToDefault];
+  const replace = React.useCallback((newValue: T) => {
+    setValue(newValue);
+  }, []);
+
+  return [value, setPropValue, resetToDefault, replace];
 };
 
 export default useGenericObjectState;
