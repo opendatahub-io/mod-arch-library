@@ -1,0 +1,182 @@
+# PatternFly Design Token Usage Rules
+
+## Priority Order for Styling Overrides
+
+When adding **ANY** styling override, follow this strict priority order:
+
+### 1. FIRST PRIORITY: Override PF Global Tokens (MOST EFFICIENT)
+
+**Always try global tokens first** - they cascade down to ALL components automatically.
+
+Look for `--pf-t--global--*` tokens in `pf-tokens-SSOT.json` or [PatternFly documentation](https://www.patternfly.org/tokens/all-patternfly-tokens/)
+
+**If found** → Override it at `.mui-theme:root` with MUI equivalent:
+
+```scss
+.mui-theme:root {
+  // Override global tokens - affects ALL components
+  --pf-t--global--text--color--on-disabled: var(--mui-palette-text-disabled);
+  --pf-t--global--border--color--disabled: var(--mui-palette-action-disabled);
+  --pf-t--global--background--color--disabled--default: var(--mui-palette-action-disabledBackground);
+}
+```
+
+**Why this is first priority**: One global override cascades to dozens of components automatically. This is the most scalable and efficient approach.
+
+### 2. SECOND PRIORITY: Use PF Component Variables (Only When Needed)
+
+**Only use component variables when:**
+- The global token override doesn't cover a specific element within a component
+- A component needs a different value than the global token provides
+- A specific component element has no corresponding global token
+
+Look for `--pf-v6-c-{component}--*` variables in `pf-tokens-SSOT.json` or by inspecting the DOM
+
+**Important**: Most PF component variables are already mapped to global tokens in `pf-tokens-SSOT.json`. Check the file to see these mappings. If a component variable references a global token that you've already overridden at `:root`, you may not need to override the component variable at all!
+
+**Example from pf-tokens-SSOT.json**:
+```json
+"--pf-v6-c-menu-toggle--disabled--Color": "var(--pf-t--global--text--color--on-disabled)"
+```
+
+This means if you override `--pf-t--global--text--color--on-disabled` at `:root`, the menu-toggle disabled color is already handled automatically!
+
+**Example - when component variable is needed**:
+
+```scss
+.mui-theme .pf-v6-c-menu-toggle.pf-m-secondary.pf-m-disabled {
+  // Global token covers disabled text color - no need to override
+  // But this specific element needs explicit border since no global token handles it
+  --pf-v6-c-menu-toggle--m-secondary--BorderColor: var(--mui-palette-action-disabled);
+  border: var(--pf-v6-c-menu-toggle--BorderWidth) solid var(--mui-palette-action-disabled);
+}
+```
+
+### 3. THIRD PRIORITY: Determine the MUI Value
+
+Check `MUI-default-theme-object.json` for the equivalent value
+- If it's a standard theme property → **Use auto-available MUI variable** (from `<MUIThemeProvider>`)
+- If it's computed/custom → **Define a custom MUI variable** in SCSS
+
+### 4. LAST RESORT: Use Hardcoded CSS
+
+Only when no PF variable (global OR component) exists (e.g., layout properties like `position`, `display`)
+
+**Key Principle**: Global tokens first (most efficient), component variables second (when needed), hardcoded CSS last (only when necessary)!
+
+## Design Token Reference Files
+
+- **MUI Theme Values**: `style/MUI-default-theme-object.json` - CHECK THIS FIRST for all values
+- **PF Design Tokens**: `style/pf-tokens-SSOT.json` - Single Source of Truth (SSOT) for all PatternFly v6 design tokens
+- **Token Values**: https://www.patternfly.org/tokens/all-patternfly-tokens/ - Official documentation showing computed values
+
+## PatternFly Variable Naming Patterns
+
+### PF Component Variables (Use These First!)
+
+Pattern: `--pf-v6-c-{component}--{property}--{modifier}`
+
+```scss
+--pf-v6-c-button--FontWeight
+--pf-v6-c-button--PaddingBlockStart
+--pf-v6-c-button--hover--BackgroundColor
+--pf-v6-c-alert--PaddingInlineStart
+--pf-v6-c-menu-toggle--expanded--Color
+```
+
+### PF Global Tokens (Use When Component Variables Don't Exist)
+
+```scss
+/* Brand colors */
+--pf-t--global--color--brand--default
+--pf-t--global--color--brand--hover
+--pf-t--global--color--brand--clicked
+
+/* Status colors */
+--pf-t--global--color--status--danger--default
+--pf-t--global--color--status--warning--default
+--pf-t--global--color--status--success--default
+
+/* Text colors */
+--pf-t--global--text--color--regular
+--pf-t--global--text--color--subtle
+--pf-t--global--text--color--on-disabled
+--pf-t--global--text--color--on-brand--default
+
+/* Background colors */
+--pf-t--global--background--color--primary--default
+--pf-t--global--background--color--secondary--default
+--pf-t--global--background--color--disabled--default
+
+/* Icon colors */
+--pf-t--global--icon--color--regular
+--pf-t--global--icon--color--disabled
+--pf-t--global--icon--color--brand--default
+
+/* Borders */
+--pf-t--global--border--width--regular
+--pf-t--global--border--color--default
+--pf-t--global--border--color--hover
+--pf-t--global--border--color--clicked
+--pf-t--global--border--color--disabled
+--pf-t--global--border--radius--small
+
+/* Spacing */
+--pf-t--global--spacer--xs     /* 4px */
+--pf-t--global--spacer--sm     /* 8px */
+--pf-t--global--spacer--md     /* 16px */
+--pf-t--global--spacer--lg     /* 24px */
+--pf-t--global--spacer--xl     /* 32px */
+```
+
+## MUI Variables Available from ThemeProvider
+
+**IMPORTANT**: Most MUI variables are **automatically available** via `<MUIThemeProvider theme={createMUITheme}>` and **DO NOT** need to be defined in SCSS.
+
+### Auto-Available (DON'T define these - use directly)
+
+From `<MUIThemeProvider theme={createMUITheme}>`:
+
+- `--mui-palette-primary-*` (main, light, dark, contrastText)
+- `--mui-palette-secondary-*`
+- `--mui-palette-error-*`, `--mui-palette-warning-*`, `--mui-palette-info-*`, `--mui-palette-success-*`
+- `--mui-palette-text-*` (primary, secondary, disabled)
+- `--mui-palette-action-*` (hover, disabled, disabledBackground, active)
+- `--mui-palette-background-*` (default, paper)
+- `--mui-palette-grey-*` (50-900, A100-A700)
+- `--mui-palette-divider`
+- `--mui-palette-common-*` (white, black)
+- `--mui-typography-fontFamily`
+- `--mui-typography-fontWeight*` (Light, Regular, Medium, Bold)
+- `--mui-shape-borderRadius`
+- `--mui-spacing-*`
+- `--mui-shadows-*`
+
+### Custom Variables (ONLY define these when needed)
+
+Define in `.mui-theme:root` when:
+
+- **Computed values**: `--mui-button--PaddingBlockStart: 6px; // spacing(0.75)`
+- **Component-specific**: `--mui-card--BorderWidth: 1px;`
+- **Non-standard values**: `--mui-form--LabelColor: rgba(0, 0, 0, 0.6);`
+
+## When to Reference pf-tokens-SSOT.json
+
+Always check the token file when:
+
+1. Adding colors to any component
+2. Setting spacing/padding/margin values
+3. Defining border styles or radius
+4. Implementing hover/active/focus/disabled states
+5. Setting typography properties
+6. Using shadows or elevation
+7. Setting z-index values
+8. Implementing transitions/animations
+
+## Benefits of Using Design Tokens
+
+1. **Consistency**: All components use the same design values
+2. **Theme switching**: Automatic support for dark mode, high contrast, etc.
+3. **Maintainability**: Update tokens in one place, changes propagate everywhere
+4. **Accessibility**: Semantic tokens ensure proper contrast ratios
+5. **Design system alignment**: Stay synchronized with PatternFly updates
