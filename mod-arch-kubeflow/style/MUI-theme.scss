@@ -497,8 +497,9 @@
   --pf-v6-c-form__section-title--MarginInlineEnd: 0px;
 }
 
-// Base form label styles
-.mui-theme .pf-v6-c-form__label {
+// Base form label styles - only apply to text inputs (those with fieldset wrapper)
+// Exclude NumberInput labels which don't use the fieldset pattern
+.mui-theme .pf-v6-c-form__group:not(:has(.pf-v6-c-number-input)) .pf-v6-c-form__label {
   position: relative;
     // TODO: Investigate using a fixed value or transform/rem for consistent positioning.
   top: 78%;
@@ -517,6 +518,7 @@
 // Form controls with number inputs - specific styling overrides
 .mui-theme .pf-v6-c-form__group:has(.pf-v6-c-number-input) {
   .pf-v6-c-form__label {
+    // NumberInput labels use standard label positioning (not floating)
     top: 30%;
     font-size: 16px;
     left: 0;
@@ -562,15 +564,13 @@
   --pf-v6-c-button--PaddingInlineEnd: var(--mui-button--PaddingInlineEnd);
 }
 
+// Consistent form control padding and styling for all inputs except file upload components and pagination
+// Pagination has inputs within form controls that need different padding, so exclude them
 .mui-theme .pf-v6-c-form-control {
   --pf-v6-c-form-control--m-disabled--BackgroundColor: var(--mui-palette-common-white);
   // Disabled color inherited from --pf-t--global--text--color--on-disabled (set to MUI text-disabled)
   --pf-v6-c-form-control--m-error--after--BorderColor: var(--mui-palette-error-main);
   --pf-v6-c-form-control--m-error--hover--after--BorderColor: var(--mui-palette-error-main);
-}
-
-// Consistent form control padding for all inputs except file upload components
-.mui-theme .pf-v6-c-form-control {
   // Resize is disabled in MUI.
   resize: none;
   --pf-v6-c-form-control--PaddingBlockStart: var(--mui-spacing-16px);
@@ -580,6 +580,13 @@
     --pf-v6-c-form-control--PaddingBlockStart: var(--mui-spacing-8px);
     --pf-v6-c-form-control--PaddingBlockEnd: var(--mui-spacing-8px);
   }
+}
+
+// Exclude pagination form controls from padding rules (pagination has its own sizing)
+// Pagination inputs need to maintain their compact size
+.mui-theme .pf-v6-c-pagination .pf-v6-c-form-control {
+  --pf-v6-c-form-control--PaddingBlockStart: unset;
+  --pf-v6-c-form-control--PaddingBlockEnd: unset;
 }
 
 .mui-theme .pf-v6-c-form__section {
@@ -599,9 +606,6 @@
   --pf-v6-c-text-input-group__text-input--PaddingInlineStart: 32px;
   --pf-v6-c-text-input-group__text-input--PaddingBlockEnd: 16.5px;
   --pf-v6-c-text-input-group__text-input--PaddingInlineEnd: 14px;
-}
-
-.mui-theme .pf-v6-c-text-input-group {
   --pf-v6-c-text-input-group__icon--Color: rgba(0, 0, 0, 0.38);
 }
 
@@ -632,12 +636,6 @@
   outline: none;
 }
 
-.form-fieldset-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-
 .mui-theme .pf-v6-c-form__group .form-fieldset-legend {
   float: unset;
   width: auto;
@@ -652,33 +650,33 @@
   max-width: 100%;
 }
 
-.form-fieldset-wrapper:hover .form-fieldset {
+.mui-theme .form-fieldset-wrapper:hover .form-fieldset {
   border-color: var(--mui-palette-common-black);
 }
 
-.form-fieldset-wrapper:focus-within span.pf-v6-c-form-control.pf-m-disabled ~ .form-fieldset,
-.form-fieldset-wrapper:hover span.pf-v6-c-form-control.pf-m-disabled ~ .form-fieldset {
+.mui-theme .form-fieldset-wrapper:focus-within span.pf-v6-c-form-control.pf-m-disabled ~ .form-fieldset,
+.mui-theme .form-fieldset-wrapper:hover span.pf-v6-c-form-control.pf-m-disabled ~ .form-fieldset {
   border-color: var(--pf-t--global--border--color--default);
 }
 
 // Disabled menu toggle inside fieldset wrapper - use disabled border color
-.form-fieldset-wrapper:has(.pf-v6-c-menu-toggle.pf-m-disabled) .form-fieldset {
+.mui-theme .form-fieldset-wrapper:has(.pf-v6-c-menu-toggle.pf-m-disabled) .form-fieldset {
   border-color: var(--mui-palette-action-disabled);
 }
 
-.form-fieldset-wrapper:has(.pf-v6-c-menu-toggle.pf-m-disabled):hover .form-fieldset {
+.mui-theme .form-fieldset-wrapper:has(.pf-v6-c-menu-toggle.pf-m-disabled):hover .form-fieldset {
   border-color: var(--mui-palette-action-disabled);
 }
 
-.form-fieldset-wrapper span.pf-v6-c-form-control.pf-m-error ~ .form-fieldset {
+.mui-theme .form-fieldset-wrapper span.pf-v6-c-form-control.pf-m-error ~ .form-fieldset {
   border-color: var(--mui-palette-error-main);
 }
 
-.form-fieldset-wrapper .pf-v6-c-input-group span.pf-v6-c-form-control .pf-m-error ~ .form-fieldset {
+.mui-theme .form-fieldset-wrapper .pf-v6-c-input-group span.pf-v6-c-form-control.pf-m-error ~ .form-fieldset {
   border-color: var(--mui-palette-error-main);
 }
 
-.form-fieldset-wrapper .pf-v6-c-input-group__item button {
+.mui-theme .form-fieldset-wrapper .pf-v6-c-input-group__item button {
   // Aligns EyeIcon in password input
   --pf-v6-c-button--PaddingBlockStart: var(--mui-spacing-16px);
   --pf-v6-c-button--PaddingBlockEnd: var(--mui-spacing-16px);
@@ -686,7 +684,7 @@
   --pf-v6-c-button--BorderRadius: 50%;
 }
 
-.form-fieldset-wrapper:focus-within .form-fieldset {
+.mui-theme .form-fieldset-wrapper:focus-within .form-fieldset {
   border-color: var(--mui-palette-primary-main);
   border-width: var(--mui-form--focus--BorderWidth);
   padding: var(--mui-form--focus--Padding) var(--mui-form--focus--Padding);
@@ -749,7 +747,7 @@
   border-color: var(--mui-palette-error-main);
 }
 
-.mui-theme .pf-v6-c-form .form-fieldset-wrapper .pf-v6-c-input-group span.pf-v6-c-form-control .pf-m-error ~ .form-fieldset {
+.mui-theme .pf-v6-c-form .form-fieldset-wrapper .pf-v6-c-input-group span.pf-v6-c-form-control.pf-m-error ~ .form-fieldset {
   border-color: var(--mui-palette-error-main);
 }
 
@@ -836,7 +834,7 @@
   border-color: var(--mui-palette-error-main);
 }
 
-.mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper .pf-v6-c-input-group span.pf-v6-c-form-control .pf-m-error ~ .form-fieldset {
+.mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper .pf-v6-c-input-group span.pf-v6-c-form-control.pf-m-error ~ .form-fieldset {
   border-color: var(--mui-palette-error-main);
 }
 
@@ -862,7 +860,7 @@
   border-color: var(--mui-palette-common-black);
 }
 
-.form-fieldset-legend {
+.mui-theme .form-fieldset-legend {
   float: unset;
   width: auto;
   overflow: hidden;
@@ -874,30 +872,30 @@
   max-width: 100%;
 }
 
-.form-fieldset-wrapper:focus-within {
+.mui-theme .form-fieldset-wrapper:focus-within {
   color: var(--mui-palette-primary-main);
 }
 
-.form-fieldset-wrapper,
-.toolbar-fieldset-wrapper,
-.tr-fieldset-wrapper {
+.mui-theme .form-fieldset-wrapper,
+.mui-theme .toolbar-fieldset-wrapper,
+.mui-theme .tr-fieldset-wrapper {
   position: relative;
   width: 100%;
 }
 
-.form-fieldset-wrapper .form-fieldset:hover {
+.mui-theme .form-fieldset-wrapper .form-fieldset:hover {
   border-color: var(--mui-palette-common-black);
 }
 
-.toolbar-fieldset-wrapper:focus-within .form-fieldset,
-.tr-fieldset-wrapper:focus-within .form-fieldset {
+.mui-theme .toolbar-fieldset-wrapper:focus-within .form-fieldset,
+.mui-theme .tr-fieldset-wrapper:focus-within .form-fieldset {
   border-color: var(--mui-palette-primary-main);
   border-width: var(--mui-form--focus--BorderWidth);
   padding: var(--mui-form--focus--Padding) var(--mui-form--focus--Padding);
 }
 
-.toolbar-fieldset-wrapper .form-fieldset,
-.form-fieldset {
+.mui-theme .toolbar-fieldset-wrapper .form-fieldset,
+.mui-theme .form-fieldset {
   text-align: left;
   position: absolute;
   inset: var(--mui-form-fieldset--InsetTop) 0 0;
@@ -913,7 +911,7 @@
   border-radius: var(--mui-shape-borderRadius);
 }
 
-.toolbar-fieldset-wrapper .form-fieldset-legend {
+.mui-theme .toolbar-fieldset-wrapper .form-fieldset-legend {
   float: unset;
   width: auto;
   overflow: hidden;
@@ -925,27 +923,27 @@
   max-width: 100%;
 }
 
-.toolbar-fieldset-wrapper .form-fieldset-legend span {
+.mui-theme .toolbar-fieldset-wrapper .form-fieldset-legend span {
   font-weight: var(--pf-t--global--font--weight--200);
 }
 
-.toolbar-fieldset-wrapper:focus-within {
+.mui-theme .toolbar-fieldset-wrapper:focus-within {
   color: var(--mui-palette-primary-main);
 }
 
-.toolbar-fieldset-wrapper:focus-within .form-fieldset-legend {
+.mui-theme .toolbar-fieldset-wrapper:focus-within .form-fieldset-legend {
   color: var(--mui-palette-primary-main);
 }
 
-.tr-fieldset-wrapper .pf-v6-c-form-control,
-.toolbar-fieldset-wrapper .pf-v6-c-form-control,
-.form-fieldset-wrapper .pf-v6-c-form-control {
+.mui-theme .tr-fieldset-wrapper .pf-v6-c-form-control,
+.mui-theme .toolbar-fieldset-wrapper .pf-v6-c-form-control,
+.mui-theme .form-fieldset-wrapper .pf-v6-c-form-control {
   // Hide real borders since fieldset wrappers provide their own border styling
   border: none;
 }
 
 // Ensure legend spans don't get form control styling
-.form-fieldset-legend span {
+.mui-theme .form-fieldset-legend span {
   border: none;
   padding: 0;
   background: transparent;
@@ -1137,7 +1135,7 @@
 }
 
 // Disabled menu toggle inside fieldset wrapper - border handled by fieldset, not toggle
-.form-fieldset-wrapper .pf-v6-c-menu-toggle.pf-m-disabled,
+.mui-theme .form-fieldset-wrapper .pf-v6-c-menu-toggle.pf-m-disabled,
 .mui-theme .pf-v6-c-form .form-fieldset-wrapper .pf-v6-c-menu-toggle.pf-m-disabled,
 .mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper .pf-v6-c-menu-toggle.pf-m-disabled,
 .mui-theme .pf-v6-c-expandable-section .form-fieldset-wrapper .pf-v6-c-menu-toggle.pf-m-disabled {
@@ -1435,8 +1433,124 @@ left: 0;
 }
 
 /* CSS workaround for spacing in labels in Workspace Kind */
-.form-label-field-group .pf-v6-c-table tr:where(.pf-v6-c-table__tr) > :where(th, td) {
-  padding-block-start: 0px;
+/* Special handling for form fields in table cells - remove extra top spacing */
+/* Layout properties (vertical-align, display, overflow) - no PF variables exist */
+.mui-theme .form-label-field-group .pf-v6-c-table tr:where(.pf-v6-c-table__tr) > :where(th, td) {
+  /* Layout property - no PF variable exists */
+  vertical-align: middle;
+  /* Balance padding - use PF component variable for consistency */
+  --pf-v6-c-table--cell--PaddingBlockStart: 0px;
+}
+
+/* Remove spacing to align form elements at top of table cells */
+/* Margin/padding: No PF variables exist for zero values - using direct CSS */
+.mui-theme .form-label-field-group .pf-v6-c-table tr:where(.pf-v6-c-table__tr) > :where(th, td) .pf-v6-c-form__group {
+  /* No PF variables for zero margin/padding - layout constraint */
+  margin: 0;
+  padding: 0;
+  /* Layout properties - no PF variables exist */
+  height: auto;
+  min-height: 0;
+  align-self: flex-start;
+}
+
+.mui-theme .form-label-field-group .pf-v6-c-table tr:where(.pf-v6-c-table__tr) > :where(th, td) .pf-v6-c-form__group-control {
+  /* No PF variables for zero margin/padding - layout constraint */
+  margin: 0;
+  padding: 0;
+  /* Layout property - no PF variable exists */
+  display: block;
+  /* Layout property - no PF variable exists */
+  height: auto;
+}
+
+.mui-theme .form-label-field-group .pf-v6-c-table .form-fieldset-wrapper {
+  /* No PF variables for zero margin/padding - layout constraint */
+  margin: 0;
+  padding: 0;
+  /* Layout properties - no PF variables exist */
+  display: inline-block;
+  width: 100%;
+  vertical-align: top;
+  line-height: 0;
+  height: auto;
+  min-height: 0;
+  /* Layout property - no PF variable exists */
+  overflow: visible;
+}
+
+.mui-theme .form-label-field-group .pf-v6-c-table .form-fieldset-wrapper .pf-v6-c-form-control {
+  /* No PF variables for zero margin/padding - layout constraint */
+  margin: 0;
+  padding: 0;
+  /* Layout properties - no PF variables exist */
+  display: block;
+  line-height: normal;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Ensure input elements inside table cells can display full text */
+/* Layout/text properties - no PF variables exist */
+.mui-theme .form-label-field-group .pf-v6-c-table .form-fieldset-wrapper input {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  width: 100%;
+}
+
+.mui-theme .form-label-field-group .pf-v6-c-table .form-fieldset-wrapper .form-fieldset {
+  /* Position properties - using PF border width variable */
+  top: var(--pf-t--global--border--width--regular);
+  /* Layout properties - no PF variables exist */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: visible;
+}
+
+/* Remove bottom border from table rows/cells when pf-m-no-border-bottom class is applied */
+/* Border property - using PF border width variable for consistency */
+.mui-theme .pf-v6-c-table .pf-m-no-border-bottom {
+  border-block-end: none;
+}
+
+/* Remove bottom padding from first th in thead when table is inside a form */
+/* Padding property - no PF variable exists for zero padding */
+.mui-theme .pf-v6-c-form .pf-v6-c-table thead tr:first-child th {
+  padding-bottom: 0px;
+}
+
+/* Add top border and remove bottom border for table rows when pf-m-border-top-only class is applied */
+/* Border properties - using PF border width and color variables for consistency */
+.mui-theme .pf-v6-c-table .pf-m-border-top-only {
+  border-block-start: var(--pf-v6-c-table__tr--BorderBlockEndWidth) solid var(--pf-v6-c-table__tr--BorderBlockEndColor);
+  border-block-end: none;
+}
+
+/* Fix text truncation in grid layouts - same issue as tables */
+/* Layout/text properties - no PF variables exist */
+.mui-theme [class*="pf-v6-l-grid"] .form-fieldset-wrapper .pf-v6-c-form-control {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  width: 100%;
+  min-width: 0;
+}
+
+.mui-theme [class*="pf-v6-l-grid"] .form-fieldset-wrapper input {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  width: 100%;
+}
+
+.mui-theme [class*="pf-v6-l-grid"] .form-fieldset-wrapper .form-fieldset {
+  /* Layout property - no PF variable exists */
+  overflow: visible;
 }
 
 /* CSS workaround to use MUI icon for sort icon */
@@ -1628,7 +1742,7 @@ left: 0;
 }
 
 // TODO: Remove when https://github.com/patternfly/patternfly-react/issues/11826 is resolved.
-.pf-v6-c-page__main-section .pf-v6-c-page__main-body {
+.mui-theme .pf-v6-c-page__main-section .pf-v6-c-page__main-body {
   height: 100%;
   --pf-v6-c-page__main-section--PaddingInlineStart: 0px;
 }
