@@ -35,9 +35,9 @@ const extensions: (NavExtension | RouteExtension | AreaExtension)[] = [
     properties: {
       id: 'mod-arch-view',
       title: 'Modular Architecture',
-      href: 'mod-arch/main-view',
+      href: '/mod-arch/main-view',
       section: 'mod-arch',
-      path: 'mod-arch/main-view/*',
+      path: '/mod-arch/main-view/*',
       label: 'Tech Preview',
     },
   },
