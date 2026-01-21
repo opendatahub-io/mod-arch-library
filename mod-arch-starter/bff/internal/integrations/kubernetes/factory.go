@@ -106,13 +106,17 @@ type TokenClientFactory struct {
 	Logger *slog.Logger
 	Header string
 	Prefix string
+	// NewTokenKubernetesClientFn is the function used to create token-based Kubernetes clients.
+	// This can be overridden by downstream code to provide custom client creation logic.
+	NewTokenKubernetesClientFn func(token string, logger *slog.Logger) (KubernetesClientInterface, error)
 }
 
 func NewTokenClientFactory(logger *slog.Logger, cfg config.EnvConfig) KubernetesClientFactory {
 	return &TokenClientFactory{
-		Logger: logger,
-		Header: cfg.AuthTokenHeader,
-		Prefix: cfg.AuthTokenPrefix,
+		Logger:                     logger,
+		Header:                     cfg.AuthTokenHeader,
+		Prefix:                     cfg.AuthTokenPrefix,
+		NewTokenKubernetesClientFn: NewTokenKubernetesClient,
 	}
 }
 
@@ -159,5 +163,5 @@ func (f *TokenClientFactory) GetClient(ctx context.Context) (KubernetesClientInt
 		return nil, fmt.Errorf("invalid or missing identity token")
 	}
 
-	return newTokenKubernetesClient(identity.Token, f.Logger)
+	return f.NewTokenKubernetesClientFn(identity.Token, f.Logger)
 }
