@@ -18,6 +18,7 @@ import (
 
 type TokenKubernetesClient struct {
 	SharedClientLogic
+	restConfig *rest.Config
 }
 
 func (kc *TokenKubernetesClient) IsClusterAdmin(_ *RequestIdentity) (bool, error) {
@@ -52,8 +53,10 @@ func (kc *TokenKubernetesClient) IsClusterAdmin(_ *RequestIdentity) (bool, error
 	return true, nil
 }
 
-// newTokenKubernetesClient creates a Kubernetes client using a user bearer token.
-func newTokenKubernetesClient(token string, logger *slog.Logger) (KubernetesClientInterface, error) {
+// NewTokenKubernetesClient creates a Kubernetes client using a user bearer token.
+// This function is exported to allow downstream code to customize client creation
+// by setting TokenClientFactory.NewTokenKubernetesClientFn.
+func NewTokenKubernetesClient(token string, logger *slog.Logger) (KubernetesClientInterface, error) {
 	baseConfig, err := helper.GetKubeconfig()
 	if err != nil {
 		logger.Error("failed to get kubeconfig", "error", err)
@@ -84,7 +87,15 @@ func newTokenKubernetesClient(token string, logger *slog.Logger) (KubernetesClie
 			// Token is retained for follow-up calls; do not log it.
 			Token: NewBearerToken(token),
 		},
+		restConfig: cfg,
 	}, nil
+}
+
+// RESTConfig returns the rest.Config used to create this client.
+// This allows downstream code to access the underlying configuration
+// for creating additional clients (e.g., dynamic clients).
+func (kc *TokenKubernetesClient) RESTConfig() *rest.Config { //nolint:unused
+	return kc.restConfig
 }
 
 // RequestIdentity is unused because the token already represents the user identity.
