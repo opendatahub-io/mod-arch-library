@@ -1,6 +1,6 @@
 {
   "name": "mod-arch-kubeflow",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Kubeflow-specific theme and UI components for modular architecture micro-frontend projects",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -53,10 +53,9 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@mui/material": "^7.0.0",
+    "@mui/material": "^7.3.4",
     "react": ">=18.2.0",
-    "react-dom": ">=18.2.0",
-    "@mui/material": "^7.3.4"
+    "react-dom": ">=18.2.0"
   },
   "devDependencies": {
     "@mui/material": "^7.3.4",
