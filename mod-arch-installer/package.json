@@ -1,6 +1,6 @@
 {
   "name": "mod-arch-installer",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "description": "CLI installer that bootstraps mod-arch-starter projects with Kubeflow or default flavors.",
   "type": "module",
   "bin": {
