@@ -2,7 +2,14 @@ import * as React from 'react';
 import { TbodyProps } from '@patternfly/react-table';
 import { EitherNotBoth } from '~/types/typeHelpers';
 import TableBase, { MIN_PAGE_SIZE } from './TableBase';
-import useTableColumnSort from './useTableColumnSort';
+import useTableColumnSort, { ControlledSortProps } from './useTableColumnSort';
+
+type ControlledPaginationProps = {
+  page?: number;
+  pageSize?: number;
+  onPageChange?: (page: number) => void;
+  onPageSizeChange?: (pageSize: number, page: number) => void;
+};
 
 type TableProps<DataType> = Omit<
   React.ComponentProps<typeof TableBase<DataType>>,
@@ -11,7 +18,9 @@ type TableProps<DataType> = Omit<
   EitherNotBoth<
     { disableRowRenderSupport?: boolean },
     { tbodyProps?: TbodyProps & { ref?: React.Ref<HTMLTableSectionElement> } }
-  >;
+  > &
+  Partial<ControlledSortProps> &
+  Partial<ControlledPaginationProps>;
 
 const Table = <T,>({
   data: allData,
@@ -20,11 +29,33 @@ const Table = <T,>({
   enablePagination,
   defaultSortColumn = 0,
   truncateRenderingAt = 0,
+  sortIndex: controlledSortIndex,
+  sortDirection: controlledSortDirection,
+  onSortChange,
+  page: controlledPage,
+  pageSize: controlledPageSize,
+  onPageChange,
+  onPageSizeChange,
   ...props
 }: TableProps<T>): React.ReactElement => {
-  const [page, setPage] = React.useState(1);
-  const [pageSize, setPageSize] = React.useState(MIN_PAGE_SIZE);
-  const sort = useTableColumnSort<T>(columns, subColumns || [], defaultSortColumn);
+  // Internal state (used when not controlled)
+  const [internalPage, setInternalPage] = React.useState(1);
+  const [internalPageSize, setInternalPageSize] = React.useState(MIN_PAGE_SIZE);
+
+  // Use controlled props if provided, otherwise use internal state
+  const page = controlledPage !== undefined ? controlledPage : internalPage;
+  const pageSize = controlledPageSize !== undefined ? controlledPageSize : internalPageSize;
+
+  const sort = useTableColumnSort<T>(
+    columns,
+    subColumns || [],
+    defaultSortColumn,
+    (controlledSortIndex !== undefined || controlledSortDirection !== undefined || onSortChange) && {
+      sortIndex: controlledSortIndex,
+      sortDirection: controlledSortDirection,
+      onSortChange: onSortChange,
+    },
+  );
   const sortedData = sort.transformData(allData);
 
   let data: T[];
@@ -39,9 +70,30 @@ const Table = <T,>({
   // update page to 1 if data changes (common when filter is applied)
   React.useEffect(() => {
     if (data.length === 0) {
-      setPage(1);
+      if (onPageChange) {
+        onPageChange(1);
+      } else {
+        setInternalPage(1);
+      }
     }
-  }, [data.length]);
+  }, [data.length, onPageChange]);
+
+  const handlePageChange = (_e: unknown, newPage: number): void => {
+    if (onPageChange) {
+      onPageChange(newPage);
+    } else {
+      setInternalPage(newPage);
+    }
+  };
+
+  const handlePageSizeChange = (_e: unknown, newSize: number, newPage: number): void => {
+    if (onPageSizeChange) {
+      onPageSizeChange(newSize, newPage);
+    } else {
+      setInternalPageSize(newSize);
+      setInternalPage(newPage);
+    }
+  };
 
   return (
     <TableBase
@@ -52,11 +104,8 @@ const Table = <T,>({
       itemCount={allData.length}
       perPage={pageSize}
       page={page}
-      onSetPage={(e, newPage) => setPage(newPage)}
-      onPerPageSelect={(e, newSize, newPage) => {
-        setPageSize(newSize);
-        setPage(newPage);
-      }}
+      onSetPage={handlePageChange}
+      onPerPageSelect={handlePageSizeChange}
       getColumnSort={sort.getColumnSort}
       {...props}
     />

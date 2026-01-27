@@ -8,6 +8,12 @@ type TableColumnSortProps<DataType> = {
   setSortDirection: (dir: 'asc' | 'desc') => void;
 };
 
+export type ControlledSortProps = {
+  sortIndex?: number | undefined;
+  sortDirection?: 'asc' | 'desc' | undefined;
+  onSortChange?: (index: number, direction: 'asc' | 'desc') => void;
+};
+
 type TableColumnSortByFieldProps<DataType> = TableColumnSortProps<DataType> & {
   sortField?: string;
   setSortField: (field: string) => void;
@@ -72,16 +78,34 @@ const useTableColumnSort = <T>(
   columns: SortableData<T>[],
   subColumns: SortableData<T>[],
   defaultSortColIndex?: number,
+  controlledSortProps?: ControlledSortProps,
 ): {
   transformData: (data: T[]) => T[];
   getColumnSort: GetColumnSort;
 } => {
-  const [activeSortIndex, setActiveSortIndex] = React.useState<number | undefined>(
+  const [internalSortIndex, setInternalSortIndex] = React.useState<number | undefined>(
     defaultSortColIndex,
   );
-  const [activeSortDirection, setActiveSortDirection] = React.useState<'desc' | 'asc' | undefined>(
+  const [internalSortDirection, setInternalSortDirection] = React.useState<'desc' | 'asc' | undefined>(
     'asc',
   );
+
+  // Use controlled props if provided, otherwise use internal state
+  const activeSortIndex = controlledSortProps?.sortIndex !== undefined 
+    ? controlledSortProps.sortIndex 
+    : internalSortIndex;
+  const activeSortDirection = controlledSortProps?.sortDirection !== undefined
+    ? controlledSortProps.sortDirection
+    : internalSortDirection;
+
+  const handleSortChange = (index: number, direction: 'asc' | 'desc'): void => {
+    if (controlledSortProps?.onSortChange) {
+      controlledSortProps.onSortChange(index, direction);
+    } else {
+      setInternalSortIndex(index);
+      setInternalSortDirection(direction);
+    }
+  };
 
   return {
     transformData: (data: T[]): T[] => {
@@ -125,9 +149,15 @@ const useTableColumnSort = <T>(
       columns,
       subColumns,
       sortDirection: activeSortDirection,
-      setSortDirection: setActiveSortDirection,
+      setSortDirection: (dir) => {
+        if (activeSortIndex !== undefined) {
+          handleSortChange(activeSortIndex, dir);
+        }
+      },
       sortIndex: activeSortIndex,
-      setSortIndex: setActiveSortIndex,
+      setSortIndex: (index) => {
+        handleSortChange(index, activeSortDirection || 'asc');
+      },
     }),
   };
 };
