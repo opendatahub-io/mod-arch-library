@@ -97,12 +97,15 @@ const useTableColumnSort = <T>(
   const activeSortDirection = controlledSortProps?.sortDirection !== undefined
     ? controlledSortProps.sortDirection
     : internalSortDirection;
+  const isSortIndexControlled = controlledSortProps?.sortIndex !== undefined;
+  const isSortDirectionControlled = controlledSortProps?.sortDirection !== undefined;
 
   const handleSortChange = (index: number, direction: 'asc' | 'desc'): void => {
-    if (controlledSortProps?.onSortChange) {
-      controlledSortProps.onSortChange(index, direction);
-    } else {
+    controlledSortProps?.onSortChange?.(index, direction);
+    if (!isSortIndexControlled) {
       setInternalSortIndex(index);
+    }
+    if (!isSortDirectionControlled) {
       setInternalSortDirection(direction);
     }
   };

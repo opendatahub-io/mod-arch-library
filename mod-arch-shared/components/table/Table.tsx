@@ -46,15 +46,16 @@ const Table = <T,>({
   const page = controlledPage !== undefined ? controlledPage : internalPage;
   const pageSize = controlledPageSize !== undefined ? controlledPageSize : internalPageSize;
 
+  const controlledSortProps =
+    controlledSortIndex !== undefined || controlledSortDirection !== undefined || onSortChange
+      ? { sortIndex: controlledSortIndex, sortDirection: controlledSortDirection, onSortChange }
+      : undefined;
+
   const sort = useTableColumnSort<T>(
     columns,
     subColumns || [],
     defaultSortColumn,
-    (controlledSortIndex !== undefined || controlledSortDirection !== undefined || onSortChange) && {
-      sortIndex: controlledSortIndex,
-      sortDirection: controlledSortDirection,
-      onSortChange: onSortChange,
-    },
+    controlledSortProps,
   );
   const sortedData = sort.transformData(allData);
 
