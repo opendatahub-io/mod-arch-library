@@ -1947,14 +1947,6 @@ left: 0;
   }
 }
 
-.mui-theme .workspacekind-file-upload {
-  height: 100%;
-
-  .pf-v6-c-file-upload__file-details {
-    flex-grow: 1;
-  }
-}
-
 .mui-theme .pf-v6-c-toolbar__item.toolbar-fieldset-wrapper,
 .mui-theme .toolbar-fieldset-wrapper {
   position: relative;
@@ -2009,18 +2001,14 @@ left: 0;
   --pf-v6-c-content--list--PaddingInlineStart: 0;
 }
 
-.mui-theme .workspacekind-file-upload {
-  height: 100%;
+// File upload textarea border styling (MUI-specific)
+.mui-theme .pf-v6-c-file-upload__file-details .pf-v6-c-form-control.pf-m-textarea {
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  border-radius: var(--mui-shape-borderRadius);
 
-  .pf-v6-c-file-upload__file-details {
-    flex-grow: 1;
+  &:hover {
+    border-color: var(--mui-palette-common-black);
   }
-}
-
-.mui-theme .pf-v6-c-file-upload {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
 }
 
 
