@@ -546,6 +546,44 @@
   border-radius: var(--pf-v6-c-form-control--BorderRadius, var(--mui-shape-borderRadius));
 }
 
+// NumberInput uses a span.pf-v6-c-form-control, so it gets excluded by the :not(span) rule above.
+// This adds the border specifically to NumberInput's form-control span.
+// Uses PF component variables which inherit from global tokens set at :root
+.mui-theme .pf-v6-c-number-input span.pf-v6-c-form-control {
+  border: var(--pf-v6-c-form-control--before--BorderWidth) solid var(--pf-v6-c-form-control--before--BorderColor);
+  box-sizing: border-box;
+
+  // Hover state - uses PF component hover variable
+  &:hover {
+    border-color: var(--pf-v6-c-form-control--hover--after--BorderColor);
+  }
+
+  // Focus state - use box-shadow to simulate thicker border without affecting layout
+  // Uses PF expanded (clicked) color which maps to primary/focus color
+  &:focus-within {
+    border-color: var(--pf-v6-c-form-control--m-expanded--after--BorderColor);
+    // Simulate 2px border with 1px border + 1px inset box-shadow
+    box-shadow: inset 0 0 0 1px var(--pf-v6-c-form-control--m-expanded--after--BorderColor);
+  }
+}
+
+// NumberInput layout fixes - ensure buttons fill full height and connect seamlessly
+.mui-theme .pf-v6-c-number-input {
+  // Ensure consistent height
+  align-items: stretch;
+
+  .pf-v6-c-input-group__item {
+    display: flex;
+    align-items: stretch;
+  }
+
+  // Make buttons take full height of their container
+  .pf-v6-c-button {
+    height: 100%;
+    align-self: stretch;
+  }
+}
+
 // Remove pseudo-element borders everywhere since we're using real borders now
 .mui-theme .pf-v6-c-form-control::after,
 .mui-theme .pf-v6-c-form-control::before {
@@ -996,7 +1034,8 @@
   border-color: var(--mui-palette-primary-main);
 }
 
-.mui-theme .pf-v6-c-form-control.pf-m-error:not(span) {
+.mui-theme .pf-v6-c-form-control.pf-m-error:not(span),
+.mui-theme .pf-v6-c-number-input span.pf-v6-c-form-control.pf-m-error {
   border-color: var(--mui-palette-error-main);
 }
 
