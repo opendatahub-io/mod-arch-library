@@ -23,6 +23,26 @@ Look for `--pf-t--global--*` tokens in `pf-tokens-SSOT.json` or [PatternFly docu
 
 **Why this is first priority**: One global override cascades to dozens of components automatically. This is the most scalable and efficient approach.
 
+**CRITICAL: NEVER set global token values inside component-level styles!**
+
+If a component uses a global token like `--pf-t--global--border--color--hover`, set that token's value ONLY at the `:root` level. Do NOT duplicate or override global token values inside individual component selectors.
+
+```scss
+// BAD - setting global token value inside a component style
+.mui-theme .pf-v6-c-number-input {
+  &:hover {
+    border-color: var(--pf-t--global--border--color--hover); // Don't do this!
+  }
+}
+
+// GOOD - set the global token value at :root, it cascades automatically
+.mui-theme:root {
+  --pf-t--global--border--color--hover: var(--mui-palette-common-black);
+}
+```
+
+This ensures consistency across all components and prevents redundant overrides.
+
 ### 2. SECOND PRIORITY: Use PF Component Variables (Only When Needed)
 
 **Only use component variables when:**
