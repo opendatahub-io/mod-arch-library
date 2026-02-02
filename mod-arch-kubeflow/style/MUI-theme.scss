@@ -706,6 +706,12 @@
   border-color: var(--mui-palette-action-disabled);
 }
 
+// Hide menu-toggle's ::before pseudo-element border in MUI theme
+// We handle borders via the element itself or the fieldset wrapper, not via ::before
+.mui-theme .pf-v6-c-menu-toggle::before {
+  border: none;
+}
+
 .mui-theme .form-fieldset-wrapper span.pf-v6-c-form-control.pf-m-error ~ .form-fieldset {
   border-color: var(--mui-palette-error-main);
 }
