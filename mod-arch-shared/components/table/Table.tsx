@@ -42,7 +42,7 @@ const Table = <T,>({
   const [internalPage, setInternalPage] = React.useState(1);
   const [internalPageSize, setInternalPageSize] = React.useState(MIN_PAGE_SIZE);
 
-  // Store callback in ref to avoid re-running effect when callback reference changes
+  // Store callback in ref
   const onPageChangeRef = React.useRef(onPageChange);
   React.useEffect(() => {
     onPageChangeRef.current = onPageChange;
@@ -76,28 +76,31 @@ const Table = <T,>({
 
   // update page to 1 if data changes (common when filter is applied)
   React.useEffect(() => {
+    const isPageControlled = controlledPage !== undefined;
     if (data.length === 0) {
-      if (onPageChangeRef.current) {
-        onPageChangeRef.current(1);
-      } else {
+      onPageChangeRef.current?.(1);
+      if (!isPageControlled) {
         setInternalPage(1);
       }
     }
-  }, [data.length]);
+  }, [data.length, controlledPage]);
 
   const handlePageChange = (_e: unknown, newPage: number): void => {
-    if (onPageChange) {
-      onPageChange(newPage);
-    } else {
+    const isPageControlled = controlledPage !== undefined;
+    onPageChange?.(newPage);
+    if (!isPageControlled) {
       setInternalPage(newPage);
     }
   };
 
   const handlePageSizeChange = (_e: unknown, newSize: number, newPage: number): void => {
-    if (onPageSizeChange) {
-      onPageSizeChange(newSize, newPage);
-    } else {
+    const isPageControlled = controlledPage !== undefined;
+    const isPageSizeControlled = controlledPageSize !== undefined;
+    onPageSizeChange?.(newSize, newPage);
+    if (!isPageSizeControlled) {
       setInternalPageSize(newSize);
+    }
+    if (!isPageControlled) {
       setInternalPage(newPage);
     }
   };
