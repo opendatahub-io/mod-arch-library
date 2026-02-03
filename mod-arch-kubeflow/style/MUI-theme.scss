@@ -166,6 +166,10 @@
   // Backdrop
   --mui-backdrop-BackgroundColor: rgba(0, 0, 0, 0.5);
 
+  // Switch - MUI/iOS-style switches use a pill shape (fully rounded ends)
+  // This preserves the capsule appearance while other components use the MUI border radius
+  --mui-switch--BorderRadius: 9999px;
+
   // Button
   --mui-button-FontWeight: 500;
   --mui-button--BorderWidth: var(--pf-t--global--border--width--regular);
@@ -193,6 +197,10 @@
   --mui-form-fieldset--InsetTop: calc(-1 * var(--mui-spacing-8px)); // -8px for label positioning
   --mui-form-fieldset--LegendPadding: var(--mui-spacing-4px); // 4px horizontal padding
   --mui-form-fieldset--LegendFontSize: var(--pf-t--global--font--size--body--sm); // 0.75rem
+
+  // Form control border styling (MUI input defaults)
+  --mui-form-control--BorderWidth: 1px;
+  --mui-form-control--BorderColor: rgba(0, 0, 0, 0.23); // MUI standard input border
 
   // Helper text
   --mui-helper-text__item--FontWeight: 400;
@@ -546,6 +554,44 @@
   border-radius: var(--pf-v6-c-form-control--BorderRadius, var(--mui-shape-borderRadius));
 }
 
+// NumberInput uses a span.pf-v6-c-form-control, so it gets excluded by the :not(span) rule above.
+// This adds the border specifically to NumberInput's form-control span.
+// Uses PF component variables which inherit from global tokens set at :root
+.mui-theme .pf-v6-c-number-input span.pf-v6-c-form-control {
+  border: var(--pf-v6-c-form-control--before--BorderWidth) solid var(--pf-v6-c-form-control--before--BorderColor);
+  box-sizing: border-box;
+
+  // Hover state - uses PF component hover variable
+  &:hover {
+    border-color: var(--pf-v6-c-form-control--hover--after--BorderColor);
+  }
+
+  // Focus state - use box-shadow to simulate thicker border without affecting layout
+  // Uses PF expanded (clicked) color which maps to primary/focus color
+  &:focus-within {
+    border-color: var(--pf-v6-c-form-control--m-expanded--after--BorderColor);
+    // Simulate 2px border with 1px border + 1px inset box-shadow
+    box-shadow: inset 0 0 0 1px var(--pf-v6-c-form-control--m-expanded--after--BorderColor);
+  }
+}
+
+// NumberInput layout fixes - ensure buttons fill full height and connect seamlessly
+.mui-theme .pf-v6-c-number-input {
+  // Ensure consistent height
+  align-items: stretch;
+
+  .pf-v6-c-input-group__item {
+    display: flex;
+    align-items: stretch;
+  }
+
+  // Make buttons take full height of their container
+  .pf-v6-c-button {
+    height: 100%;
+    align-self: stretch;
+  }
+}
+
 // Remove pseudo-element borders everywhere since we're using real borders now
 .mui-theme .pf-v6-c-form-control::after,
 .mui-theme .pf-v6-c-form-control::before {
@@ -666,6 +712,12 @@
 
 .mui-theme .form-fieldset-wrapper:has(.pf-v6-c-menu-toggle.pf-m-disabled):hover .form-fieldset {
   border-color: var(--mui-palette-action-disabled);
+}
+
+// Hide menu-toggle's ::before pseudo-element border inside fieldset wrapper
+// The fieldset wrapper provides the border, so we don't need the ::before border
+.mui-theme .form-fieldset-wrapper .pf-v6-c-menu-toggle::before {
+  border: none;
 }
 
 .mui-theme .form-fieldset-wrapper span.pf-v6-c-form-control.pf-m-error ~ .form-fieldset {
@@ -996,7 +1048,8 @@
   border-color: var(--mui-palette-primary-main);
 }
 
-.mui-theme .pf-v6-c-form-control.pf-m-error:not(span) {
+.mui-theme .pf-v6-c-form-control.pf-m-error:not(span),
+.mui-theme .pf-v6-c-number-input span.pf-v6-c-form-control.pf-m-error {
   border-color: var(--mui-palette-error-main);
 }
 
@@ -1078,6 +1131,7 @@
   --pf-v6-c-menu-toggle--expanded--Color: var(--mui-palette-common-black);
   --pf-v6-c-menu-toggle--hover--BorderColor: var(--mui-menu-toggle--hover--BorderColor);
   --pf-v6-c-menu-toggle--BorderColor: var(--mui-menu-toggle--BorderColor);
+
   --pf-v6-c-menu-toggle--hover--BackgroundColor: var(
     --pf-t--global--background--color--action--plain--hover
   );
@@ -1136,12 +1190,15 @@
   --pf-v6-c-menu-toggle--m-secondary--Color: var(--mui-palette-primary-main);
   --pf-v6-c-menu-toggle--m-secondary--BorderColor: var(--mui-palette-primary-main);
   --pf-v6-c-menu-toggle--m-secondary--BackgroundColor: transparent;
+  // Explicit border for secondary variant
+  border-color: var(--mui-palette-primary-main);
 
   &:hover {
     --pf-v6-c-menu-toggle--m-secondary--hover--BorderColor: var(--mui-palette-primary-dark);
     --pf-v6-c-menu-toggle--m-secondary--hover--Color: var(--mui-palette-primary-dark);
     // No PF variable for secondary hover background; using direct CSS
     background-color: var(--mui-palette-action-hover);
+    border-color: var(--mui-palette-primary-dark);
   }
 
   // Disabled state for secondary variant (higher specificity than base disabled)
@@ -1710,6 +1767,12 @@ left: 0;
   min-height: var(--kf-central-app-bar-height);
 }
 
+// Switch component - use pill-shaped border radius for the capsule appearance
+.mui-theme .pf-v6-c-switch {
+  --pf-v6-c-switch__toggle--BorderRadius: var(--mui-switch--BorderRadius);
+  --pf-v6-c-switch__toggle--before--BorderRadius: var(--mui-switch--BorderRadius);
+}
+
 .mui-theme .pf-v6-c-modal-box {
   // BorderRadius inherited from --pf-t--global--border--radius--large (set to MUI shape-borderRadius)
   --pf-v6-c-modal-box--BoxShadow: var(--mui-shadows-24);
@@ -1907,14 +1970,6 @@ left: 0;
   }
 }
 
-.mui-theme .workspacekind-file-upload {
-  height: 100%;
-
-  .pf-v6-c-file-upload__file-details {
-    flex-grow: 1;
-  }
-}
-
 .mui-theme .pf-v6-c-toolbar__item.toolbar-fieldset-wrapper,
 .mui-theme .toolbar-fieldset-wrapper {
   position: relative;
@@ -1951,6 +2006,21 @@ left: 0;
   --pf-v6-c-menu-toggle--PaddingInlineEnd: 12px;
 }
 
+// Filter group menu-toggles - add border styling
+.mui-theme .pf-v6-c-toolbar__group.pf-m-filter-group .pf-v6-c-menu-toggle {
+  // Use inset box-shadow for border effect to avoid layout shift
+  box-shadow: inset 0 0 0 1px var(--mui-palette-grey-400);
+  border-radius: var(--mui-shape-borderRadius);
+
+  &:hover {
+    box-shadow: inset 0 0 0 1px var(--mui-palette-common-black);
+  }
+
+  &.pf-m-expanded {
+    box-shadow: none;
+  }
+}
+
 /* Only apply fixed width to filter dropdown in toolbar filter group */
 .mui-theme .pf-v6-c-toolbar__group.pf-m-filter-group .pf-v6-c-menu-toggle:not(.pf-m-split-button):not(.pf-m-plain) {
   --pf-v6-c-menu-toggle--MinWidth: 140px;
@@ -1969,18 +2039,14 @@ left: 0;
   --pf-v6-c-content--list--PaddingInlineStart: 0;
 }
 
-.mui-theme .workspacekind-file-upload {
-  height: 100%;
+// File upload textarea border styling (MUI-specific)
+.mui-theme .pf-v6-c-file-upload__file-details .pf-v6-c-form-control.pf-m-textarea {
+  border: var(--mui-form-control--BorderWidth) solid var(--mui-form-control--BorderColor);
+  border-radius: var(--mui-shape-borderRadius);
 
-  .pf-v6-c-file-upload__file-details {
-    flex-grow: 1;
+  &:hover {
+    border-color: var(--mui-palette-common-black);
   }
-}
-
-.mui-theme .pf-v6-c-file-upload {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
 }
 
 
