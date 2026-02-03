@@ -11,7 +11,8 @@ type TableColumnSortProps<DataType> = {
 export type ControlledSortProps = {
   sortIndex?: number | undefined;
   sortDirection?: 'asc' | 'desc' | undefined;
-  onSortChange?: (index: number, direction: 'asc' | 'desc') => void;
+  onSortIndexChange?: (index: number) => void;
+  onSortDirectionChange?: (direction: 'asc' | 'desc') => void;
 };
 
 type TableColumnSortByFieldProps<DataType> = TableColumnSortProps<DataType> & {
@@ -89,7 +90,6 @@ const useTableColumnSort = <T>(
   const [internalSortDirection, setInternalSortDirection] = React.useState<
     'desc' | 'asc' | undefined
   >('asc');
-  const pendingSortIndexRef = React.useRef<number | undefined>(undefined);
 
   // Use controlled props if provided, otherwise use internal state
   const activeSortIndex =
@@ -103,11 +103,15 @@ const useTableColumnSort = <T>(
   const isSortIndexControlled = controlledSortProps?.sortIndex !== undefined;
   const isSortDirectionControlled = controlledSortProps?.sortDirection !== undefined;
 
-  const handleSortChange = (index: number, direction: 'asc' | 'desc'): void => {
-    controlledSortProps?.onSortChange?.(index, direction);
+  const handleSortIndexChange = (index: number): void => {
+    controlledSortProps?.onSortIndexChange?.(index);
     if (!isSortIndexControlled) {
       setInternalSortIndex(index);
     }
+  };
+
+  const handleSortDirectionChange = (direction: 'asc' | 'desc'): void => {
+    controlledSortProps?.onSortDirectionChange?.(direction);
     if (!isSortDirectionControlled) {
       setInternalSortDirection(direction);
     }
@@ -155,17 +159,9 @@ const useTableColumnSort = <T>(
       columns,
       subColumns,
       sortDirection: activeSortDirection,
-      setSortDirection: (dir) => {
-        const nextIndex = pendingSortIndexRef.current ?? activeSortIndex;
-        if (nextIndex !== undefined) {
-          handleSortChange(nextIndex, dir);
-        }
-        pendingSortIndexRef.current = undefined;
-      },
+      setSortDirection: handleSortDirectionChange,
       sortIndex: activeSortIndex,
-      setSortIndex: (index) => {
-        pendingSortIndexRef.current = index;
-      },
+      setSortIndex: handleSortIndexChange,
     }),
   };
 };

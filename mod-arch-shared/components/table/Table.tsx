@@ -31,7 +31,8 @@ const Table = <T,>({
   truncateRenderingAt = 0,
   sortIndex: controlledSortIndex,
   sortDirection: controlledSortDirection,
-  onSortChange,
+  onSortIndexChange,
+  onSortDirectionChange,
   page: controlledPage,
   pageSize: controlledPageSize,
   onPageChange,
@@ -53,8 +54,16 @@ const Table = <T,>({
   const pageSize = controlledPageSize !== undefined ? controlledPageSize : internalPageSize;
 
   const controlledSortProps =
-    controlledSortIndex !== undefined || controlledSortDirection !== undefined || onSortChange
-      ? { sortIndex: controlledSortIndex, sortDirection: controlledSortDirection, onSortChange }
+    controlledSortIndex !== undefined ||
+    controlledSortDirection !== undefined ||
+    onSortIndexChange ||
+    onSortDirectionChange
+      ? {
+          sortIndex: controlledSortIndex,
+          sortDirection: controlledSortDirection,
+          onSortIndexChange,
+          onSortDirectionChange,
+        }
       : undefined;
 
   const sort = useTableColumnSort<T>(
