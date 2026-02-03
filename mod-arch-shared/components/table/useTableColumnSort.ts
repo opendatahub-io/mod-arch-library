@@ -86,17 +86,20 @@ const useTableColumnSort = <T>(
   const [internalSortIndex, setInternalSortIndex] = React.useState<number | undefined>(
     defaultSortColIndex,
   );
-  const [internalSortDirection, setInternalSortDirection] = React.useState<'desc' | 'asc' | undefined>(
-    'asc',
-  );
+  const [internalSortDirection, setInternalSortDirection] = React.useState<
+    'desc' | 'asc' | undefined
+  >('asc');
+  const pendingSortIndexRef = React.useRef<number | undefined>(undefined);
 
   // Use controlled props if provided, otherwise use internal state
-  const activeSortIndex = controlledSortProps?.sortIndex !== undefined 
-    ? controlledSortProps.sortIndex 
-    : internalSortIndex;
-  const activeSortDirection = controlledSortProps?.sortDirection !== undefined
-    ? controlledSortProps.sortDirection
-    : internalSortDirection;
+  const activeSortIndex =
+    controlledSortProps?.sortIndex !== undefined
+      ? controlledSortProps.sortIndex
+      : internalSortIndex;
+  const activeSortDirection =
+    controlledSortProps?.sortDirection !== undefined
+      ? controlledSortProps.sortDirection
+      : internalSortDirection;
   const isSortIndexControlled = controlledSortProps?.sortIndex !== undefined;
   const isSortDirectionControlled = controlledSortProps?.sortDirection !== undefined;
 
@@ -153,13 +156,15 @@ const useTableColumnSort = <T>(
       subColumns,
       sortDirection: activeSortDirection,
       setSortDirection: (dir) => {
-        if (activeSortIndex !== undefined) {
-          handleSortChange(activeSortIndex, dir);
+        const nextIndex = pendingSortIndexRef.current ?? activeSortIndex;
+        if (nextIndex !== undefined) {
+          handleSortChange(nextIndex, dir);
         }
+        pendingSortIndexRef.current = undefined;
       },
       sortIndex: activeSortIndex,
       setSortIndex: (index) => {
-        handleSortChange(index, activeSortDirection || 'asc');
+        pendingSortIndexRef.current = index;
       },
     }),
   };

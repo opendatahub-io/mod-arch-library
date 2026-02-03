@@ -42,6 +42,12 @@ const Table = <T,>({
   const [internalPage, setInternalPage] = React.useState(1);
   const [internalPageSize, setInternalPageSize] = React.useState(MIN_PAGE_SIZE);
 
+  // Store callback in ref to avoid re-running effect when callback reference changes
+  const onPageChangeRef = React.useRef(onPageChange);
+  React.useEffect(() => {
+    onPageChangeRef.current = onPageChange;
+  }, [onPageChange]);
+
   // Use controlled props if provided, otherwise use internal state
   const page = controlledPage !== undefined ? controlledPage : internalPage;
   const pageSize = controlledPageSize !== undefined ? controlledPageSize : internalPageSize;
@@ -71,13 +77,13 @@ const Table = <T,>({
   // update page to 1 if data changes (common when filter is applied)
   React.useEffect(() => {
     if (data.length === 0) {
-      if (onPageChange) {
-        onPageChange(1);
+      if (onPageChangeRef.current) {
+        onPageChangeRef.current(1);
       } else {
         setInternalPage(1);
       }
     }
-  }, [data.length, onPageChange]);
+  }, [data.length]);
 
   const handlePageChange = (_e: unknown, newPage: number): void => {
     if (onPageChange) {
