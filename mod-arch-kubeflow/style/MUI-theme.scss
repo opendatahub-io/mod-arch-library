@@ -198,6 +198,10 @@
   --mui-form-fieldset--LegendPadding: var(--mui-spacing-4px); // 4px horizontal padding
   --mui-form-fieldset--LegendFontSize: var(--pf-t--global--font--size--body--sm); // 0.75rem
 
+  // Form control border styling (MUI input defaults)
+  --mui-form-control--BorderWidth: 1px;
+  --mui-form-control--BorderColor: rgba(0, 0, 0, 0.23); // MUI standard input border
+
   // Helper text
   --mui-helper-text__item--FontWeight: 400;
 
@@ -2038,7 +2042,7 @@ left: 0;
 
 // File upload textarea border styling (MUI-specific)
 .mui-theme .pf-v6-c-file-upload__file-details .pf-v6-c-form-control.pf-m-textarea {
-  border: 1px solid rgba(0, 0, 0, 0.23);
+  border: var(--mui-form-control--BorderWidth) solid var(--mui-form-control--BorderColor);
   border-radius: var(--mui-shape-borderRadius);
 
   &:hover {
