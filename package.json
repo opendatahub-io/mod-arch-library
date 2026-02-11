@@ -63,7 +63,7 @@
   "author": "OpenDataHub.io",
   "license": "Apache-2.0",
   "lint-staged": {
-    "**/*.{js,ts,jsx,tsx}": [
+    "mod-arch-*/**/*.{js,ts,jsx,tsx}": [
       "npx eslint --max-warnings 0"
     ]
   },
