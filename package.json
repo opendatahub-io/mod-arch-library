@@ -10,7 +10,7 @@
     "mod-arch-installer"
   ],
   "engines": {
-    "node": ">=20.0.0",
+    "node": ">=22.0.0",
     "npm": ">=10.0.0"
   },
   "scripts": {
@@ -40,7 +40,8 @@
     "publish:shared": "npm run build:shared && npm publish --workspace=mod-arch-shared",
     "publish:kubeflow": "npm run build:kubeflow && npm publish --workspace=mod-arch-kubeflow",
     "publish:installer": "npm run build:installer && npm publish --workspace=mod-arch-installer",
-    "prepublish:all": "npm run test"
+    "prepublish:all": "npm run test",
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
@@ -61,7 +62,23 @@
   ],
   "author": "OpenDataHub.io",
   "license": "Apache-2.0",
+  "lint-staged": {
+    "**/*.{js,ts,jsx,tsx}": [
+      "npx eslint --max-warnings 0"
+    ]
+  },
   "devDependencies": {
-    "npm-run-all2": "^7.0.1"
+    "@commitlint/cli": "20.4.1",
+    "@commitlint/config-conventional": "20.4.1",
+    "@semantic-release/changelog": "6.0.3",
+    "@semantic-release/commit-analyzer": "13.0.1",
+    "@semantic-release/exec": "7.1.0",
+    "@semantic-release/git": "10.0.1",
+    "@semantic-release/github": "12.0.5",
+    "@semantic-release/release-notes-generator": "14.1.0",
+    "husky": "9.1.7",
+    "lint-staged": "16.2.7",
+    "npm-run-all2": "^7.0.1",
+    "semantic-release": "25.0.3"
   }
 }
