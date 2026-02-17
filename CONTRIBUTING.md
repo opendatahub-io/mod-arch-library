@@ -97,7 +97,9 @@ Releases are automated via [semantic-release](https://github.com/semantic-releas
 
 1. PR titles are validated against [Conventional Commits](https://www.conventionalcommits.org/) format by CI
 2. On merge to `main`, semantic-release parses the squash commit message and determines the version bump
-3. Packages are versioned, tagged, and published automatically
+3. Packages are published to npm and a GitHub Release with a git tag is created automatically
+
+> **Note:** The `version` field in `package.json` files is set to `0.0.0-semantically-released` and is not updated in source. The actual version lives in git tags and the npm registry. This follows the [semantic-release recommended approach](https://semantic-release.gitbook.io/semantic-release/support/faq#making-commits-during-the-release-process-adds-significant-complexity) to avoid version bump commits and the elevated token permissions they require.
 
 ### PR title → version mapping
 
