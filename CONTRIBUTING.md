@@ -23,9 +23,8 @@ We use GitHub to host code, to track issues and feature requests, as well as acc
 ### Pull Request Process
 
 1. Update the README.md or documentation with details of changes if applicable
-2. Update the CHANGELOG.md with details of changes
-3. The PR must pass all CI tests before being merged
-4. At least one maintainer must review and approve the changes
+2. The PR must pass all CI tests before being merged
+3. At least one maintainer must review and approve the changes
 
 ## Development Workflow
 
@@ -125,12 +124,13 @@ Breaking changes require a manual release process:
 
 1. Open a PR with the breaking change, using a `feat:` or `fix:` prefix as appropriate
 2. Document the breaking change clearly in the PR description
-3. After merge, a maintainer must trigger the manual publish workflow (`Actions → Manually Publish`) with the appropriate package selection
-4. Update the version manually in `package.json` files before running the workflow if a major bump is needed
+3. After merge, a maintainer creates a GitHub Release with the major version tag (e.g., `v2.0.0`) and uses the **Manually Publish** workflow (`Actions → Manually Publish`) with a version input to publish to npm
+
+> **Note:** Since `package.json` versions are not maintained in source (see above), the manual publish workflow must set the version at publish time. This is an exception to the normal automated flow.
 
 ### Manual publish
 
-For ad-hoc releases (including major versions), use the **Manually Publish** workflow in GitHub Actions. It supports publishing individual packages or all packages at once.
+For ad-hoc releases (including major versions), use the **Manually Publish** workflow in GitHub Actions. It requires a version input (e.g., `2.0.0`) and supports publishing individual packages or all packages at once.
 
 ## PR Title Format
 
