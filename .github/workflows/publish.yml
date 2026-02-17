@@ -49,7 +49,7 @@ jobs:
         run: npm version ${{ github.event.inputs.version }} --no-git-tag-version && npm version ${{ github.event.inputs.version }} --workspaces --no-git-tag-version
 
       - name: Publish all packages
-        if: github.event_name == 'release' || github.event.inputs.package == 'all'
+        if: github.event.inputs.package == 'all'
         run: npm run publish:all
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
