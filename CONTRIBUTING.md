@@ -112,6 +112,8 @@ Releases are automated via [semantic-release](https://github.com/semantic-releas
 | `docs:` | No release | `docs: update theming guide` |
 | `test:` | No release | `test: add hook coverage` |
 | `chore:` | No release | `chore: update dependencies` |
+| `ci:` | No release | `ci: update pipeline config` |
+| `build:` | No release | `build: tweak webpack settings` |
 
 ### Breaking changes
 
