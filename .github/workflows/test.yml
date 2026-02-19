@@ -7,13 +7,35 @@ on:
     branches: [ main ]
 
 jobs:
+  pr-title:
+    name: Lint PR Title
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 # v6.1.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        types: |
+          feat
+          fix
+          perf
+          revert
+          refactor
+          style
+          docs
+          test
+          chore
+          ci
+          build
+
   test:
     name: Run Tests
     runs-on: ubuntu-latest
     
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [22.x]
     
     steps:
     - name: Checkout code
@@ -48,7 +70,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20.x'
+        node-version: '22.x'
         cache: 'npm'
         
     - name: Install dependencies
@@ -75,7 +97,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20.x'
+        node-version: '22.x'
         cache: 'npm'
         
     - name: Install dependencies

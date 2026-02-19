@@ -23,9 +23,8 @@ We use GitHub to host code, to track issues and feature requests, as well as acc
 ### Pull Request Process
 
 1. Update the README.md or documentation with details of changes if applicable
-2. Update the CHANGELOG.md with details of changes
-3. The PR must pass all CI tests before being merged
-4. At least one maintainer must review and approve the changes
+2. The PR must pass all CI tests before being merged
+3. At least one maintainer must review and approve the changes
 
 ## Development Workflow
 
@@ -89,25 +88,67 @@ When adding new components to the library, please follow these guidelines:
 - Use meaningful variable and function names
 - Include JSDoc comments for better documentation
 
-## Versioning
+## Releases
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your-organization/mod-arch-library/tags).
+Releases are automated via [semantic-release](https://github.com/semantic-release/semantic-release). Version bumps are determined by the **PR title**, since we use GitHub squash merge (the PR title becomes the commit message on `main`).
 
-- **MAJOR** version when you make incompatible API changes
-- **MINOR** version when you add functionality in a backwards compatible manner
-- **PATCH** version when you make backwards compatible bug fixes
+### How it works
 
-## Commit Messages
+1. PR titles are validated against [Conventional Commits](https://www.conventionalcommits.org/) format by CI
+2. On merge to `main`, semantic-release parses the squash commit message and determines the version bump
+3. Packages are published to npm and a GitHub Release with a git tag is created automatically
 
-We follow the [Conventional Commits](https://www.conventionalcommits.org/) specification:
+> **Note:** The `version` field in `package.json` files is set to `0.0.0-semantically-released` and is not updated in source. The actual version lives in git tags and the npm registry. This follows the [semantic-release recommended approach](https://semantic-release.gitbook.io/semantic-release/support/faq#making-commits-during-the-release-process-adds-significant-complexity) to avoid version bump commits and the elevated token permissions they require.
+
+### PR title → version mapping
+
+| PR title prefix | Version bump | Example |
+| --------------- | ------------ | ------- |
+| `feat:` | Minor (0.x.0) | `feat: add chart color tokens` |
+| `fix:` | Patch (0.0.x) | `fix: backdrop z-index overlap` |
+| `perf:` | Patch | `perf: reduce theme bundle size` |
+| `revert:` | Patch | `revert: undo token rename` |
+| `refactor:` | No release | `refactor: simplify theme context` |
+| `style:` | No release | `style: format SCSS files` |
+| `docs:` | No release | `docs: update theming guide` |
+| `test:` | No release | `test: add hook coverage` |
+| `chore:` | No release | `chore: update dependencies` |
+| `ci:` | No release | `ci: update pipeline config` |
+| `build:` | No release | `build: tweak webpack settings` |
+
+### Breaking changes
+
+**Major version bumps are intentionally blocked from automated releases.** Even if a commit includes `BREAKING CHANGE` in its footer or uses the `!` suffix (e.g., `feat!: rename theme API`), semantic-release will **not** create a major release.
+
+Breaking changes require a manual release process:
+
+1. Open a PR with the breaking change, using a `feat:` or `fix:` prefix as appropriate
+2. Document the breaking change clearly in the PR description
+3. After merge, a maintainer creates a GitHub Release with the major version tag (e.g., `v2.0.0`) and uses the **Manually Publish** workflow (`Actions → Manually Publish`) with a version input to publish to npm
+
+> **Note:** Since `package.json` versions are not maintained in source (see above), the manual publish workflow must set the version at publish time. This is an exception to the normal automated flow.
+
+### Manual publish
+
+For ad-hoc releases (including major versions), use the **Manually Publish** workflow in GitHub Actions. It requires a version input (e.g., `2.0.0`) and supports publishing individual packages or all packages at once.
+
+## PR Title Format
+
+PR titles **must** follow [Conventional Commits](https://www.conventionalcommits.org/) format. CI will block PRs with non-conforming titles. The allowed prefixes are:
 
 - `feat:` - A new feature
 - `fix:` - A bug fix
-- `docs:` - Documentation only changes
-- `style:` - Changes that do not affect the meaning of the code
+- `perf:` - A performance improvement
+- `revert:` - Reverting a previous change
 - `refactor:` - A code change that neither fixes a bug nor adds a feature
+- `style:` - Changes that do not affect the meaning of the code
+- `docs:` - Documentation only changes
 - `test:` - Adding missing tests or correcting existing tests
-- `chore:` - Changes to the build process or auxiliary tools and libraries
+- `chore:` - Changes to the build process or auxiliary tools
+- `ci:` - CI/CD configuration changes
+- `build:` - Build system changes
+
+Scopes are optional but encouraged for clarity: `feat(kubeflow): add chart color tokens`
 
 ## License
 

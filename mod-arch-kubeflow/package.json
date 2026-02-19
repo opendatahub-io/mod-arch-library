@@ -1,6 +1,6 @@
 {
   "name": "mod-arch-kubeflow",
-  "version": "1.6.0",
+  "version": "0.0.0-semantically-released",
   "description": "Kubeflow-specific theme and UI components for modular architecture micro-frontend projects",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -10,7 +10,7 @@
     "*.scss"
   ],
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "files": [
     "dist",

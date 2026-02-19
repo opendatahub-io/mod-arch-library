@@ -3,6 +3,10 @@ name: Manually Publish
 on:
   workflow_dispatch:
     inputs:
+      version:
+        description: 'Version to publish (e.g. 2.0.0). Required because package.json versions are not maintained in source.'
+        required: true
+        type: string
       package:
         description: 'Package to publish (all, core, shared, kubeflow, installer)'
         required: true
@@ -28,7 +32,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           registry-url: 'https://registry.npmjs.org'
           cache: 'npm'
 
@@ -41,8 +45,13 @@ jobs:
       - name: Build packages
         run: npm run build
 
+      - name: Set package versions
+        env:
+          VERSION: ${{ github.event.inputs.version }}
+        run: npm version "$VERSION" --no-git-tag-version && npm version "$VERSION" --workspaces --no-git-tag-version
+
       - name: Publish all packages
-        if: github.event_name == 'release' || github.event.inputs.package == 'all'
+        if: github.event.inputs.package == 'all'
         run: npm run publish:all
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
