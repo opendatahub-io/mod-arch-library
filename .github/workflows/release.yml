@@ -35,17 +35,9 @@ jobs:
       - name: Build packages
         run: npm run build
 
-      - name: Semantic Release (dry run)
-        # TODO: Remove --dry-run once verified in CI
-        run: npx semantic-release --dry-run
+      - name: Semantic Release
+        run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      # - name: Semantic Release
-      #   run: npx semantic-release
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
