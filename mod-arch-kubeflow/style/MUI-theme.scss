@@ -294,9 +294,9 @@
   --mui-spacing-16px: calc(2 * var(--mui-spacing));
   --mui-spacing-32px: calc(4 * var(--mui-spacing));
 
-  // Password input toggle: compact circular button (no PF variable for this size)
-  --mui-password-toggle--size: 28px;
-  --mui-password-toggle--container-padding-inline-end: 6px;
+  // Input group control buttons (e.g. password toggle, mount path edit): compact circular button
+  --mui-input-group-control-button--size: 28px;
+  --mui-input-group-control-button--container-padding-inline-end: 6px;
 
 }
 
@@ -731,50 +731,18 @@
   border-color: var(--mui-palette-error-main);
 }
 
-// Password input toggle: small circular button, centered in field height.
-// Applications must add class .password-input__toggle to the control button.
-.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item:has(.password-input__toggle) {
-  // Layout: center button vertically; spacing has no PF variable for this context
-  display: flex;
-  align-items: center;
-  padding-inline-end: var(--mui-password-toggle--container-padding-inline-end);
-}
-
-// Input group action buttons (e.g. mount path pencil, check, cancel): same vertical centering as password toggle.
-.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item:has(.input-group-action-button) {
+// Input group control buttons: use PF structure only (Button variant="control" in InputGroup).
+// No app class names required; any consumer using variant="control" gets this styling.
+.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item:has(.pf-v6-c-button.pf-m-control) {
   display: flex;
   align-items: center;
 }
 
-.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item:has(.input-group-action-button):last-child {
-  padding-inline-end: var(--mui-spacing-8px);
+.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item:has(.pf-v6-c-button.pf-m-control):last-child {
+  padding-inline-end: var(--mui-input-group-control-button--container-padding-inline-end);
 }
 
-.mui-theme .input-group-action-button.pf-v6-c-button {
-  --pf-v6-c-button--PaddingBlockStart: 0;
-  --pf-v6-c-button--PaddingBlockEnd: 0;
-  --pf-v6-c-button--PaddingInlineStart: 0;
-  --pf-v6-c-button--PaddingInlineEnd: 0;
-  align-self: center;
-  line-height: 0;
-  border-radius: 50%;
-  width: var(--mui-password-toggle--size);
-  height: var(--mui-password-toggle--size);
-  min-width: var(--mui-password-toggle--size);
-  min-height: var(--mui-password-toggle--size);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.mui-theme .input-group-action-button.pf-v6-c-button .pf-v6-c-button__icon,
-.mui-theme .input-group-action-button.pf-v6-c-button svg {
-  display: block;
-  margin: 0;
-}
-
-.mui-theme .password-input__toggle.pf-v6-c-button {
-  // PF component variables; no border in default, hover, focus, or active
+.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control {
   --pf-v6-c-button--BorderColor: transparent;
   --pf-v6-c-button--hover--BorderColor: transparent;
   --pf-v6-c-button--m-control--BorderColor: transparent;
@@ -785,34 +753,32 @@
   --pf-v6-c-button--PaddingInlineStart: 0;
   --pf-v6-c-button--PaddingInlineEnd: 0;
   --pf-v6-c-button--m-control--BorderRadius: 50%;
-  // Fixed size for compact circular toggle (no PF variable for this use case)
-  width: var(--mui-password-toggle--size);
-  height: var(--mui-password-toggle--size);
-  min-width: var(--mui-password-toggle--size);
-  min-height: var(--mui-password-toggle--size);
+  width: var(--mui-input-group-control-button--size);
+  height: var(--mui-input-group-control-button--size);
+  min-width: var(--mui-input-group-control-button--size);
+  min-height: var(--mui-input-group-control-button--size);
   border-radius: 50%;
-  // Layout: center icon (no PF variables for these)
   display: inline-flex;
   align-items: center;
   justify-content: center;
   line-height: 0;
+  align-self: center;
 }
 
-.mui-theme .password-input__toggle.pf-v6-c-button .pf-v6-c-button__icon,
-.mui-theme .password-input__toggle.pf-v6-c-button svg {
-  // Remove default spacing so icon is centered (no PF variable)
+.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control .pf-v6-c-button__icon,
+.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control svg {
   display: block;
   margin: 0;
 }
 
-.mui-theme .password-input__toggle.pf-v6-c-button:hover {
+.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control:hover {
   border-radius: 50%;
   outline: none;
   background-color: var(--pf-t--global--background--color--action--plain--hover, rgba(0, 0, 0, 0.04));
 }
 
-.mui-theme .password-input__toggle.pf-v6-c-button:focus,
-.mui-theme .password-input__toggle.pf-v6-c-button:focus-visible {
+.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control:focus,
+.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control:focus-visible {
   border-radius: 50%;
   outline: none;
 }
@@ -883,8 +849,6 @@
 .mui-theme .pf-v6-c-form .form-fieldset-wrapper .pf-v6-c-input-group span.pf-v6-c-form-control.pf-m-error ~ .form-fieldset {
   border-color: var(--mui-palette-error-main);
 }
-
-// Password input toggle: see dedicated .password-input__toggle block.
 
 .mui-theme .pf-v6-c-form .form-fieldset-wrapper:focus-within .form-fieldset {
   border-color: var(--mui-palette-primary-main);
@@ -965,7 +929,6 @@
   border-color: var(--mui-palette-error-main);
 }
 
-// Password input toggle: see dedicated .password-input__toggle block.
 
 .mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper:focus-within .form-fieldset {
   border-color: var(--mui-palette-primary-main);
