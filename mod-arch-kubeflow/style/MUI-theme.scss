@@ -315,6 +315,13 @@
 ╚════════════════════════════════════════════════════════════════════════════════╝
 */
 
+// PF table: vertical-align. PF does not set vertical-align on cells (browser default often baseline).
+// Set middle for all table cells under theme so mixed content (text + controls) aligns; no app class needed.
+.mui-theme .pf-v6-c-table .pf-v6-c-table__td,
+.mui-theme .pf-v6-c-table .pf-v6-c-table__th {
+  vertical-align: middle;
+}
+
 .mui-theme .pf-v6-c-action-list__item .pf-v6-c-button {
   --pf-v6-c-button--PaddingInlineStart: 0;
   --pf-v6-c-button--PaddingInlineEnd: 0;
@@ -781,6 +788,7 @@
 .mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control:focus-visible {
   border-radius: 50%;
   outline: none;
+  box-shadow: 0 0 0 2px var(--mui-palette-primary-main);
 }
 
 .mui-theme .form-fieldset-wrapper:focus-within .form-fieldset {
@@ -1133,6 +1141,12 @@
   --pf-v6-c-menu__item--PaddingInlineStart: var(--mui-menu__item--PaddingInlineStart);
   --pf-v6-c-menu__item--PaddingInlineEnd: var(--mui-menu__item--PaddingInlineEnd);
   --pf-v6-c-menu__item--FontSize: var(--mui-menu__item--FontSize);
+}
+
+// Remove negative margins on scrollable menu content that clip the scrollbar
+.mui-theme .pf-v6-c-menu.pf-m-scrollable .pf-v6-c-menu__content {
+  margin-block-start: 0;
+  margin-block-end: 0;
 }
 
 
