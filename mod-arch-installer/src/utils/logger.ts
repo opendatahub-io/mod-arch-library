@@ -1,6 +1,9 @@
 import pc from 'picocolors';
 
 export const logger = {
+  log(message: string) {
+    console.log(message);
+  },
   info(message: string) {
     console.log(pc.cyan('[mod-arch-installer]'), message);
   },

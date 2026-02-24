@@ -5,6 +5,7 @@ import { copyDirectory, ensureEmptyDirectory, fileExists, readJSON, writeJSON } 
 import { logger } from './utils/logger.js';
 import { runCommand } from './utils/runCommand.js';
 import { replaceModuleNames } from './utils/templateReplacer.js';
+import { displayPostInstallChecklist } from './postInstall.js';
 import type { InstallOptions, StarterFlavor } from './types.js';
 
 const TEMPLATE_ROOT = path.resolve(fileURLToPath(new URL('../templates/mod-arch-starter', import.meta.url)));
@@ -263,6 +264,6 @@ export async function installStarter(options: InstallOptions) {
   await installDependencies(targetDir, options.skipInstall);
   await initializeGitRepo(targetDir, options.initializeGit);
 
-  logger.success('Installation complete!');
+  displayPostInstallChecklist({ ...options, targetDir });
   return options;
 }
