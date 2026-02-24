@@ -8,9 +8,6 @@ import webpack from '@cypress/webpack-preprocessor';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore no types available
 import cypressHighResolution from 'cypress-high-resolution';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore no types available
-import { beforeRunHook, afterRunHook } from 'cypress-mochawesome-reporter/lib';
 import { mergeFiles } from 'junit-report-merger';
 import { env, BASE_URL } from '~/__tests__/cypress/cypress/utils/testConfig';
 import webpackConfig from './webpack.config';
@@ -19,21 +16,9 @@ const resultsDir = `${env.CY_RESULTS_DIR || 'results'}/${env.CY_MOCK ? 'mocked' 
 
 export default defineConfig({
   experimentalMemoryManagement: true,
-  // Use relative path as a workaround to https://github.com/cypress-io/cypress/issues/6406
-  reporter: '../../../node_modules/cypress-multi-reporters',
+  reporter: 'mocha-junit-reporter',
   reporterOptions: {
-    reporterEnabled: 'cypress-mochawesome-reporter, mocha-junit-reporter',
-    mochaJunitReporterReporterOptions: {
-      mochaFile: `${resultsDir}/junit/junit-[hash].xml`,
-    },
-    cypressMochawesomeReporterReporterOptions: {
-      charts: true,
-      embeddedScreenshots: false,
-      ignoreVideos: false,
-      inlineAssets: true,
-      reportDir: resultsDir,
-      videoOnFailOnly: true,
-    },
+    mochaFile: `${resultsDir}/junit/junit-[hash].xml`,
   },
   chromeWebSecurity: false,
   viewportWidth: 1920,
@@ -110,15 +95,7 @@ export default defineConfig({
         }
       });
 
-      on('before:run', async (details) => {
-        // cypress-mochawesome-reporter
-        await beforeRunHook(details);
-      });
-
       on('after:run', async () => {
-        // cypress-mochawesome-reporter
-        await afterRunHook();
-
         // merge junit reports into a single report
         const outputFile = path.join(__dirname, resultsDir, 'junit-report.xml');
         const inputFiles = [`./${resultsDir}/junit/*.xml`];
