@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { copyDirectory, ensureEmptyDirectory, fileExists, readJSON, writeJSON } from './utils/filesystem.js';
 import { logger } from './utils/logger.js';
 import { runCommand } from './utils/runCommand.js';
+import { replaceModuleNames } from './utils/templateReplacer.js';
 import type { InstallOptions, StarterFlavor } from './types.js';
 
 const TEMPLATE_ROOT = path.resolve(fileURLToPath(new URL('../templates/mod-arch-starter', import.meta.url)));
@@ -242,7 +243,7 @@ async function renameGitignores(dir: string) {
 export async function installStarter(options: InstallOptions) {
   const targetDir = path.resolve(process.cwd(), options.targetDir);
   await mkdir(targetDir, { recursive: true });
-  logger.info(`Preparing project in ${targetDir} (flavor: ${options.flavor}).`);
+  logger.info(`Preparing project "${options.moduleName.kebabCase}" in ${targetDir} (flavor: ${options.flavor}).`);
 
   await copyBaseTemplate(targetDir);
   await removeDefaultManifests(options.flavor, targetDir);
@@ -253,13 +254,15 @@ export async function installStarter(options: InstallOptions) {
   await applyDocsOverlay(options.flavor, targetDir);
   await removeDefaultFolders(options.flavor, targetDir);
   await updateFrontendDependencies(options, targetDir);
+
+  // Replace hardcoded module names with the provided module name
+  logger.info(`Applying module name "${options.moduleName.kebabCase}"...`);
+  await replaceModuleNames(targetDir, options.moduleName);
+
   await renameGitignores(targetDir);
   await installDependencies(targetDir, options.skipInstall);
   await initializeGitRepo(targetDir, options.initializeGit);
 
   logger.success('Installation complete!');
-  logger.info('Next steps:');
-  logger.info(`  1. cd ${targetDir}/<your-project-folder>`);
-  logger.info('  2. make dev-install-dependencies');
-  logger.info('  3. Start development in mock mode with make dev-start.');
+  return options;
 }

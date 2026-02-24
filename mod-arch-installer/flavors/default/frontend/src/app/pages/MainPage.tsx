@@ -1,21 +1,15 @@
 import React from 'react';
-import ApplicationsPage from '../components/ApplicationsPage';
+import ApplicationsPage from '~/app/components/ApplicationsPage';
 
-const MainPage: React.FC = () => {
-  const loadError = undefined;
-  const loaded = true;
-
-  return (
-    <ApplicationsPage
-      title="Main Page"
-      description={<p>Welcome to the Main Page</p>}
-      empty
-      loadError={loadError}
-      loaded={loaded}
-      provideChildrenPadding
-      removeChildrenTopPadding
-    />
-  );
-};
+const MainPage: React.FC = () => (
+  <ApplicationsPage
+    title="Main Page"
+    description={<p>Welcome to the Main Page</p>}
+    empty
+    loaded
+    provideChildrenPadding
+    removeChildrenTopPadding
+  />
+);
 
 export default MainPage;

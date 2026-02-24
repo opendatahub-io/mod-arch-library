@@ -28,6 +28,7 @@
     "node": ">=22.0.0"
   },
   "dependencies": {
+    "@inquirer/prompts": "^7.0.0",
     "commander": "^12.1.0",
     "picocolors": "^1.0.0"
   },
