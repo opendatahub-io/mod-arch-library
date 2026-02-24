@@ -294,6 +294,9 @@
   --mui-spacing-16px: calc(2 * var(--mui-spacing));
   --mui-spacing-32px: calc(4 * var(--mui-spacing));
 
+  // Password input toggle: compact circular button (no PF variable for this size)
+  --mui-password-toggle--size: 28px;
+  --mui-password-toggle--container-padding-inline-end: 6px;
 
 }
 
@@ -728,12 +731,90 @@
   border-color: var(--mui-palette-error-main);
 }
 
-.mui-theme .form-fieldset-wrapper .pf-v6-c-input-group__item button {
-  // Aligns EyeIcon in password input
-  --pf-v6-c-button--PaddingBlockStart: var(--mui-spacing-16px);
-  --pf-v6-c-button--PaddingBlockEnd: var(--mui-spacing-16px);
-  --pf-v6-c-button--BorderColor: var(--mui-palette-common-white);
-  --pf-v6-c-button--BorderRadius: 50%;
+// Password input toggle: small circular button, centered in field height.
+// Applications must add class .password-input__toggle to the control button.
+.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item:has(.password-input__toggle) {
+  // Layout: center button vertically; spacing has no PF variable for this context
+  display: flex;
+  align-items: center;
+  padding-inline-end: var(--mui-password-toggle--container-padding-inline-end);
+}
+
+// Input group action buttons (e.g. mount path pencil, check, cancel): same vertical centering as password toggle.
+.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item:has(.input-group-action-button) {
+  display: flex;
+  align-items: center;
+}
+
+.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item:has(.input-group-action-button):last-child {
+  padding-inline-end: var(--mui-spacing-8px);
+}
+
+.mui-theme .input-group-action-button.pf-v6-c-button {
+  --pf-v6-c-button--PaddingBlockStart: 0;
+  --pf-v6-c-button--PaddingBlockEnd: 0;
+  --pf-v6-c-button--PaddingInlineStart: 0;
+  --pf-v6-c-button--PaddingInlineEnd: 0;
+  align-self: center;
+  line-height: 0;
+  border-radius: 50%;
+  width: var(--mui-password-toggle--size);
+  height: var(--mui-password-toggle--size);
+  min-width: var(--mui-password-toggle--size);
+  min-height: var(--mui-password-toggle--size);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mui-theme .input-group-action-button.pf-v6-c-button .pf-v6-c-button__icon,
+.mui-theme .input-group-action-button.pf-v6-c-button svg {
+  display: block;
+  margin: 0;
+}
+
+.mui-theme .password-input__toggle.pf-v6-c-button {
+  // PF component variables; no border in default, hover, focus, or active
+  --pf-v6-c-button--BorderColor: transparent;
+  --pf-v6-c-button--hover--BorderColor: transparent;
+  --pf-v6-c-button--m-control--BorderColor: transparent;
+  --pf-v6-c-button--m-control--hover--BorderColor: transparent;
+  --pf-v6-c-button--m-control--m-clicked--BorderColor: transparent;
+  --pf-v6-c-button--PaddingBlockStart: 0;
+  --pf-v6-c-button--PaddingBlockEnd: 0;
+  --pf-v6-c-button--PaddingInlineStart: 0;
+  --pf-v6-c-button--PaddingInlineEnd: 0;
+  --pf-v6-c-button--m-control--BorderRadius: 50%;
+  // Fixed size for compact circular toggle (no PF variable for this use case)
+  width: var(--mui-password-toggle--size);
+  height: var(--mui-password-toggle--size);
+  min-width: var(--mui-password-toggle--size);
+  min-height: var(--mui-password-toggle--size);
+  border-radius: 50%;
+  // Layout: center icon (no PF variables for these)
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.mui-theme .password-input__toggle.pf-v6-c-button .pf-v6-c-button__icon,
+.mui-theme .password-input__toggle.pf-v6-c-button svg {
+  // Remove default spacing so icon is centered (no PF variable)
+  display: block;
+  margin: 0;
+}
+
+.mui-theme .password-input__toggle.pf-v6-c-button:hover {
+  border-radius: 50%;
+  outline: none;
+  background-color: var(--pf-t--global--background--color--action--plain--hover, rgba(0, 0, 0, 0.04));
+}
+
+.mui-theme .password-input__toggle.pf-v6-c-button:focus,
+.mui-theme .password-input__toggle.pf-v6-c-button:focus-visible {
+  border-radius: 50%;
+  outline: none;
 }
 
 .mui-theme .form-fieldset-wrapper:focus-within .form-fieldset {
@@ -803,13 +884,7 @@
   border-color: var(--mui-palette-error-main);
 }
 
-.mui-theme .pf-v6-c-form .form-fieldset-wrapper .pf-v6-c-input-group__item button {
-  // Aligns EyeIcon in password input
-  --pf-v6-c-button--PaddingBlockStart: var(--mui-spacing-16px);
-  --pf-v6-c-button--PaddingBlockEnd: var(--mui-spacing-16px);
-  --pf-v6-c-button--BorderColor: var(--mui-palette-common-white);
-  --pf-v6-c-button--BorderRadius: 50%;
-}
+// Password input toggle: see dedicated .password-input__toggle block.
 
 .mui-theme .pf-v6-c-form .form-fieldset-wrapper:focus-within .form-fieldset {
   border-color: var(--mui-palette-primary-main);
@@ -890,13 +965,7 @@
   border-color: var(--mui-palette-error-main);
 }
 
-.mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper .pf-v6-c-input-group__item button {
-  // Aligns EyeIcon in password input
-  --pf-v6-c-button--PaddingBlockStart: var(--pf-t--global--spacer--md);
-  --pf-v6-c-button--PaddingBlockEnd: var(--pf-t--global--spacer--md);
-  --pf-v6-c-button--BorderColor: var(--mui-palette-common-white);
-  --pf-v6-c-button--BorderRadius: 50%;
-}
+// Password input toggle: see dedicated .password-input__toggle block.
 
 .mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper:focus-within .form-fieldset {
   border-color: var(--mui-palette-primary-main);
