@@ -6,7 +6,12 @@ type AppContextProps = {
   user: UserSettings;
 };
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-export const AppContext = React.createContext({} as AppContextProps);
+export const AppContext = React.createContext<AppContextProps | null>(null);
 
-export const useAppContext = (): AppContextProps => React.useContext(AppContext);
+export const useAppContext = (): AppContextProps => {
+  const context = React.useContext(AppContext);
+  if (!context) {
+    throw new Error('useAppContext must be used within an AppContext.Provider');
+  }
+  return context;
+};

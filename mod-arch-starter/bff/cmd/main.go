@@ -17,6 +17,13 @@ import (
 	"time"
 )
 
+const (
+	serverIdleTimeout  = time.Minute
+	serverReadTimeout  = 30 * time.Second
+	serverWriteTimeout = 30 * time.Second
+	shutdownTimeout    = 30 * time.Second
+)
+
 func main() {
 	var cfg config.EnvConfig
 	var certFile, keyFile string
@@ -85,9 +92,9 @@ func main() {
 	srv := &http.Server{
 		Addr:         fmt.Sprintf(":%d", cfg.Port),
 		Handler:      app.Routes(),
-		IdleTimeout:  time.Minute,
-		ReadTimeout:  30 * time.Second,
-		WriteTimeout: 30 * time.Second,
+		IdleTimeout:  serverIdleTimeout,
+		ReadTimeout:  serverReadTimeout,
+		WriteTimeout: serverWriteTimeout,
 		ErrorLog:     slog.NewLogLogger(logger.Handler(), slog.LevelError),
 	}
 
@@ -119,7 +126,7 @@ func main() {
 	logger.Info("shutting down gracefully...")
 
 	// Create a context with timeout for the shutdown process
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), shutdownTimeout)
 	defer cancel()
 
 	// Shutdown the HTTP server gracefully
