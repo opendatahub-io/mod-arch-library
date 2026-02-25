@@ -25,7 +25,7 @@ program
   .option('-f, --flavor <flavor>', 'Starter flavor: kubeflow (default) or default', 'kubeflow')
   .option('-n, --name <module-name>', 'Module name in kebab-case (e.g., auto-rag, model-registry)')
   .option('--skip-install', 'Skip dependency installation steps', false)
-  .option('--no-git', 'Do not initialize a git repository after copying the template', false)
+  .option('--no-git', 'Do not initialize a git repository after copying the template')
   .action(async (projectDirectory: string, options: CliOptions) => {
     const flavor = options.flavor as StarterFlavor;
     if (!FLAVORS.includes(flavor)) {

@@ -100,19 +100,21 @@ function applyReplacements(content: string, names: ModuleNames): string {
  * Process a single file, applying module name replacements.
  */
 async function processFile(filePath: string, names: ModuleNames): Promise<boolean> {
+  let content: string;
   try {
-    const content = await readFile(filePath, 'utf-8');
-    const newContent = applyReplacements(content, names);
-
-    if (content !== newContent) {
-      await writeFile(filePath, newContent, 'utf-8');
-      return true;
-    }
-    return false;
+    content = await readFile(filePath, 'utf-8');
   } catch {
     // File doesn't exist or can't be read - skip silently
     return false;
   }
+
+  const newContent = applyReplacements(content, names);
+  if (content !== newContent) {
+    // Write errors should propagate to surface issues like permissions or disk full
+    await writeFile(filePath, newContent, 'utf-8');
+    return true;
+  }
+  return false;
 }
 
 /**

@@ -13,7 +13,7 @@ setupDotenvFilesForEnv({ env: 'development' });
 const webpackCommon = require('./webpack.common.js');
 
 const RELATIVE_DIRNAME = process.env._RELATIVE_DIRNAME;
-const IS_PROJECT_ROOT_DIR = process.env._IS_PROJECT_ROOT_DIR;
+const IS_PROJECT_ROOT_DIR = process.env._IS_PROJECT_ROOT_DIR === 'true';
 const SRC_DIR = process.env._SRC_DIR;
 const COMMON_DIR = process.env._COMMON_DIR;
 const PUBLIC_PATH = process.env._PUBLIC_PATH;

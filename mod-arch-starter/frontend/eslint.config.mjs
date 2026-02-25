@@ -292,7 +292,9 @@ export default tseslint.config(
     files: ['src/__tests__/cypress/**/*.ts'],
     ...cypressPlugin.configs.recommended,
     languageOptions: {
+      ...cypressPlugin.configs.recommended.languageOptions,
       parserOptions: {
+        ...cypressPlugin.configs.recommended.languageOptions?.parserOptions,
         project: './src/__tests__/cypress/tsconfig.json',
       },
     },
