@@ -140,6 +140,9 @@
   --pf-t--global--border--color--status--success--default: var(--mui-palette-success-main);
   --pf-t--global--border--color--status--info--default: var(--mui-palette-info-main);
 
+  // MUI's warning background is darker than PF's default yellow, requiring white text for contrast
+  --pf-t--global--text--color--status--on-warning--default: var(--mui-palette-warning-contrastText);
+
   // ═══════════════════════════════════════════════════════════════════════════
   // MUI CUSTOM VARIABLES
   // Custom variables for MUI-specific values used in component overrides below.
@@ -368,6 +371,8 @@
 
 .mui-theme .pf-v6-c-backdrop {
   --pf-v6-c-backdrop--BackgroundColor: var(--mui-backdrop-BackgroundColor);
+  // Sidebar uses MUI drawer z-index (1200); modal must render above it
+  --pf-v6-c-backdrop--ZIndex: var(--mui-zIndex-modal);
 }
 
 .mui-theme .pf-v6-c-brand.kubeflow_brand {
@@ -1590,7 +1595,7 @@ left: 0;
 /* CSS workaround for spacing in labels in Workspace Kind */
 /* Special handling for form fields in table cells - remove extra top spacing */
 /* Layout properties (vertical-align, display, overflow) - no PF variables exist */
-.mui-theme .form-label-field-group .pf-v6-c-table tr:where(.pf-v6-c-table__tr) > :where(th, td) {
+.mui-theme .form-label-field-group .pf-v6-c-table tr:where(.pf-v6-c-table__tr):not(.pf-v6-c-inline-edit) > :where(th, td) {
   /* Layout property - no PF variable exists */
   vertical-align: middle;
   /* Balance padding - use PF component variable for consistency */
