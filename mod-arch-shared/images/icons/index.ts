@@ -13,6 +13,7 @@ export { default as ExploreApplicationsIcon } from './ExploreApplicationsIcon';
 export { default as GroupIcon } from './GroupIcon';
 export { default as ModelIcon } from './ModelIcon';
 export { default as ModelRegistryIcon } from './ModelRegistryIcon';
+export { default as ModelRegistryNavigatorIcon } from './ModelRegistryNavigatorIcon';
 export { default as ModelServerIcon } from './ModelServerIcon';
 export { default as MultiModelIcon } from './MultiModelIcon';
 export { default as NotebookIcon } from './NotebookIcon';

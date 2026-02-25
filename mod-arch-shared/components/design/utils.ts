@@ -52,6 +52,7 @@ export enum ProjectObjectType {
   modelServer = 'model-server',
   modelCatalog = 'model-catalog',
   registeredModels = 'registered-models',
+  modelRegistryNavigator = 'model-registry-navigator',
   deployedModels = 'deployed-models',
   deployingModels = 'deploying-models',
   modelRegistrySettings = 'model-registry-settings',
