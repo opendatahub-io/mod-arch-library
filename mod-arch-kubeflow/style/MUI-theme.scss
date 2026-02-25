@@ -1602,6 +1602,11 @@ left: 0;
   --pf-v6-c-table--cell--PaddingBlockStart: 0px;
 }
 
+/* Vertically center action cells (e.g. delete button) in inline edit rows to align with taller MUI form fields */
+.mui-theme .form-label-field-group .pf-v6-c-table tr.pf-v6-c-inline-edit.pf-m-inline-editable > td:last-child {
+  vertical-align: middle;
+}
+
 /* Remove spacing to align form elements at top of table cells */
 /* Margin/padding: No PF variables exist for zero values - using direct CSS */
 .mui-theme .form-label-field-group .pf-v6-c-table tr:where(.pf-v6-c-table__tr) > :where(th, td) .pf-v6-c-form__group {
