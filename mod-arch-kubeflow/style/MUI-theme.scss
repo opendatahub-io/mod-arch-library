@@ -784,15 +784,20 @@
   background-color: var(--pf-t--global--background--color--action--plain--hover, rgba(0, 0, 0, 0.04));
 }
 
-.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control:focus,
 .mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control:focus-visible {
   border-radius: 50%;
   outline: none;
   box-shadow: 0 0 0 2px var(--mui-palette-primary-main);
 }
 
-.mui-theme .form-fieldset-wrapper:focus-within .form-fieldset {
+.mui-theme .form-fieldset-wrapper:focus-within:not(:has(.pf-m-error)) .form-fieldset {
   border-color: var(--mui-palette-primary-main);
+  border-width: var(--mui-form--focus--BorderWidth);
+  padding: var(--mui-form--focus--Padding) var(--mui-form--focus--Padding);
+}
+
+.mui-theme .form-fieldset-wrapper:focus-within:has(.pf-m-error) .form-fieldset {
+  border-color: var(--mui-palette-error-main);
   border-width: var(--mui-form--focus--BorderWidth);
   padding: var(--mui-form--focus--Padding) var(--mui-form--focus--Padding);
 }
@@ -858,8 +863,14 @@
   border-color: var(--mui-palette-error-main);
 }
 
-.mui-theme .pf-v6-c-form .form-fieldset-wrapper:focus-within .form-fieldset {
+.mui-theme .pf-v6-c-form .form-fieldset-wrapper:focus-within:not(:has(.pf-m-error)) .form-fieldset {
   border-color: var(--mui-palette-primary-main);
+  border-width: var(--mui-form--focus--BorderWidth);
+  padding: var(--mui-form--focus--Padding) var(--mui-form--focus--Padding);
+}
+
+.mui-theme .pf-v6-c-form .form-fieldset-wrapper:focus-within:has(.pf-m-error) .form-fieldset {
+  border-color: var(--mui-palette-error-main);
   border-width: var(--mui-form--focus--BorderWidth);
   padding: var(--mui-form--focus--Padding) var(--mui-form--focus--Padding);
 }
@@ -938,8 +949,14 @@
 }
 
 
-.mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper:focus-within .form-fieldset {
+.mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper:focus-within:not(:has(.pf-m-error)) .form-fieldset {
   border-color: var(--mui-palette-primary-main);
+  border-width: var(--mui-form--focus--BorderWidth);
+  padding: var(--mui-form--focus--Padding) var(--mui-form--focus--Padding);
+}
+
+.mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper:focus-within:has(.pf-m-error) .form-fieldset {
+  border-color: var(--mui-palette-error-main);
   border-width: var(--mui-form--focus--BorderWidth);
   padding: var(--mui-form--focus--Padding) var(--mui-form--focus--Padding);
 }
@@ -1046,8 +1063,14 @@
   border-color: var(--mui-palette-common-black);
 }
 
-.mui-theme .pf-v6-c-expandable-section .form-fieldset-wrapper:focus-within .form-fieldset {
+.mui-theme .pf-v6-c-expandable-section .form-fieldset-wrapper:focus-within:not(:has(.pf-m-error)) .form-fieldset {
   border-color: var(--mui-palette-primary-main);
+  border-width: var(--mui-form--focus--BorderWidth);
+  padding: var(--mui-form--focus--Padding) var(--mui-form--focus--Padding);
+}
+
+.mui-theme .pf-v6-c-expandable-section .form-fieldset-wrapper:focus-within:has(.pf-m-error) .form-fieldset {
+  border-color: var(--mui-palette-error-main);
   border-width: var(--mui-form--focus--BorderWidth);
   padding: var(--mui-form--focus--Padding) var(--mui-form--focus--Padding);
 }
