@@ -315,10 +315,9 @@
 ╚════════════════════════════════════════════════════════════════════════════════╝
 */
 
-// PF table: vertical-align. PF does not set vertical-align on cells (browser default often baseline).
-// Set middle for all table cells under theme so mixed content (text + controls) aligns; no app class needed.
-.mui-theme .pf-v6-c-table .pf-v6-c-table__td,
-.mui-theme .pf-v6-c-table .pf-v6-c-table__th {
+// PF table: opt-in vertical-align middle for tables with mixed content (text + controls).
+// Add class mui-table-cells-middle to the Table when rows have inputs/buttons; keeps text-only tables on PF default.
+.mui-theme .pf-v6-c-table.mui-table-cells-middle .pf-v6-c-table__td {
   vertical-align: middle;
 }
 
