@@ -4,6 +4,8 @@ import { fileURLToPath } from 'node:url';
 import { copyDirectory, ensureEmptyDirectory, fileExists, readJSON, writeJSON } from './utils/filesystem.js';
 import { logger } from './utils/logger.js';
 import { runCommand } from './utils/runCommand.js';
+import { replaceModuleNames } from './utils/templateReplacer.js';
+import { displayPostInstallChecklist } from './postInstall.js';
 import type { InstallOptions, StarterFlavor } from './types.js';
 
 const TEMPLATE_ROOT = path.resolve(fileURLToPath(new URL('../templates/mod-arch-starter', import.meta.url)));
@@ -11,6 +13,9 @@ const FLAVOR_ROOT = path.resolve(fileURLToPath(new URL('../flavors', import.meta
 const FRONTEND_DIR = 'frontend';
 const MANIFESTS_DIR = 'manifests';
 const ROOT_OVERLAY_DIR = 'root';
+const API_DIR = 'api';
+const BFF_DIR = 'bff';
+const DOCS_DIR = 'docs';
 
 async function copyBaseTemplate(targetDir: string) {
   await ensureEmptyDirectory(targetDir);
@@ -71,6 +76,13 @@ async function removeDefaultFolders(flavor: StarterFlavor, targetDir: string) {
   if (hasSettingsMainPage) {
     await rm(settingsMainPagePath, { force: true });
   }
+
+  // Remove kubeflow-development-guide.md - kubeflow-specific documentation
+  const kubeflowGuidePath = path.join(targetDir, DOCS_DIR, 'kubeflow-development-guide.md');
+  const hasKubeflowGuide = await fileExists(kubeflowGuidePath);
+  if (hasKubeflowGuide) {
+    await rm(kubeflowGuidePath, { force: true });
+  }
 }
 
 async function applyFrontendOverlay(flavor: StarterFlavor, targetDir: string) {
@@ -86,6 +98,48 @@ async function applyFrontendOverlay(flavor: StarterFlavor, targetDir: string) {
     return;
   }
   await copyDirectory(overlayDir, frontendTarget);
+}
+
+async function applyApiOverlay(flavor: StarterFlavor, targetDir: string) {
+  if (flavor === 'kubeflow') {
+    return;
+  }
+
+  const overlayDir = path.join(FLAVOR_ROOT, flavor, API_DIR);
+  const apiTarget = path.join(targetDir, API_DIR);
+  const hasOverlay = await fileExists(overlayDir);
+  if (!hasOverlay) {
+    return; // Silently skip if no overlay exists
+  }
+  await copyDirectory(overlayDir, apiTarget);
+}
+
+async function applyBffOverlay(flavor: StarterFlavor, targetDir: string) {
+  if (flavor === 'kubeflow') {
+    return;
+  }
+
+  const overlayDir = path.join(FLAVOR_ROOT, flavor, BFF_DIR);
+  const bffTarget = path.join(targetDir, BFF_DIR);
+  const hasOverlay = await fileExists(overlayDir);
+  if (!hasOverlay) {
+    return; // Silently skip if no overlay exists
+  }
+  await copyDirectory(overlayDir, bffTarget);
+}
+
+async function applyDocsOverlay(flavor: StarterFlavor, targetDir: string) {
+  if (flavor === 'kubeflow') {
+    return;
+  }
+
+  const overlayDir = path.join(FLAVOR_ROOT, flavor, DOCS_DIR);
+  const docsTarget = path.join(targetDir, DOCS_DIR);
+  const hasOverlay = await fileExists(overlayDir);
+  if (!hasOverlay) {
+    return; // Silently skip if no overlay exists
+  }
+  await copyDirectory(overlayDir, docsTarget);
 }
 
 async function updateFrontendDependencies(options: InstallOptions, targetDir: string) {
@@ -190,21 +244,26 @@ async function renameGitignores(dir: string) {
 export async function installStarter(options: InstallOptions) {
   const targetDir = path.resolve(process.cwd(), options.targetDir);
   await mkdir(targetDir, { recursive: true });
-  logger.info(`Preparing project in ${targetDir} (flavor: ${options.flavor}).`);
+  logger.info(`Preparing project "${options.moduleName.kebabCase}" in ${targetDir} (flavor: ${options.flavor}).`);
 
   await copyBaseTemplate(targetDir);
   await removeDefaultManifests(options.flavor, targetDir);
   await applyRootOverlay(options.flavor, targetDir);
   await applyFrontendOverlay(options.flavor, targetDir);
+  await applyApiOverlay(options.flavor, targetDir);
+  await applyBffOverlay(options.flavor, targetDir);
+  await applyDocsOverlay(options.flavor, targetDir);
   await removeDefaultFolders(options.flavor, targetDir);
   await updateFrontendDependencies(options, targetDir);
+
+  // Replace hardcoded module names with the provided module name
+  logger.info(`Applying module name "${options.moduleName.kebabCase}"...`);
+  await replaceModuleNames(targetDir, options.moduleName);
+
   await renameGitignores(targetDir);
   await installDependencies(targetDir, options.skipInstall);
   await initializeGitRepo(targetDir, options.initializeGit);
 
-  logger.success('Installation complete!');
-  logger.info('Next steps:');
-  logger.info(`  1. cd ${targetDir}/<your-project-folder>`);
-  logger.info('  2. make dev-install-dependencies');
-  logger.info('  3. Start development in mock mode with make dev-start.');
+  displayPostInstallChecklist({ ...options, targetDir });
+  return options;
 }

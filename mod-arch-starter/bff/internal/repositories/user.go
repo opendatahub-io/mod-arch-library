@@ -14,21 +14,18 @@ func NewUserRepository() *UserRepository {
 }
 
 func (r *UserRepository) GetUser(client k8s.KubernetesClientInterface, identity *k8s.RequestIdentity) (*models.User, error) {
-
 	isAdmin, err := client.IsClusterAdmin(identity)
 	if err != nil {
-		return nil, fmt.Errorf("error getting user info: %w", err)
+		return nil, fmt.Errorf("failed to check admin status: %w", err)
 	}
 
-	user, err := client.GetUser(identity)
+	userID, err := client.GetUser(identity)
 	if err != nil {
-		return nil, fmt.Errorf("error getting user info: %w", err)
+		return nil, fmt.Errorf("failed to get user identity: %w", err)
 	}
 
-	var res = models.User{
-		UserID:       user,
+	return &models.User{
+		UserID:       userID,
 		ClusterAdmin: isAdmin,
-	}
-
-	return &res, nil
+	}, nil
 }

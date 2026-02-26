@@ -17,13 +17,6 @@ import (
 	"time"
 )
 
-const (
-	serverIdleTimeout  = time.Minute
-	serverReadTimeout  = 30 * time.Second
-	serverWriteTimeout = 30 * time.Second
-	shutdownTimeout    = 30 * time.Second
-)
-
 func main() {
 	var cfg config.EnvConfig
 	var certFile, keyFile string
@@ -37,7 +30,7 @@ func main() {
 	flag.IntVar(&cfg.DevModeClientPort, "dev-mode-client-port", getEnvAsInt("DEV_MODE_CLIENT_PORT", 8080), "Use port when in development mode for client")
 
 	// New deployment mode flag
-	flag.Var(&cfg.DeploymentMode, "deployment-mode", "Deployment mode (kubeflow, federated, or standalone)")
+	flag.Var(&cfg.DeploymentMode, "deployment-mode", "Deployment mode (federated or standalone)")
 
 	flag.StringVar(&cfg.StaticAssetsDir, "static-assets-dir", "./static", "Configure frontend static assets root directory")
 	flag.TextVar(&cfg.LogLevel, "log-level", parseLevel(getEnvAsString("LOG_LEVEL", "INFO")), "Sets server log level, possible values: error, warn, info, debug")
@@ -92,9 +85,9 @@ func main() {
 	srv := &http.Server{
 		Addr:         fmt.Sprintf(":%d", cfg.Port),
 		Handler:      app.Routes(),
-		IdleTimeout:  serverIdleTimeout,
-		ReadTimeout:  serverReadTimeout,
-		WriteTimeout: serverWriteTimeout,
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  30 * time.Second,
+		WriteTimeout: 30 * time.Second,
 		ErrorLog:     slog.NewLogLogger(logger.Handler(), slog.LevelError),
 	}
 
@@ -126,7 +119,7 @@ func main() {
 	logger.Info("shutting down gracefully...")
 
 	// Create a context with timeout for the shutdown process
-	ctx, cancel := context.WithTimeout(context.Background(), shutdownTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	// Shutdown the HTTP server gracefully

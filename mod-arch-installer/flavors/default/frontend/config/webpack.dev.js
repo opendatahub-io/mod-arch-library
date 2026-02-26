@@ -13,7 +13,7 @@ setupDotenvFilesForEnv({ env: 'development' });
 const webpackCommon = require('./webpack.common.js');
 
 const RELATIVE_DIRNAME = process.env._RELATIVE_DIRNAME;
-const IS_PROJECT_ROOT_DIR = process.env._IS_PROJECT_ROOT_DIR;
+const IS_PROJECT_ROOT_DIR = process.env._IS_PROJECT_ROOT_DIR === 'true';
 const SRC_DIR = process.env._SRC_DIR;
 const COMMON_DIR = process.env._COMMON_DIR;
 const PUBLIC_PATH = process.env._PUBLIC_PATH;
@@ -24,16 +24,10 @@ const PROXY_PROTOCOL = process.env._PROXY_PROTOCOL;
 const PROXY_HOST = process.env._PROXY_HOST;
 const PROXY_PORT = process.env._PROXY_PORT;
 const ROOT_NODE_MODULES = path.resolve(RELATIVE_DIRNAME, '../../../node_modules');
-const DEPLOYMENT_MODE = process.env._DEPLOYMENT_MODE;
 const AUTH_METHOD = process.env._AUTH_METHOD;
-const BASE_PATH = DEPLOYMENT_MODE === 'kubeflow' ? '/mod-arch/' : PUBLIC_PATH;
+const BASE_PATH = PUBLIC_PATH;
 
 const getProxyHeaders = () => {
-  if (AUTH_METHOD === 'internal') {
-    return {
-      'kubeflow-userid': 'user@example.com',
-    };
-  }
   if (AUTH_METHOD === 'user_token') {
     try {
       const token = execSync(
