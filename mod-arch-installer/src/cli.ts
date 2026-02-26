@@ -68,8 +68,21 @@ program
     }
 
     const moduleNames = transformModuleName(moduleName);
-    // Create target directory using base directory + module name
-    const targetDir = path.resolve(process.cwd(), baseDirectory, moduleName);
+    // Determine target directory:
+    // - If base-directory is '.' (default), create folder named after the module
+    // - If base-directory is provided, use it directly (don't append module name again)
+    // This prevents double-nesting when user runs: npx mod-arch-installer my-module -n my-module
+    let targetDir: string;
+    if (baseDirectory === '.') {
+      // Default: create ./module-name/
+      targetDir = path.resolve(process.cwd(), moduleName);
+    } else if (path.basename(baseDirectory) === moduleName) {
+      // User specified directory matching module name: use as-is to prevent double nesting
+      targetDir = path.resolve(process.cwd(), baseDirectory);
+    } else {
+      // User specified a different directory: use it as-is (they're overriding the default behavior)
+      targetDir = path.resolve(process.cwd(), baseDirectory);
+    }
 
     await installStarter({
       projectName: moduleName,

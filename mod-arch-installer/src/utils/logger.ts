@@ -5,15 +5,47 @@ export const logger = {
     console.log(message);
   },
   info(message: string) {
-    console.log(pc.cyan('[mod-arch-installer]'), message);
+    console.log(pc.cyan('  ●'), message);
   },
   success(message: string) {
-    console.log(pc.green('[mod-arch-installer]'), message);
+    console.log(pc.green('  ✓'), message);
   },
   warn(message: string) {
-    console.warn(pc.yellow('[mod-arch-installer]'), message);
+    console.warn(pc.yellow('  ⚠'), message);
   },
   error(message: string) {
-    console.error(pc.red('[mod-arch-installer]'), message);
+    console.error(pc.red('  ✗'), message);
+  },
+  step(step: number, total: number, message: string) {
+    const stepText = pc.dim(`[${step}/${total}]`);
+    console.log(`  ${stepText} ${message}`);
+  },
+  banner() {
+    console.log('');
+    console.log(pc.bold(pc.magenta('  ╔═══════════════════════════════════════════╗')));
+    console.log(pc.bold(pc.magenta('  ║')) + pc.bold('    🚀 Modular Architecture Installer    ') + pc.bold(pc.magenta('║')));
+    console.log(pc.bold(pc.magenta('  ╚═══════════════════════════════════════════╝')));
+    console.log('');
+  },
+  header(text: string) {
+    console.log('');
+    console.log(pc.bold(pc.cyan(`  ◆ ${text}`)));
+    console.log(pc.dim('  ─────────────────────────────────────────'));
+  },
+  listItem(text: string, indent = 2) {
+    const spaces = ' '.repeat(indent);
+    console.log(`${spaces}${pc.dim('›')} ${text}`);
+  },
+  command(cmd: string) {
+    console.log(`    ${pc.bgBlack(pc.green(` $ ${cmd} `))}`);
+  },
+  link(text: string, url: string) {
+    console.log(`    ${pc.blue(text)}: ${pc.underline(pc.cyan(url))}`);
+  },
+  divider() {
+    console.log(pc.dim('  ─────────────────────────────────────────'));
+  },
+  blank() {
+    console.log('');
   },
 };

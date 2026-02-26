@@ -11,8 +11,7 @@ const extensions: (NavExtension | RouteExtension | AreaExtension)[] = [
     type: 'app.area',
     properties: {
       id: MOD_ARCH,
-      requiredComponents: [],
-      featureFlags: ['modArchModule'], // Todo: You need to add this feature flag.
+      devFlags: [MOD_ARCH],
     },
   },
   {
@@ -22,7 +21,7 @@ const extensions: (NavExtension | RouteExtension | AreaExtension)[] = [
     },
     properties: {
       id: 'mod-arch',
-      title: 'Modular Architecture Component',
+      title: 'Mod Arch',
       group: '7_mod_arch_studio',
       iconRef: () => import('./ModArchNavIcon'),
     },
@@ -34,7 +33,7 @@ const extensions: (NavExtension | RouteExtension | AreaExtension)[] = [
     },
     properties: {
       id: 'mod-arch-view',
-      title: 'Modular Architecture',
+      title: 'Mod Arch',
       href: '/mod-arch/main-view',
       section: 'mod-arch',
       path: '/mod-arch/main-view/*',

@@ -243,9 +243,17 @@ async function renameGitignores(dir: string) {
 
 export async function installStarter(options: InstallOptions) {
   const targetDir = path.resolve(process.cwd(), options.targetDir);
-  await mkdir(targetDir, { recursive: true });
-  logger.info(`Preparing project "${options.moduleName.kebabCase}" in ${targetDir} (flavor: ${options.flavor}).`);
 
+  // Show banner
+  logger.banner();
+
+  const totalSteps = 5;
+  let currentStep = 0;
+
+  // Step 1: Copy template
+  currentStep++;
+  logger.step(currentStep, totalSteps, `Copying ${options.flavor} template...`);
+  await mkdir(targetDir, { recursive: true });
   await copyBaseTemplate(targetDir);
   await removeDefaultManifests(options.flavor, targetDir);
   await applyRootOverlay(options.flavor, targetDir);
@@ -254,15 +262,40 @@ export async function installStarter(options: InstallOptions) {
   await applyBffOverlay(options.flavor, targetDir);
   await applyDocsOverlay(options.flavor, targetDir);
   await removeDefaultFolders(options.flavor, targetDir);
+  logger.success('Template copied');
+
+  // Step 2: Configure dependencies
+  currentStep++;
+  logger.step(currentStep, totalSteps, 'Configuring dependencies...');
   await updateFrontendDependencies(options, targetDir);
+  logger.success('Dependencies configured');
 
-  // Replace hardcoded module names with the provided module name
-  logger.info(`Applying module name "${options.moduleName.kebabCase}"...`);
+  // Step 3: Apply module name
+  currentStep++;
+  logger.step(currentStep, totalSteps, `Applying module name "${options.moduleName.kebabCase}"...`);
   await replaceModuleNames(targetDir, options.moduleName);
-
   await renameGitignores(targetDir);
-  await installDependencies(targetDir, options.skipInstall);
-  await initializeGitRepo(targetDir, options.initializeGit);
+  logger.success('Module name applied');
+
+  // Step 4: Install dependencies (optional)
+  currentStep++;
+  if (!options.skipInstall) {
+    logger.step(currentStep, totalSteps, 'Installing npm dependencies...');
+    await installDependencies(targetDir, options.skipInstall);
+    logger.success('Dependencies installed');
+  } else {
+    logger.step(currentStep, totalSteps, 'Skipping npm install (use --install to enable)');
+  }
+
+  // Step 5: Initialize git (optional)
+  currentStep++;
+  if (options.initializeGit) {
+    logger.step(currentStep, totalSteps, 'Initializing git repository...');
+    await initializeGitRepo(targetDir, options.initializeGit);
+    logger.success('Git repository initialized');
+  } else {
+    logger.step(currentStep, totalSteps, 'Skipping git init (use --git to enable)');
+  }
 
   displayPostInstallChecklist({ ...options, targetDir });
   return options;
