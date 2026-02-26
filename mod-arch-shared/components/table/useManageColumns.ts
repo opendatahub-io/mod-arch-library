@@ -69,7 +69,11 @@ export const useManageColumns = <T, C extends SortableData<T> = SortableData<T>>
   // Calculate default visible fields if not provided
   const effectivedefaultVisibleColumnIds = React.useMemo(() => {
     if (defaultVisibleColumnIds) {
-      return defaultVisibleColumnIds;
+      const normalizedDefaults = defaultVisibleColumnIds.filter((id) =>
+        manageableColumns.some((col) => col.field === id),
+      );
+      const defaultCount = maxVisibleColumns ?? 2;
+      return normalizedDefaults.slice(0, defaultCount);
     }
     // Default: show first maxVisibleColumns columns, or first 2 if not specified
     const manageableFields = manageableColumns.map((col) => col.field);
@@ -147,9 +151,16 @@ export const useManageColumns = <T, C extends SortableData<T> = SortableData<T>>
 
   const setVisibleColumnIds = React.useCallback(
     (columnIds: string[]) => {
-      setStoredVisibleIds(columnIds);
+      const uniqueManageableIds = Array.from(new Set(columnIds)).filter((id) =>
+        manageableColumns.some((col) => col.field === id),
+      );
+      const normalizedIds =
+        maxVisibleColumns !== undefined
+          ? uniqueManageableIds.slice(0, maxVisibleColumns)
+          : uniqueManageableIds;
+      setStoredVisibleIds(normalizedIds);
     },
-    [setStoredVisibleIds],
+    [setStoredVisibleIds, manageableColumns, maxVisibleColumns],
   );
 
   // Modal state management

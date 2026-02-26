@@ -204,6 +204,7 @@ export const ManageColumnsModal: React.FC<ManageColumnsModalProps> = ({
     const checkbox = (
       <Checkbox
         id={col.id}
+        aria-label={col.label}
         isChecked={currentCol.isVisible}
         isDisabled={isDisabled}
         onChange={(_, checked) => handleToggleColumn(col.id, checked)}
