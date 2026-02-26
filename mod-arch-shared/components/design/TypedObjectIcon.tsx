@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { SVGIconProps } from '@patternfly/react-icons/dist/esm/createIcon';
 import { ProjectObjectType, typedColor } from '~/components/design/utils';
-import { GroupIcon, RegisteredModelIcon, UserIcon, ModelCatalogIcon } from '~/images/icons';
+import {
+  GroupIcon,
+  RegisteredModelIcon,
+  UserIcon,
+  ModelCatalogIcon,
+  ModelRegistryNavigatorIcon,
+} from '~/images/icons';
 
 type TypedObjectIconProps = SVGIconProps & {
   resourceType: ProjectObjectType;
@@ -20,6 +26,9 @@ const TypedObjectIcon: React.FC<TypedObjectIconProps> = ({
     case ProjectObjectType.registeredModels:
     case ProjectObjectType.modelRegistrySettings:
       Icon = RegisteredModelIcon;
+      break;
+    case ProjectObjectType.modelRegistryNavigator:
+      Icon = ModelRegistryNavigatorIcon;
       break;
     case ProjectObjectType.user:
       Icon = UserIcon;
