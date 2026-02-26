@@ -1,3 +1,4 @@
+import path from 'node:path';
 import pc from 'picocolors';
 import { logger } from './utils/logger.js';
 import type { InstallOptions } from './types.js';
@@ -40,24 +41,23 @@ function displayKubeflowChecklist(targetDir: string): void {
 }
 
 function displayDefaultChecklist(camelCase: string, pascalCase: string, targetDir: string): void {
-  logger.header('Next Steps');
+  const moduleName = path.basename(targetDir);
 
-  logger.listItem(`${pc.bold('1.')} Navigate to your project:`);
-  logger.command(`cd ${targetDir}`);
-  logger.blank();
+  logger.header('Next Steps (ODH Dashboard Integration)');
 
-  logger.listItem(`${pc.bold('2.')} Add feature flag to ${pc.yellow('frontend/src/k8sTypes.ts')}:`);
+  logger.listItem(`${pc.bold('1.')} Add feature flag to ${pc.yellow('frontend/src/k8sTypes.ts')}:`);
   console.log(`    ${pc.dim('Add:')} ${pc.green(`'${camelCase}Module'`)} to the feature flags`);
   logger.blank();
 
-  logger.listItem(`${pc.bold('3.')} Add config to ${pc.yellow('frontend/src/concepts/areas/const.ts')}`);
+  logger.listItem(`${pc.bold('2.')} Add config to ${pc.yellow('frontend/src/concepts/areas/const.ts')}`);
   logger.blank();
 
-  logger.listItem(`${pc.bold('4.')} Install dependencies:`);
+  logger.listItem(`${pc.bold('3.')} Install dependencies ${pc.dim('(from odh-dashboard root)')}:`);
   logger.command('npm install');
   logger.blank();
 
-  logger.listItem(`${pc.bold('5.')} Start development server:`);
+  logger.listItem(`${pc.bold('4.')} Start development server ${pc.dim(`(from packages/${moduleName})`)}:`);
+  logger.command(`cd packages/${moduleName}`);
   logger.command('make dev-start-federated');
   logger.blank();
 

@@ -22,9 +22,9 @@ export const logger = {
   },
   banner() {
     console.log('');
-    console.log(pc.bold(pc.magenta('  ╔═══════════════════════════════════════════╗')));
-    console.log(pc.bold(pc.magenta('  ║')) + pc.bold('    🚀 Modular Architecture Installer    ') + pc.bold(pc.magenta('║')));
-    console.log(pc.bold(pc.magenta('  ╚═══════════════════════════════════════════╝')));
+    console.log(pc.bold(pc.magenta('  ╔═════════════════════════════════════════════╗')));
+    console.log(pc.bold(pc.magenta('  ║')) + pc.bold('    🚀 Modular Architecture Installer      ') + pc.bold(pc.magenta('║')));
+    console.log(pc.bold(pc.magenta('  ╚═════════════════════════════════════════════╝')));
     console.log('');
   },
   header(text: string) {
@@ -37,7 +37,7 @@ export const logger = {
     console.log(`${spaces}${pc.dim('›')} ${text}`);
   },
   command(cmd: string) {
-    console.log(`    ${pc.bgBlack(pc.green(` $ ${cmd} `))}`);
+    console.log(`    ${pc.cyan('$')} ${pc.bold(pc.white(cmd))}`);
   },
   link(text: string, url: string) {
     console.log(`    ${pc.blue(text)}: ${pc.underline(pc.cyan(url))}`);
