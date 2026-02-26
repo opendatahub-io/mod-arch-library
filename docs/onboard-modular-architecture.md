@@ -19,11 +19,13 @@ cd packages
 
 ### 2. Initialize the Module
 
-Start a new modular architecture project using the installer. Replace `<your-module-name>` with the desired name for your module.
+Start a new modular architecture project using the installer. Replace `<your-module-name>` with the desired name for your module (in kebab-case).
 
 ```bash
-npx mod-arch-installer <your-module-name> --flavor default
+npx mod-arch-installer -n <your-module-name>
 ```
+
+This creates a `./<your-module-name>/` directory with the full starter template (PatternFly-only flavor by default). The installer skips `npm install` by default to avoid conflicts with the monorepo's package manager.
 
 ### 3. Adapt the Module Name
 
