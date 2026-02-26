@@ -37,7 +37,7 @@ Every module starts from `mod-arch-starter`: same repo structure, same tooling, 
 
 ### ODH/RHOAI (federated module)
 
-1. Scaffold with `--flavor default` so the starter removes `mod-arch-kubeflow`, then remove the `TODOs` to adapt the code to the dashboard.
+1. Scaffold with `npx mod-arch-installer -n <name>` (default flavor removes `mod-arch-kubeflow`), then remove the `TODOs` to adapt the code to the dashboard.
 2. Configure `module-federation` metadata in `frontend/package.json` and expose `./extensions`.
 3. Register API proxies in the Module Federation config so the dashboard can route to your BFF.
 4. Deploy the remote entry to OpenShift and register it in `odh-dashboard` via CR or config map.

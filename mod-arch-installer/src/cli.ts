@@ -16,17 +16,31 @@ interface CliOptions {
   name?: string;
   install?: boolean;
   git?: boolean;
+  // Deprecated options (kept for backward compatibility)
+  skipInstall?: boolean;
+  noGit?: boolean;
 }
 
 program
   .name('mod-arch-installer')
   .description('Bootstrap a new Modular Architecture project from the mod-arch-starter reference implementation.')
   .argument('[base-directory]', 'Base directory where the module folder will be created', '.')
-  .option('-f, --flavor <flavor>', 'Starter flavor: kubeflow (default) or default', 'kubeflow')
+  .option('-f, --flavor <flavor>', 'Starter flavor: default (PatternFly-only) or kubeflow (MUI theme)', 'default')
   .option('-n, --name <module-name>', 'Module name in kebab-case (e.g., auto-rag, model-registry)')
   .option('--install', 'Run npm install after copying the template (skipped by default to avoid monorepo conflicts)')
   .option('--git', 'Initialize a git repository after copying the template (disabled by default)')
+  // Deprecated options (hidden but still functional for backward compatibility)
+  .option('--skip-install', '(deprecated: use default behavior) Skip dependency installation', false)
+  .option('--no-git', '(deprecated: use default behavior) Do not initialize git repository')
   .action(async (baseDirectory: string, options: CliOptions) => {
+    // Handle deprecated options with warnings
+    if (options.skipInstall) {
+      logger.warn('--skip-install is deprecated and will be removed in a future version. Install is now skipped by default; use --install to enable.');
+    }
+    if (options.noGit === true) {
+      logger.warn('--no-git is deprecated and will be removed in a future version. Git init is now disabled by default; use --git to enable.');
+    }
+
     const flavor = options.flavor as StarterFlavor;
     if (!FLAVORS.includes(flavor)) {
       logger.error(`Unknown flavor "${flavor}". Use one of: ${FLAVORS.join(', ')}`);

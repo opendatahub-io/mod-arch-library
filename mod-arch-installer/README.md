@@ -5,17 +5,14 @@
 ## Usage
 
 ```bash
-# Creates ./my-new-module/ in current directory
+# Creates ./my-new-module/ in current directory (PatternFly-only flavor)
 npx mod-arch-installer -n my-new-module
 
 # Creates ./packages/my-new-module/
 npx mod-arch-installer ./packages -n my-new-module
 
-# With Kubeflow flavor (default)
+# With Kubeflow flavor (MUI theme)
 npx mod-arch-installer -n my-new-module --flavor kubeflow
-
-# With PatternFly-only flavor
-npx mod-arch-installer -n my-new-module --flavor default
 ```
 
 ### Options
@@ -23,7 +20,7 @@ npx mod-arch-installer -n my-new-module --flavor default
 | Option | Description | Default |
 | --- | --- | --- |
 | `-n, --name <module-name>` | Module name in kebab-case (e.g., `auto-rag`, `model-registry`) | Prompted if not provided |
-| `-f, --flavor <kubeflow\|default>` | Starter flavor: Kubeflow (MUI theme) or default (PatternFly-only) | `kubeflow` |
+| `-f, --flavor <default\|kubeflow>` | Starter flavor: default (PatternFly-only) or kubeflow (MUI theme) | `default` |
 | `--install` | Run `npm install` after copying (skipped by default to avoid monorepo conflicts) | Disabled |
 | `--git` | Initialize a git repository after copying | Disabled |
 
