@@ -20,8 +20,8 @@ import {
 } from '@patternfly/react-drag-drop';
 import ContentModal, { ButtonAction } from '~/components/modals/ContentModal';
 import { ManageColumnSearchInput } from './ManageColumnSearchInput';
-import type { ManagedColumn, UseManageColumnsResult } from '../useManageColumns';
 import { reorderColumns } from './utils';
+import type { ManagedColumn, UseManageColumnsResult } from '../useManageColumns';
 
 /**
  * Configuration for the ManageColumnsModal

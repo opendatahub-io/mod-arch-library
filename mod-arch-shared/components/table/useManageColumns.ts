@@ -185,4 +185,3 @@ export const useManageColumns = <T, C extends SortableData<T> = SortableData<T>>
     closeModal,
   };
 };
-
