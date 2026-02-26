@@ -140,6 +140,9 @@
   --pf-t--global--border--color--status--success--default: var(--mui-palette-success-main);
   --pf-t--global--border--color--status--info--default: var(--mui-palette-info-main);
 
+  // MUI's warning background is darker than PF's default yellow, requiring white text for contrast
+  --pf-t--global--text--color--status--on-warning--default: var(--mui-palette-warning-contrastText);
+
   // ═══════════════════════════════════════════════════════════════════════════
   // MUI CUSTOM VARIABLES
   // Custom variables for MUI-specific values used in component overrides below.
@@ -294,6 +297,9 @@
   --mui-spacing-16px: calc(2 * var(--mui-spacing));
   --mui-spacing-32px: calc(4 * var(--mui-spacing));
 
+  // Input group control buttons (e.g. password toggle, mount path edit): compact circular button
+  --mui-input-group-control-button--size: 28px;
+  --mui-input-group-control-button--container-padding-inline-end: 6px;
 
 }
 
@@ -311,6 +317,12 @@
 ║ Before adding new overrides here, check if a global token override would work. ║
 ╚════════════════════════════════════════════════════════════════════════════════╝
 */
+
+// PF table: opt-in vertical-align middle for tables with mixed content (text + controls).
+// Add class mui-table-cells-middle to the Table when rows have inputs/buttons; keeps text-only tables on PF default.
+.mui-theme .pf-v6-c-table.mui-table-cells-middle .pf-v6-c-table__td {
+  vertical-align: middle;
+}
 
 .mui-theme .pf-v6-c-action-list__item .pf-v6-c-button {
   --pf-v6-c-button--PaddingInlineStart: 0;
@@ -359,6 +371,8 @@
 
 .mui-theme .pf-v6-c-backdrop {
   --pf-v6-c-backdrop--BackgroundColor: var(--mui-backdrop-BackgroundColor);
+  // Sidebar uses MUI drawer z-index (1200); modal must render above it
+  --pf-v6-c-backdrop--ZIndex: var(--mui-zIndex-modal);
 }
 
 .mui-theme .pf-v6-c-brand.kubeflow_brand {
@@ -728,16 +742,67 @@
   border-color: var(--mui-palette-error-main);
 }
 
-.mui-theme .form-fieldset-wrapper .pf-v6-c-input-group__item button {
-  // Aligns EyeIcon in password input
-  --pf-v6-c-button--PaddingBlockStart: var(--mui-spacing-16px);
-  --pf-v6-c-button--PaddingBlockEnd: var(--mui-spacing-16px);
-  --pf-v6-c-button--BorderColor: var(--mui-palette-common-white);
-  --pf-v6-c-button--BorderRadius: 50%;
+// Input group control buttons: use PF structure only (Button variant="control" in InputGroup).
+// No app class names required; any consumer using variant="control" gets this styling.
+.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item:has(.pf-v6-c-button.pf-m-control) {
+  display: flex;
+  align-items: center;
 }
 
-.mui-theme .form-fieldset-wrapper:focus-within .form-fieldset {
+.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item:has(.pf-v6-c-button.pf-m-control):last-child {
+  padding-inline-end: var(--mui-input-group-control-button--container-padding-inline-end);
+}
+
+.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control {
+  --pf-v6-c-button--BorderColor: transparent;
+  --pf-v6-c-button--hover--BorderColor: transparent;
+  --pf-v6-c-button--m-control--BorderColor: transparent;
+  --pf-v6-c-button--m-control--hover--BorderColor: transparent;
+  --pf-v6-c-button--m-control--m-clicked--BorderColor: transparent;
+  --pf-v6-c-button--PaddingBlockStart: 0;
+  --pf-v6-c-button--PaddingBlockEnd: 0;
+  --pf-v6-c-button--PaddingInlineStart: 0;
+  --pf-v6-c-button--PaddingInlineEnd: 0;
+  --pf-v6-c-button--m-control--BorderRadius: 50%;
+
+  width: var(--mui-input-group-control-button--size);
+  height: var(--mui-input-group-control-button--size);
+  min-width: var(--mui-input-group-control-button--size);
+  min-height: var(--mui-input-group-control-button--size);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  align-self: center;
+}
+
+.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control .pf-v6-c-button__icon,
+.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control svg {
+  display: block;
+  margin: 0;
+}
+
+.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control:hover {
+  border-radius: 50%;
+  outline: none;
+  background-color: var(--pf-t--global--background--color--action--plain--hover, rgba(0, 0, 0, 0.04));
+}
+
+.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control:focus-visible {
+  border-radius: 50%;
+  outline: none;
+  box-shadow: 0 0 0 2px var(--mui-palette-primary-main);
+}
+
+.mui-theme .form-fieldset-wrapper:focus-within:not(:has(.pf-m-error)) .form-fieldset {
   border-color: var(--mui-palette-primary-main);
+  border-width: var(--mui-form--focus--BorderWidth);
+  padding: var(--mui-form--focus--Padding) var(--mui-form--focus--Padding);
+}
+
+.mui-theme .form-fieldset-wrapper:focus-within:has(.pf-m-error) .form-fieldset {
+  border-color: var(--mui-palette-error-main);
   border-width: var(--mui-form--focus--BorderWidth);
   padding: var(--mui-form--focus--Padding) var(--mui-form--focus--Padding);
 }
@@ -803,16 +868,14 @@
   border-color: var(--mui-palette-error-main);
 }
 
-.mui-theme .pf-v6-c-form .form-fieldset-wrapper .pf-v6-c-input-group__item button {
-  // Aligns EyeIcon in password input
-  --pf-v6-c-button--PaddingBlockStart: var(--mui-spacing-16px);
-  --pf-v6-c-button--PaddingBlockEnd: var(--mui-spacing-16px);
-  --pf-v6-c-button--BorderColor: var(--mui-palette-common-white);
-  --pf-v6-c-button--BorderRadius: 50%;
+.mui-theme .pf-v6-c-form .form-fieldset-wrapper:focus-within:not(:has(.pf-m-error)) .form-fieldset {
+  border-color: var(--mui-palette-primary-main);
+  border-width: var(--mui-form--focus--BorderWidth);
+  padding: var(--mui-form--focus--Padding) var(--mui-form--focus--Padding);
 }
 
-.mui-theme .pf-v6-c-form .form-fieldset-wrapper:focus-within .form-fieldset {
-  border-color: var(--mui-palette-primary-main);
+.mui-theme .pf-v6-c-form .form-fieldset-wrapper:focus-within:has(.pf-m-error) .form-fieldset {
+  border-color: var(--mui-palette-error-main);
   border-width: var(--mui-form--focus--BorderWidth);
   padding: var(--mui-form--focus--Padding) var(--mui-form--focus--Padding);
 }
@@ -890,16 +953,15 @@
   border-color: var(--mui-palette-error-main);
 }
 
-.mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper .pf-v6-c-input-group__item button {
-  // Aligns EyeIcon in password input
-  --pf-v6-c-button--PaddingBlockStart: var(--pf-t--global--spacer--md);
-  --pf-v6-c-button--PaddingBlockEnd: var(--pf-t--global--spacer--md);
-  --pf-v6-c-button--BorderColor: var(--mui-palette-common-white);
-  --pf-v6-c-button--BorderRadius: 50%;
+
+.mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper:focus-within:not(:has(.pf-m-error)) .form-fieldset {
+  border-color: var(--mui-palette-primary-main);
+  border-width: var(--mui-form--focus--BorderWidth);
+  padding: var(--mui-form--focus--Padding) var(--mui-form--focus--Padding);
 }
 
-.mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper:focus-within .form-fieldset {
-  border-color: var(--mui-palette-primary-main);
+.mui-theme [class*="pf-v6-l-"] .form-fieldset-wrapper:focus-within:has(.pf-m-error) .form-fieldset {
+  border-color: var(--mui-palette-error-main);
   border-width: var(--mui-form--focus--BorderWidth);
   padding: var(--mui-form--focus--Padding) var(--mui-form--focus--Padding);
 }
@@ -1006,8 +1068,14 @@
   border-color: var(--mui-palette-common-black);
 }
 
-.mui-theme .pf-v6-c-expandable-section .form-fieldset-wrapper:focus-within .form-fieldset {
+.mui-theme .pf-v6-c-expandable-section .form-fieldset-wrapper:focus-within:not(:has(.pf-m-error)) .form-fieldset {
   border-color: var(--mui-palette-primary-main);
+  border-width: var(--mui-form--focus--BorderWidth);
+  padding: var(--mui-form--focus--Padding) var(--mui-form--focus--Padding);
+}
+
+.mui-theme .pf-v6-c-expandable-section .form-fieldset-wrapper:focus-within:has(.pf-m-error) .form-fieldset {
+  border-color: var(--mui-palette-error-main);
   border-width: var(--mui-form--focus--BorderWidth);
   padding: var(--mui-form--focus--Padding) var(--mui-form--focus--Padding);
 }
@@ -1101,6 +1169,12 @@
   --pf-v6-c-menu__item--PaddingInlineStart: var(--mui-menu__item--PaddingInlineStart);
   --pf-v6-c-menu__item--PaddingInlineEnd: var(--mui-menu__item--PaddingInlineEnd);
   --pf-v6-c-menu__item--FontSize: var(--mui-menu__item--FontSize);
+}
+
+// Remove negative margins on scrollable menu content that clip the scrollbar
+.mui-theme .pf-v6-c-menu.pf-m-scrollable .pf-v6-c-menu__content {
+  margin-block-start: 0;
+  margin-block-end: 0;
 }
 
 
@@ -1521,11 +1595,16 @@ left: 0;
 /* CSS workaround for spacing in labels in Workspace Kind */
 /* Special handling for form fields in table cells - remove extra top spacing */
 /* Layout properties (vertical-align, display, overflow) - no PF variables exist */
-.mui-theme .form-label-field-group .pf-v6-c-table tr:where(.pf-v6-c-table__tr) > :where(th, td) {
+.mui-theme .form-label-field-group .pf-v6-c-table tr:where(.pf-v6-c-table__tr):not(.pf-v6-c-inline-edit) > :where(th, td) {
   /* Layout property - no PF variable exists */
   vertical-align: middle;
   /* Balance padding - use PF component variable for consistency */
   --pf-v6-c-table--cell--PaddingBlockStart: 0px;
+}
+
+/* Vertically center action cells (e.g. delete button) in inline edit rows to align with taller MUI form fields */
+.mui-theme .form-label-field-group .pf-v6-c-table tr.pf-v6-c-inline-edit.pf-m-inline-editable > td:last-child {
+  vertical-align: middle;
 }
 
 /* Remove spacing to align form elements at top of table cells */
