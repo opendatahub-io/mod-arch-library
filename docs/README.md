@@ -52,5 +52,8 @@ After the CLI runs, jump into `my-module/frontend/` and run `npm run start:dev` 
 - Deep-dive proposals live in `reference-docs/` (e.g., [intro](../reference-docs/intro.md) and [module-federation](https://github.com/opendatahub-io/odh-dashboard/blob/main/docs/module-federation.md)).
 - ODH Dashboard integration specifics live in [odh-dashboard](https://github.com/opendatahub-io/odh-dashboard).
 - Community Q&A happens in the Kubeflow Slack (`#odh-modular-architecture`).
+- Understanding the balance of BFFs, UI, and services providing domain specific structure
+    - [Internal Miro](https://miro.com/app/board/uXjVG_Uq3DU=/) explaining responsibilities and answering some high level questions
+    - [External blog](https://ederign.me/blog/2026-02-20-modular-architecture-ai-platform) to how we got here, and why this infrastructure
 
 Contributions are welcome—open a PR or drop feedback in the community channel so we can keep this entrypoint sharp and actionable.
