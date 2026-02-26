@@ -56,7 +56,11 @@ function displayDefaultChecklist(camelCase: string, pascalCase: string, targetDi
   logger.command('npm install');
   logger.blank();
 
-  logger.listItem(`${pc.bold('4.')} Start development server ${pc.dim(`(from packages/${moduleName})`)}:`);
+  logger.listItem(`${pc.bold('4.')} Configure port ${pc.dim('(if 9103 is already in use)')}:`);
+  console.log(`    ${pc.dim('Update')} ${pc.yellow('Makefile')} ${pc.dim('and')} ${pc.yellow('package.json')} ${pc.dim('with your port')}`);
+  logger.blank();
+
+  logger.listItem(`${pc.bold('5.')} Start development server ${pc.dim(`(from packages/${moduleName})`)}:`);
   logger.command(`cd packages/${moduleName}`);
   logger.command('make dev-start-federated');
   logger.blank();
