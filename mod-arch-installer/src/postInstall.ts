@@ -1,3 +1,5 @@
+import path from 'node:path';
+import pc from 'picocolors';
 import { logger } from './utils/logger.js';
 import type { InstallOptions } from './types.js';
 
@@ -7,49 +9,70 @@ import type { InstallOptions } from './types.js';
 export function displayPostInstallChecklist(options: InstallOptions): void {
   const { moduleName, targetDir, flavor } = options;
 
-  logger.log('');
-  logger.success(`Module created at ${targetDir}`);
-  logger.log('');
+  logger.blank();
+  console.log(pc.bold(pc.green('  ✓ Success!')) + ' Module created at ' + pc.cyan(targetDir));
+  logger.blank();
 
   if (flavor === 'kubeflow') {
     displayKubeflowChecklist(targetDir);
   } else {
-    displayDefaultChecklist(moduleName.camelCase, moduleName.pascalCase);
+    displayDefaultChecklist(moduleName.camelCase, moduleName.pascalCase, targetDir);
   }
 }
 
 function displayKubeflowChecklist(targetDir: string): void {
-  logger.log('Next steps:');
-  logger.log(`  1. cd ${targetDir}`);
-  logger.log('  2. make dev-install-dependencies');
-  logger.log('  3. Start development in mock mode with make dev-start');
-  logger.log('');
-  logger.log('Documentation:');
-  logger.log('  - https://github.com/opendatahub-io/mod-arch-library/tree/main/docs');
-  logger.log('');
+  logger.header('Next Steps');
+
+  logger.listItem(`${pc.bold('1.')} Navigate to your project:`);
+  logger.command(`cd ${targetDir}`);
+  logger.blank();
+
+  logger.listItem(`${pc.bold('2.')} Install dependencies:`);
+  logger.command('make dev-install-dependencies');
+  logger.blank();
+
+  logger.listItem(`${pc.bold('3.')} Start development server:`);
+  logger.command('make dev-start');
+  logger.blank();
+
+  logger.header('Documentation');
+  logger.link('Mod Arch Library', 'https://github.com/opendatahub-io/mod-arch-library/tree/main/docs');
+  logger.blank();
 }
 
-function displayDefaultChecklist(camelCase: string, pascalCase: string): void {
-  logger.log('Next steps for ODH Dashboard integration:');
-  logger.log('');
-  logger.log('Required:');
-  logger.log(`  1. Add '${camelCase}Module' feature flag to`);
-  logger.log('     frontend/src/k8sTypes.ts');
-  logger.log('');
-  logger.log('  2. Add default config to');
-  logger.log('     frontend/src/concepts/areas/const.ts');
-  logger.log('');
-  logger.log("  3. Run 'npm install' at repo root");
-  logger.log('');
-  logger.log("  4. Start with 'make dev-start-federated'");
-  logger.log('');
-  logger.log('Optional:');
-  logger.log('  - Export types via package.json exports field');
-  logger.log('  - Configure parent area (e.g., gen-ai-studio)');
-  logger.log(`  - Add navigation icon in ${pascalCase}NavIcon.ts`);
-  logger.log('');
-  logger.log('Documentation:');
-  logger.log('  - https://github.com/opendatahub-io/odh-dashboard/blob/main/docs/onboard-modular-architecture.md');
-  logger.log('  - https://github.com/opendatahub-io/mod-arch-library/tree/main/docs');
-  logger.log('');
+function displayDefaultChecklist(camelCase: string, pascalCase: string, targetDir: string): void {
+  const moduleName = path.basename(targetDir);
+
+  logger.header('Next Steps (ODH Dashboard Integration)');
+
+  logger.listItem(`${pc.bold('1.')} Add feature flag to ${pc.yellow('frontend/src/k8sTypes.ts')}:`);
+  console.log(`    ${pc.dim('Add:')} ${pc.green(`'${camelCase}Module'`)} to the feature flags`);
+  logger.blank();
+
+  logger.listItem(`${pc.bold('2.')} Add config to ${pc.yellow('frontend/src/concepts/areas/const.ts')}`);
+  logger.blank();
+
+  logger.listItem(`${pc.bold('3.')} Install dependencies ${pc.dim('(from odh-dashboard root)')}:`);
+  logger.command('npm install');
+  logger.blank();
+
+  logger.listItem(`${pc.bold('4.')} Configure port ${pc.dim('(if 9103 is already in use)')}:`);
+  console.log(`    ${pc.dim('Update')} ${pc.yellow('Makefile')} ${pc.dim('and')} ${pc.yellow('package.json')} ${pc.dim('with your port')}`);
+  logger.blank();
+
+  logger.listItem(`${pc.bold('5.')} Start development server ${pc.dim(`(from packages/${moduleName})`)}:`);
+  logger.command(`cd packages/${moduleName}`);
+  logger.command('make dev-start-federated');
+  logger.blank();
+
+  logger.header('Optional Enhancements');
+  logger.listItem(`Export types via ${pc.yellow('package.json')} exports field`);
+  logger.listItem(`Configure parent area (e.g., ${pc.cyan('gen-ai-studio')})`);
+  logger.listItem(`Add navigation icon in ${pc.yellow(`${pascalCase}NavIcon.ts`)}`);
+  logger.blank();
+
+  logger.header('Documentation');
+  logger.link('Onboarding Guide', 'https://github.com/opendatahub-io/odh-dashboard/blob/main/docs/onboard-modular-architecture.md');
+  logger.link('Mod Arch Library', 'https://github.com/opendatahub-io/mod-arch-library/tree/main/docs');
+  logger.blank();
 }
