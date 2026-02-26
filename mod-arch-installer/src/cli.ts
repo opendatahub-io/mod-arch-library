@@ -14,19 +14,19 @@ const program = new Command();
 interface CliOptions {
   flavor: StarterFlavor;
   name?: string;
-  skipInstall?: boolean;
+  install?: boolean;
   git?: boolean;
 }
 
 program
-  .name('install-mod-arch-starter')
+  .name('mod-arch-installer')
   .description('Bootstrap a new Modular Architecture project from the mod-arch-starter reference implementation.')
-  .argument('[project-directory]', 'Target directory where the starter will be copied', '.')
+  .argument('[base-directory]', 'Base directory where the module folder will be created', '.')
   .option('-f, --flavor <flavor>', 'Starter flavor: kubeflow (default) or default', 'kubeflow')
   .option('-n, --name <module-name>', 'Module name in kebab-case (e.g., auto-rag, model-registry)')
-  .option('--skip-install', 'Skip dependency installation steps', false)
-  .option('--no-git', 'Do not initialize a git repository after copying the template')
-  .action(async (projectDirectory: string, options: CliOptions) => {
+  .option('--install', 'Run npm install after copying the template (skipped by default to avoid monorepo conflicts)')
+  .option('--git', 'Initialize a git repository after copying the template (disabled by default)')
+  .action(async (baseDirectory: string, options: CliOptions) => {
     const flavor = options.flavor as StarterFlavor;
     if (!FLAVORS.includes(flavor)) {
       logger.error(`Unknown flavor "${flavor}". Use one of: ${FLAVORS.join(', ')}`);
@@ -54,15 +54,16 @@ program
     }
 
     const moduleNames = transformModuleName(moduleName);
-    const targetDir = path.resolve(process.cwd(), projectDirectory);
+    // Create target directory using base directory + module name
+    const targetDir = path.resolve(process.cwd(), baseDirectory, moduleName);
 
     await installStarter({
-      projectName: path.basename(targetDir),
+      projectName: moduleName,
       moduleName: moduleNames,
       targetDir,
       flavor,
-      skipInstall: Boolean(options.skipInstall),
-      initializeGit: options.git !== false,
+      skipInstall: !options.install, // Skip by default, only install if --install flag is passed
+      initializeGit: Boolean(options.git), // Git is now opt-in (disabled by default)
     });
   });
 
