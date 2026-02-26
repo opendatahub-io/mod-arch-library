@@ -13,10 +13,10 @@ You can check the [contributing guidelines] for more information on how to contr
 Bootstrap a fresh copy of this starter without cloning the repo by using the published CLI:
 
 ```bash
-npx mod-arch-installer my-module --flavor kubeflow
+npx mod-arch-installer -n my-module --flavor kubeflow
 ```
 
-See [`docs/install.md`](./docs/install.md) for all CLI options and details about the PatternFly-first default flavor.
+This creates a `./my-module/` directory with the full starter template. See [`docs/install.md`](./docs/install.md) for all CLI options and details about the PatternFly-first default flavor.
 
 ## OpenAPI Specification
 

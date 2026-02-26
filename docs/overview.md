@@ -27,7 +27,7 @@ Every module starts from `mod-arch-starter`: same repo structure, same tooling, 
 
 ### Kubeflow (upstream flow)
 
-1. Scaffold with `npx mod-arch-installer <name> --flavor kubeflow`.
+1. Scaffold with `npx mod-arch-installer -n <name> --flavor kubeflow`.
 2. Define your OpenAPI surface in `api/openapi/` and stub the BFF handlers.
 3. Build UI routes under `frontend/src/app/pages` and wire them through `AppRoutes`.
 4. Use the Kubeflow manifests in `manifests/kubeflow/` to test inside the central dashboard.

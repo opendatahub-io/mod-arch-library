@@ -11,15 +11,17 @@ This folder is the entrypoint for anyone building a Modular Architecture module.
 ## Quick start: mod-arch-starter
 
 ```bash
-npx mod-arch-installer my-module --flavor kubeflow
-# or PatternFly-only
-npx mod-arch-installer my-module --flavor default
+# Creates ./my-module/ with Kubeflow flavor
+npx mod-arch-installer -n my-module --flavor kubeflow
+
+# Creates ./my-module/ with PatternFly-only flavor
+npx mod-arch-installer -n my-module --flavor default
 ```
 
 - **Kubeflow flavor**: Includes `mod-arch-kubeflow`, MUI theme provider, and Kubeflow imagery.
 - **Default flavor**: Removes Kubeflow dependencies, keeps PatternFly as the source of truth, and is ready for Module Federation in the RHOAI Dashboard.
 
-After the CLI runs, jump into `frontend/` and run `npm run start:dev` (or `npm run start:default`), then hook the Go BFF via `make run` under `bff/`.
+After the CLI runs, jump into `my-module/frontend/` and run `npm run start:dev` (or `npm run start:default`), then hook the Go BFF via `make run` under `bff/`.
 
 ## Architecture & Module Federation
 
