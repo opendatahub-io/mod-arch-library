@@ -23,7 +23,7 @@ export const logger = {
   banner() {
     console.log('');
     console.log(pc.bold(pc.magenta('  ╔═════════════════════════════════════════════╗')));
-    console.log(pc.bold(pc.magenta('  ║')) + pc.bold('    🚀 Modular Architecture Installer      ') + pc.bold(pc.magenta('║')));
+    console.log(pc.bold(pc.magenta('  ║')) + pc.bold('    🚀 Modular Architecture Installer        ') + pc.bold(pc.magenta('║')));
     console.log(pc.bold(pc.magenta('  ╚═════════════════════════════════════════════╝')));
     console.log('');
   },
