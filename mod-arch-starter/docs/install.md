@@ -1,35 +1,44 @@
 # Installing mod-arch-starter via `npx`
 
-Use the published `install-mod-arch-starter` CLI (shipped in the `mod-arch-installer` package) to scaffold a fresh copy of this starter without cloning the entire repository.
+Use the published `mod-arch-installer` CLI to scaffold a fresh copy of this starter without cloning the entire repository.
 
 ```bash
-npx mod-arch-installer my-new-module
+npx mod-arch-installer -n my-new-module
 ```
+
+This creates a `./my-new-module/` directory with the full starter template.
 
 ## CLI options
 
-| Flag | Description | Default |
+| Option | Description | Default |
 | --- | --- | --- |
-| `--flavor <kubeflow\|default>` | Chooses between the Kubeflow (Material UI) or PatternFly-only default flavor. | `kubeflow` |
-| `--skip-install` | Skips running `npm install` inside `frontend/`. | `false` |
-| `--no-git` | Prevents the CLI from running `git init`, `git add .`, and the initial commit. | `false` (git init runs by default unless flag is provided) |
+| `-n, --name <module-name>` | Module name in kebab-case (e.g., `auto-rag`, `model-registry`) | Prompted if not provided |
+| `-f, --flavor <default\|kubeflow>` | Chooses between the PatternFly-only default flavor or Kubeflow (Material UI) | `default` |
+| `--install` | Run `npm install` inside `frontend/` (skipped by default to avoid monorepo conflicts) | Disabled |
+| `--git` | Initialize a git repository after copying | Disabled |
 
 Examples:
 
 ```bash
-# Kubeflow-flavor starter (includes mod-arch-kubeflow theme provider)
-npx mod-arch-installer mr-ui --flavor kubeflow
+# PatternFly-only starter (default) - omits mod-arch-kubeflow
+npx mod-arch-installer -n my-module
 
-# PatternFly-only starter that omits mod-arch-kubeflow entirely
-npx mod-arch-installer experiments-ui --flavor default
+# Kubeflow-flavor starter (includes mod-arch-kubeflow theme provider)
+npx mod-arch-installer -n mr-ui --flavor kubeflow
+
+# Install into a specific directory (creates ./packages/my-module/)
+npx mod-arch-installer ./packages -n my-module
+
+# With npm install and git initialization
+npx mod-arch-installer -n my-module --install --git
 ```
 
 ## What the CLI installs
 
 - Full copy of `mod-arch-starter` including `frontend/`, `bff/`, `api/`, manifests, and docs.
 - Flavor-specific overrides:
-  - **Kubeflow** (default): identical to this repository's `main` branch.
-  - **Default**: removes `mod-arch-kubeflow`, drops the `ThemeProvider`, updates navigation chrome to PatternFly, and keeps PatternFly as the active theme.
+  - **Default** (default): removes `mod-arch-kubeflow`, drops the `ThemeProvider`, updates navigation chrome to PatternFly, and keeps PatternFly as the active theme.
+  - **Kubeflow**: identical to this repository's `main` branch, includes MUI theme provider.
 - Optional dependency installation inside `frontend/` (can be skipped).
 - Optional git initialization.
 

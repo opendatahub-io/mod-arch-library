@@ -11,15 +11,17 @@ This folder is the entrypoint for anyone building a Modular Architecture module.
 ## Quick start: mod-arch-starter
 
 ```bash
-npx mod-arch-installer my-module --flavor kubeflow
-# or PatternFly-only
-npx mod-arch-installer my-module --flavor default
+# Creates ./my-module/ with PatternFly-only flavor (default)
+npx mod-arch-installer -n my-module
+
+# Creates ./my-module/ with Kubeflow flavor (MUI theme)
+npx mod-arch-installer -n my-module --flavor kubeflow
 ```
 
-- **Kubeflow flavor**: Includes `mod-arch-kubeflow`, MUI theme provider, and Kubeflow imagery.
 - **Default flavor**: Removes Kubeflow dependencies, keeps PatternFly as the source of truth, and is ready for Module Federation in the RHOAI Dashboard.
+- **Kubeflow flavor**: Includes `mod-arch-kubeflow`, MUI theme provider, and Kubeflow imagery.
 
-After the CLI runs, jump into `frontend/` and run `npm run start:dev` (or `npm run start:default`), then hook the Go BFF via `make run` under `bff/`.
+After the CLI runs, jump into `my-module/frontend/` and run `npm run start:dev` (or `npm run start:default`), then hook the Go BFF via `make run` under `bff/`.
 
 ## Architecture & Module Federation
 
@@ -31,7 +33,7 @@ After the CLI runs, jump into `frontend/` and run `npm run start:dev` (or `npm r
 | Path | When to use it | Key steps |
 | --- | --- | --- |
 | **Kubeflow Upstream** | Contribute new modules directly to Kubeflow. | Scaffold with `--flavor kubeflow`, follow the [Kubeflow track](./golden-path.md#kubeflow-track) in the Golden Path, deploy with the Kubeflow manifests from `mod-arch-starter/manifests/kubeflow`. |
-| **ODH/RHOAI Federated** | Deliver modules into the downstream Dashboard using Module Federation. | Scaffold with `--flavor default`, read [Module Federation](https://github.com/opendatahub-io/odh-dashboard/blob/main/docs/module-federation.md) plus the RHOAI section of [Deployment Modes](./deployment-modes.md), then wire the remote entry into `odh-dashboard`. |
+| **ODH/RHOAI Federated** | Deliver modules into the downstream Dashboard using Module Federation. | Scaffold with the default flavor (no flag needed), read [Module Federation](https://github.com/opendatahub-io/odh-dashboard/blob/main/docs/module-federation.md) plus the RHOAI section of [Deployment Modes](./deployment-modes.md), then wire the remote entry into `odh-dashboard`. |
 | **Standalone / External** | Prototyping or embedding a module outside both dashboards. | Use either flavor, launch the BFF locally, and follow [Deployment Modes](./deployment-modes.md#3-standalone-mode). |
 
 ## Essential references
@@ -50,5 +52,8 @@ After the CLI runs, jump into `frontend/` and run `npm run start:dev` (or `npm r
 - Deep-dive proposals live in `reference-docs/` (e.g., [intro](../reference-docs/intro.md) and [module-federation](https://github.com/opendatahub-io/odh-dashboard/blob/main/docs/module-federation.md)).
 - ODH Dashboard integration specifics live in [odh-dashboard](https://github.com/opendatahub-io/odh-dashboard).
 - Community Q&A happens in the Kubeflow Slack (`#odh-modular-architecture`).
+- Understanding the balance of BFFs, UI, and services providing domain specific structure
+    - [Internal Miro](https://miro.com/app/board/uXjVG_Uq3DU=/) explaining responsibilities and answering some high level questions
+    - [External blog](https://ederign.me/blog/2026-02-20-modular-architecture-ai-platform) to how we got here, and why this infrastructure
 
 Contributions are welcome—open a PR or drop feedback in the community channel so we can keep this entrypoint sharp and actionable.

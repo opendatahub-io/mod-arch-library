@@ -27,7 +27,7 @@ Every module starts from `mod-arch-starter`: same repo structure, same tooling, 
 
 ### Kubeflow (upstream flow)
 
-1. Scaffold with `npx mod-arch-installer <name> --flavor kubeflow`.
+1. Scaffold with `npx mod-arch-installer -n <name> --flavor kubeflow`.
 2. Define your OpenAPI surface in `api/openapi/` and stub the BFF handlers.
 3. Build UI routes under `frontend/src/app/pages` and wire them through `AppRoutes`.
 4. Use the Kubeflow manifests in `manifests/kubeflow/` to test inside the central dashboard.
@@ -37,7 +37,7 @@ Every module starts from `mod-arch-starter`: same repo structure, same tooling, 
 
 ### ODH/RHOAI (federated module)
 
-1. Scaffold with `--flavor default` so the starter removes `mod-arch-kubeflow`, then remove the `TODOs` to adapt the code to the dashboard.
+1. Scaffold with `npx mod-arch-installer -n <name>` (default flavor removes `mod-arch-kubeflow`), then remove the `TODOs` to adapt the code to the dashboard.
 2. Configure `module-federation` metadata in `frontend/package.json` and expose `./extensions`.
 3. Register API proxies in the Module Federation config so the dashboard can route to your BFF.
 4. Deploy the remote entry to OpenShift and register it in `odh-dashboard` via CR or config map.

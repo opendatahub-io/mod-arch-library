@@ -92,7 +92,7 @@
     "@patternfly/react-drag-drop": "^6.4.0",
     "classnames": "^2.2.6",
     "dompurify": "^3.2.4",
-    "lodash-es": "^4.17.15",
+    "lodash-es": "^4.17.23",
     "mod-arch-core": "0.0.0-semantically-released",
     "showdown": "^2.1.0"
   },
