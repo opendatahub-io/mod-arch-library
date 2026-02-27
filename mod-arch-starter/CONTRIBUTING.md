@@ -21,11 +21,51 @@ To review the requirements, please refer to:
 
 ### Development
 
-To run the mocked development environment you can either:
+There are multiple development modes available depending on your needs:
 
-- Use the makefile command to install dependencies `make dev-install-dependencies`, and then start the dev environment with `make dev-start`.
+#### Mock Mode (Recommended for Local Development)
 
-- Or follow the steps in the [frontend dev setup] and [BFF dev setup] guides.
+Use `make dev-start` to run the application in **mock mode** with mocked Kubernetes client. This is the recommended approach for local development as it:
+
+- Requires no cluster connection
+- Uses `user_token` authentication (the default)
+- Provides fast feedback loop for UI/BFF development
+
+```bash
+make dev-install-dependencies
+make dev-start
+```
+
+#### Federated Mode (Tapping into a Real Cluster)
+
+Use `make dev-start-federated` when you need to test against a real ODH/RHOAI cluster. This mode:
+
+- Connects to a real Kubernetes cluster (requires port-forwarding)
+- Uses `user_token` authentication with `x-forwarded-access-token` header
+- Is required for testing real cluster integrations
+
+```bash
+# First, set up port-forwarding to your cluster
+kubectl port-forward svc/your-service -n your-namespace 8085:8080
+
+# Then start the federated dev environment
+make dev-start-federated
+```
+
+#### Kubeflow Mode (Kubeflow Central Dashboard)
+
+Use `make dev-start-kubeflow` only if developing for Kubeflow Central Dashboard. This mode:
+
+- Uses `internal` authentication with `kubeflow-userid` header
+- Is specific to Kubeflow environments
+
+```bash
+make dev-start-kubeflow
+```
+
+> **Summary:** Use `dev-start` (mock mode) for most development work. Use `dev-start-federated` when you need to test against a real cluster.
+
+Alternatively, follow the steps in the [frontend dev setup] and [BFF dev setup] guides for manual setup.
 
 ### Kubernetes Deployment
 
