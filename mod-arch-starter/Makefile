@@ -25,22 +25,31 @@ help: ## Display this help.
 
 
 ############ Dev Environment ############
+##
+## Development Commands:
+##   dev-start          - Start in mock mode (RECOMMENDED for local development)
+##                        Uses user_token auth with mocked K8s client, no cluster needed
+##   dev-start-federated - Start tapping into a real cluster (requires port-forward)
+##                        Uses user_token auth with real K8s client
+##   dev-start-kubeflow  - Start for Kubeflow development (requires Kubeflow cluster)
+##                        Uses internal auth with kubeflow-userid header
+##
 
 .PHONY: dev-install-dependencies
 dev-install-dependencies:
 	cd frontend && npm install
 
 .PHONY: dev-bff
-dev-bff:
+dev-bff: ## Run BFF in mock mode with user_token auth (recommended for local dev)
 	trap 'exit 0' INT; \
-	cd bff && make run PORT=4000 MOCK_K8S_CLIENT=true MOCK_HTTP_CLIENT=true DEV_MODE=true DEPLOYMENT_MODE=standalone 
+	cd bff && make run PORT=4000 MOCK_K8S_CLIENT=true MOCK_HTTP_CLIENT=true DEV_MODE=true DEPLOYMENT_MODE=standalone AUTH_METHOD=user_token
 
 .PHONY: dev-frontend
 dev-frontend:
 	cd frontend && DEPLOYMENT_MODE=standalone STYLE_THEME=mui-theme npm run start:dev
 
 .PHONY: dev-start
-dev-start:
+dev-start: ## Start in mock mode - recommended for local development
 	@trap 'exit 0' INT; \
 	make -j 2 dev-bff dev-frontend
 
