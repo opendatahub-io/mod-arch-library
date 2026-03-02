@@ -6,9 +6,8 @@
  * - @semantic-release/npm only updates one pkgRoot; we publish multiple workspaces
  *   with one version (npm publish --workspaces), so we must set version in every
  *   package.json.
- * - "npm version --workspaces" triggers lockfile resolution that tries to fetch
- *   workspace packages (e.g. mod-arch-core@0.0.0-semantically-released) from the
- *   registry and fails with ETARGET.
+ * - "npm version --workspaces" can trigger resolution that fetches the placeholder
+ *   version from the registry and errors with ETARGET.
  *
  * Usage: node scripts/release-set-version.mjs <version>
  * Example: node scripts/release-set-version.mjs 1.10.0
