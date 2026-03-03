@@ -19,7 +19,10 @@ type TableProps<DataType> = Omit<
     { disableRowRenderSupport?: boolean },
     { tbodyProps?: TbodyProps & { ref?: React.Ref<HTMLTableSectionElement> } }
   > &
-  Partial<ControlledSortProps> &
+  Partial<ControlledSortProps> & {
+    sortField?: string;
+    onSortFieldChange?: (field: string) => void;
+  } &
   Partial<ControlledPaginationProps>;
 
 const Table = <T,>({
@@ -33,6 +36,8 @@ const Table = <T,>({
   sortDirection: controlledSortDirection,
   onSortIndexChange,
   onSortDirectionChange,
+  sortField,
+  onSortFieldChange,
   page: controlledPage,
   pageSize: controlledPageSize,
   onPageChange,
@@ -53,18 +58,46 @@ const Table = <T,>({
   const page = controlledPage !== undefined ? controlledPage : internalPage;
   const pageSize = controlledPageSize !== undefined ? controlledPageSize : internalPageSize;
 
-  const controlledSortProps =
-    controlledSortIndex !== undefined ||
-    controlledSortDirection !== undefined ||
-    onSortIndexChange ||
-    onSortDirectionChange
-      ? {
-          sortIndex: controlledSortIndex,
-          sortDirection: controlledSortDirection,
-          onSortIndexChange,
-          onSortDirectionChange,
-        }
-      : undefined;
+  const allColumns = React.useMemo(
+    () => [...columns, ...(subColumns || [])],
+    [columns, subColumns],
+  );
+
+  const derivedSortIndex = React.useMemo(() => {
+    if (sortField !== undefined) {
+      const index = allColumns.findIndex((c) => c.field === sortField);
+      return index >= 0 ? index : undefined;
+    }
+    return controlledSortIndex;
+  }, [allColumns, sortField, controlledSortIndex]);
+
+  const derivedOnSortIndexChange = React.useCallback(
+    (index: number) => {
+      const column = allColumns[index];
+      if (column?.field && onSortFieldChange) {
+        onSortFieldChange(String(column.field));
+      } else if (onSortIndexChange) {
+        onSortIndexChange(index);
+      }
+    },
+    [allColumns, onSortFieldChange, onSortIndexChange],
+  );
+
+  const controlledSortProps = React.useMemo(
+    () =>
+      derivedSortIndex !== undefined ||
+      controlledSortDirection !== undefined ||
+      derivedOnSortIndexChange ||
+      onSortDirectionChange
+        ? {
+            sortIndex: derivedSortIndex,
+            sortDirection: controlledSortDirection,
+            onSortIndexChange: derivedOnSortIndexChange,
+            onSortDirectionChange,
+          }
+        : undefined,
+    [derivedSortIndex, controlledSortDirection, derivedOnSortIndexChange, onSortDirectionChange],
+  );
 
   const sort = useTableColumnSort<T>(
     columns,
