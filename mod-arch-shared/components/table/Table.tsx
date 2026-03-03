@@ -22,8 +22,7 @@ type TableProps<DataType> = Omit<
   Partial<ControlledSortProps> & {
     sortField?: string;
     onSortFieldChange?: (field: string) => void;
-  } &
-  Partial<ControlledPaginationProps>;
+  } & Partial<ControlledPaginationProps>;
 
 const Table = <T,>({
   data: allData,
@@ -73,29 +72,26 @@ const Table = <T,>({
 
   const derivedOnSortIndexChange = React.useCallback(
     (index: number) => {
-      const column = allColumns[index];
-      if (column?.field && onSortFieldChange) {
-        onSortFieldChange(String(column.field));
-      } else if (onSortIndexChange) {
-        onSortIndexChange(index);
+      if (!onSortFieldChange) {
+        if (onSortIndexChange) {
+          onSortIndexChange(index);
+        }
+        return;
       }
+
+      const column = allColumns[index];
+      onSortFieldChange(String(column.field));
     },
     [allColumns, onSortFieldChange, onSortIndexChange],
   );
 
   const controlledSortProps = React.useMemo(
-    () =>
-      derivedSortIndex !== undefined ||
-      controlledSortDirection !== undefined ||
-      derivedOnSortIndexChange ||
-      onSortDirectionChange
-        ? {
-            sortIndex: derivedSortIndex,
-            sortDirection: controlledSortDirection,
-            onSortIndexChange: derivedOnSortIndexChange,
-            onSortDirectionChange,
-          }
-        : undefined,
+    () => ({
+      sortIndex: derivedSortIndex,
+      sortDirection: controlledSortDirection,
+      onSortIndexChange: derivedOnSortIndexChange,
+      onSortDirectionChange,
+    }),
     [derivedSortIndex, controlledSortDirection, derivedOnSortIndexChange, onSortDirectionChange],
   );
 
