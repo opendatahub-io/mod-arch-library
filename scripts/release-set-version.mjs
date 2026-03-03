@@ -26,17 +26,47 @@ if (!version || !/^\d+\.\d+\.\d+(-.+)?$/.test(version)) {
   process.exit(1);
 }
 
+const rootPkgPath = path.join(rootDir, "package.json");
+if (!fs.existsSync(rootPkgPath)) {
+  console.error("Root package.json not found: %s", rootPkgPath);
+  process.exit(1);
+}
+let rootPkg;
+try {
+  rootPkg = JSON.parse(fs.readFileSync(rootPkgPath, "utf8"));
+} catch (err) {
+  console.error("Invalid root package.json: %s", err.message);
+  process.exit(1);
+}
+const workspaces = rootPkg.workspaces;
+if (!Array.isArray(workspaces) || workspaces.length === 0) {
+  console.error("Root package.json must have a non-empty \"workspaces\" array");
+  process.exit(1);
+}
+
 const packagePaths = [
   "package.json",
-  "mod-arch-core/package.json",
-  "mod-arch-shared/package.json",
-  "mod-arch-kubeflow/package.json",
-  "mod-arch-installer/package.json",
+  ...workspaces.map((w) => path.join(w, "package.json")),
 ];
 
+const validated = [];
 for (const relPath of packagePaths) {
-  const absPath = path.join(rootDir, relPath);
-  const pkg = JSON.parse(fs.readFileSync(absPath, "utf8"));
+  const absPath = path.resolve(rootDir, relPath);
+  if (!fs.existsSync(absPath)) {
+    console.error("Missing package.json: %s", absPath);
+    process.exit(1);
+  }
+  let pkg;
+  try {
+    pkg = JSON.parse(fs.readFileSync(absPath, "utf8"));
+  } catch (err) {
+    console.error("Invalid JSON in %s: %s", absPath, err.message);
+    process.exit(1);
+  }
+  validated.push({ absPath, relPath, pkg });
+}
+
+for (const { absPath, relPath, pkg } of validated) {
   pkg.version = version;
   fs.writeFileSync(absPath, JSON.stringify(pkg, null, 2) + "\n");
   console.log("%s -> %s", relPath, version);
