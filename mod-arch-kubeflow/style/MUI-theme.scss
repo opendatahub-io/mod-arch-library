@@ -500,9 +500,6 @@
   color: var(--mui-palette-error-main);
 }
 
-.mui-theme .pf-v6-c-form__label-required {
-  color: inherit; // inherit from parent
-}
 
 .mui-theme .pf-v6-c-form__helper-text.path-helper-text {
   margin-inline-start: var(--pf-t--global--spacer--lg);
@@ -519,9 +516,10 @@
   --pf-v6-c-form__section-title--MarginInlineEnd: 0px;
 }
 
-// Base form label styles - only apply to text inputs (those with fieldset wrapper)
-// Exclude NumberInput labels which don't use the fieldset pattern
-.mui-theme .pf-v6-c-form__group:not(:has(.pf-v6-c-number-input)) .pf-v6-c-form__label {
+// Floating label styles — only apply when FormFieldset wrapper is present.
+// FormGroups without FormFieldset (plain text displays, view states, custom layouts)
+// use standard PF label positioning by default.
+.mui-theme .pf-v6-c-form__group:has(.form-fieldset-wrapper) .pf-v6-c-form__label {
   position: relative;
     // TODO: Investigate using a fixed value or transform/rem for consistent positioning.
   top: 78%;
@@ -538,14 +536,8 @@
 }
 
 // Form controls with number inputs - specific styling overrides
+// (NumberInput does not use FormFieldset, so it is unaffected by the floating label rule above)
 .mui-theme .pf-v6-c-form__group:has(.pf-v6-c-number-input) {
-  .pf-v6-c-form__label {
-    // NumberInput labels use standard label positioning (not floating)
-    top: 30%;
-    font-size: 16px;
-    left: 0;
-  }
-
   .pf-v6-c-form-control {
     // Override default form control padding to match button padding in this context
     --pf-v6-c-form-control--PaddingBlockStart: var(--mui-spacing-8px);
@@ -560,10 +552,12 @@
   }
 }
 
-// Use PatternFly's border system via CSS custom properties instead of pseudo-elements
-// This provides proper borders without relying on ::before/::after which can conflict
-// Exclude spans from getting borders (they're used for labels/legends)
-.mui-theme .pf-v6-c-form-control:not(span) {
+// Inside fieldset wrappers, replace PF's ::before/::after border system with a real border
+// on the wrapper element itself. Outside fieldset wrappers (plain FormGroup), PF's native
+// ::before/::after pseudo-elements handle borders and should be left untouched.
+.mui-theme .form-fieldset-wrapper .pf-v6-c-form-control:not(span),
+.mui-theme .tr-fieldset-wrapper .pf-v6-c-form-control:not(span),
+.mui-theme .toolbar-fieldset-wrapper .pf-v6-c-form-control:not(span) {
   border: var(--pf-v6-c-form-control--BorderWidth, 1px) solid var(--pf-v6-c-form-control--BorderColor, var(--pf-t--global--border--color--default));
   border-radius: var(--pf-v6-c-form-control--BorderRadius, var(--mui-shape-borderRadius));
 }
@@ -606,9 +600,19 @@
   }
 }
 
-// Remove pseudo-element borders everywhere since we're using real borders now
-.mui-theme .pf-v6-c-form-control::after,
-.mui-theme .pf-v6-c-form-control::before {
+// Suppress PF's ::before/::after borders in two contexts:
+// 1. Inside fieldset wrappers — the fieldset element provides the visual border instead.
+// 2. NumberInput — it uses a real border on the span directly (see rule above).
+// Outside these contexts, PF's pseudo-elements are left intact so plain FormGroup inputs
+// render with native PF border behavior.
+.mui-theme .form-fieldset-wrapper .pf-v6-c-form-control::after,
+.mui-theme .form-fieldset-wrapper .pf-v6-c-form-control::before,
+.mui-theme .tr-fieldset-wrapper .pf-v6-c-form-control::after,
+.mui-theme .tr-fieldset-wrapper .pf-v6-c-form-control::before,
+.mui-theme .toolbar-fieldset-wrapper .pf-v6-c-form-control::after,
+.mui-theme .toolbar-fieldset-wrapper .pf-v6-c-form-control::before,
+.mui-theme .pf-v6-c-number-input .pf-v6-c-form-control::after,
+.mui-theme .pf-v6-c-number-input .pf-v6-c-form-control::before {
   display: none;
 }
 
@@ -624,8 +628,7 @@
   --pf-v6-c-button--PaddingInlineEnd: var(--mui-button--PaddingInlineEnd);
 }
 
-// Consistent form control padding and styling for all inputs except file upload components and pagination
-// Pagination has inputs within form controls that need different padding, so exclude them
+// Consistent form control styling for all inputs in MUI theme
 .mui-theme .pf-v6-c-form-control {
   --pf-v6-c-form-control--m-disabled--BackgroundColor: var(--mui-palette-common-white);
   // Disabled color inherited from --pf-t--global--text--color--on-disabled (set to MUI text-disabled)
@@ -633,13 +636,6 @@
   --pf-v6-c-form-control--m-error--hover--after--BorderColor: var(--mui-palette-error-main);
   // Resize is disabled in MUI.
   resize: none;
-  --pf-v6-c-form-control--PaddingBlockStart: var(--mui-spacing-16px);
-  --pf-v6-c-form-control--PaddingBlockEnd: var(--mui-spacing-16px);
-
-  #text-file-simple-filename {
-    --pf-v6-c-form-control--PaddingBlockStart: var(--mui-spacing-8px);
-    --pf-v6-c-form-control--PaddingBlockEnd: var(--mui-spacing-8px);
-  }
 }
 
 // Exclude pagination form controls from padding rules (pagination has its own sizing)
@@ -744,16 +740,18 @@
 
 // Input group control buttons: use PF structure only (Button variant="control" in InputGroup).
 // No app class names required; any consumer using variant="control" gets this styling.
-.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item:has(.pf-v6-c-button.pf-m-control) {
+// FileUpload is excluded because it also uses input-group control buttons ("Browse"/"Clear")
+// and should keep the default PF rectangular button style.
+.mui-theme .pf-v6-c-input-group:not(.pf-v6-c-file-upload .pf-v6-c-input-group) .pf-v6-c-input-group__item:has(.pf-v6-c-button.pf-m-control) {
   display: flex;
   align-items: center;
 }
 
-.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item:has(.pf-v6-c-button.pf-m-control):last-child {
+.mui-theme .pf-v6-c-input-group:not(.pf-v6-c-file-upload .pf-v6-c-input-group) .pf-v6-c-input-group__item:has(.pf-v6-c-button.pf-m-control):last-child {
   padding-inline-end: var(--mui-input-group-control-button--container-padding-inline-end);
 }
 
-.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control {
+.mui-theme .pf-v6-c-input-group:not(.pf-v6-c-file-upload .pf-v6-c-input-group) .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control {
   --pf-v6-c-button--BorderColor: transparent;
   --pf-v6-c-button--hover--BorderColor: transparent;
   --pf-v6-c-button--m-control--BorderColor: transparent;
@@ -777,19 +775,19 @@
   align-self: center;
 }
 
-.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control .pf-v6-c-button__icon,
-.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control svg {
+.mui-theme .pf-v6-c-input-group:not(.pf-v6-c-file-upload .pf-v6-c-input-group) .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control .pf-v6-c-button__icon,
+.mui-theme .pf-v6-c-input-group:not(.pf-v6-c-file-upload .pf-v6-c-input-group) .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control svg {
   display: block;
   margin: 0;
 }
 
-.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control:hover {
+.mui-theme .pf-v6-c-input-group:not(.pf-v6-c-file-upload .pf-v6-c-input-group) .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control:hover {
   border-radius: 50%;
   outline: none;
   background-color: var(--pf-t--global--background--color--action--plain--hover, rgba(0, 0, 0, 0.04));
 }
 
-.mui-theme .pf-v6-c-input-group .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control:focus-visible {
+.mui-theme .pf-v6-c-input-group:not(.pf-v6-c-file-upload .pf-v6-c-input-group) .pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control:focus-visible {
   border-radius: 50%;
   outline: none;
   box-shadow: 0 0 0 2px var(--mui-palette-primary-main);
@@ -1049,11 +1047,19 @@
   color: var(--mui-palette-primary-main);
 }
 
+// Fieldset-wrapper inputs: hide real border (fieldset provides it) and apply MUI-sized
+// padding (needed for floating label clearance). Plain FormGroup inputs use PF default padding.
 .mui-theme .tr-fieldset-wrapper .pf-v6-c-form-control,
 .mui-theme .toolbar-fieldset-wrapper .pf-v6-c-form-control,
 .mui-theme .form-fieldset-wrapper .pf-v6-c-form-control {
-  // Hide real borders since fieldset wrappers provide their own border styling
   border: none;
+  --pf-v6-c-form-control--PaddingBlockStart: var(--mui-spacing-16px);
+  --pf-v6-c-form-control--PaddingBlockEnd: var(--mui-spacing-16px);
+
+  #text-file-simple-filename {
+    --pf-v6-c-form-control--PaddingBlockStart: var(--mui-spacing-8px);
+    --pf-v6-c-form-control--PaddingBlockEnd: var(--mui-spacing-8px);
+  }
 }
 
 // Ensure legend spans don't get form control styling
@@ -1106,22 +1112,28 @@
   --pf-v6-c-form__field-group-body--PaddingBlockStart: 8px;
 }
 
-.mui-theme .pf-v6-c-form__group .pf-v6-c-form-control:focus-within + .pf-v6-c-form__label,
-.mui-theme .pf-v6-c-form__group .pf-v6-c-form-control:not(:placeholder-shown) + .pf-v6-c-form__label {
+.mui-theme .pf-v6-c-form__group:has(.form-fieldset-wrapper) .pf-v6-c-form-control:focus-within + .pf-v6-c-form__label,
+.mui-theme .pf-v6-c-form__group:has(.form-fieldset-wrapper) .pf-v6-c-form-control:not(:placeholder-shown) + .pf-v6-c-form__label {
   color: var(--mui-palette-primary-main);
 }
 
-.mui-theme .pf-v6-c-form__group:focus-within .pf-v6-c-form-control:not(span) {
+.mui-theme .pf-v6-c-form__group:has(.form-fieldset-wrapper):focus-within .pf-v6-c-form-control:not(span) {
   border-width: var(--mui-form--focus--BorderWidth);
   border-color: var(--mui-palette-primary-main);
 }
 
-.mui-theme .pf-v6-c-form-control.pf-m-error:not(span),
+// Error/hover border overrides only apply inside fieldset wrappers (real border).
+// Plain FormGroup inputs use PF's ::before/::after for these states.
+.mui-theme .form-fieldset-wrapper .pf-v6-c-form-control.pf-m-error:not(span),
+.mui-theme .tr-fieldset-wrapper .pf-v6-c-form-control.pf-m-error:not(span),
+.mui-theme .toolbar-fieldset-wrapper .pf-v6-c-form-control.pf-m-error:not(span),
 .mui-theme .pf-v6-c-number-input span.pf-v6-c-form-control.pf-m-error {
   border-color: var(--mui-palette-error-main);
 }
 
-.mui-theme .pf-v6-c-form-control:hover:not(span) {
+.mui-theme .form-fieldset-wrapper .pf-v6-c-form-control:hover:not(span),
+.mui-theme .tr-fieldset-wrapper .pf-v6-c-form-control:hover:not(span),
+.mui-theme .toolbar-fieldset-wrapper .pf-v6-c-form-control:hover:not(span) {
   border-color: var(--pf-t--global--border--color--hover, var(--mui-palette-grey-400));
 }
 
@@ -1146,14 +1158,14 @@
   border-color: var(--mui-palette-error-main);
 }
 
-.mui-theme .pf-v6-c-form__group:not(.pf-m-error):focus-within .pf-v6-c-form__label {
+.mui-theme .pf-v6-c-form__group:has(.form-fieldset-wrapper):not(.pf-m-error):focus-within .pf-v6-c-form__label {
   // Using CSS property here since --pf-v6-c-form__label--Color does not exist.
 
   /* Change color of the label when the input is focused */
   color: var(--mui-palette-primary-main);
 }
 
-.mui-theme .pf-v6-c-form__group:not(.pf-m-error):focus-within .pf-v6-c-form__label-required {
+.mui-theme .pf-v6-c-form__group:has(.form-fieldset-wrapper):not(.pf-m-error):focus-within .pf-v6-c-form__label-required {
   color: var(--mui-palette-primary-main);
 }
 
@@ -2119,12 +2131,18 @@ left: 0;
 }
 
 // File upload textarea border styling (MUI-specific)
+// Use a real border and suppress PF's ::before/::after pseudo-element borders to avoid double/artifact borders.
 .mui-theme .pf-v6-c-file-upload__file-details .pf-v6-c-form-control.pf-m-textarea {
   border: var(--mui-form-control--BorderWidth) solid var(--mui-form-control--BorderColor);
   border-radius: var(--mui-shape-borderRadius);
 
   &:hover {
     border-color: var(--mui-palette-common-black);
+  }
+
+  &::before,
+  &::after {
+    display: none;
   }
 }
 
