@@ -48,6 +48,8 @@ mod-arch-kubeflow/
 
 When the MUI theme is active, PatternFly form inputs must be wrapped to maintain parity with MUI's `TextField` structure. MUI's `TextField` renders an `<OutlinedInput>` which includes a `<fieldset>` and `<legend>` element. PatternFly inputs don't render this structure natively, so `FormFieldset` replicates it. Without this wrapper, form fields under the MUI theme will have native PatternFly borders and a stacked label. **Always use the shared components from `mod-arch-shared`** — never roll your own wrapper.
 
+These components handle theme branching internally — **do not add `isMUITheme` checks in the consuming component** to conditionally render or style the input. The wrapper reads the theme context itself and applies the correct structure. If you find yourself writing `isMUITheme ? <ThemeAwareFormGroupWrapper> : <FormGroup>`, that is wrong — use `ThemeAwareFormGroupWrapper` unconditionally.
+
 ### Components that need a wrapper
 
 | Component | When to use |
