@@ -150,6 +150,14 @@ PR titles **must** follow [Conventional Commits](https://www.conventionalcommits
 
 Scopes are optional but encouraged for clarity: `feat(kubeflow): add chart color tokens`
 
+## Package-specific guidelines
+
+Some packages have additional contribution guidelines beyond what's described here. Check the package directory for a `CONTRIBUTING.md` before starting work:
+
+| Package | Notes |
+| ------------------- | ------ |
+| [`mod-arch-kubeflow`](mod-arch-kubeflow/CONTRIBUTING.md) | Theming and styling with PatternFly design tokens and MUI integration |
+
 ## License
 
 By contributing, you agree that your contributions will be licensed under the project's [Apache License 2.0](LICENSE).
