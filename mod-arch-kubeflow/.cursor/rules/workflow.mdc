@@ -1,5 +1,21 @@
 # Development Workflow & Decision Trees
 
+## Form fields under the MUI theme
+
+When `isMUITheme` is true, all form inputs **must** be wrapped with `ThemeAwareFormGroupWrapper` and all search inputs **must** use `ThemeAwareSearchInput`. Both are exported from `mod-arch-shared`. Without this wrapper, form fields under the MUI theme will have native PatternFly borders and a stacked label, deviating from the MUI theme.
+
+```tsx
+import { ThemeAwareFormGroupWrapper, ThemeAwareSearchInput } from 'mod-arch-shared';
+
+<ThemeAwareFormGroupWrapper label="Name" fieldId="name" isRequired>
+  <TextInput id="name" value={name} onChange={...} />
+</ThemeAwareFormGroupWrapper>
+
+<ThemeAwareSearchInput value={search} onChange={setSearch} fieldLabel="Search" />
+```
+
+Do not create local copies of these components — the canonical implementations live in `mod-arch-shared`.
+
 ## Decision Process for Styling Overrides
 
 ```text

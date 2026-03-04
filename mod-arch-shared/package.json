@@ -53,6 +53,7 @@
   },
   "peerDependencies": {
     "mod-arch-core": "*",
+    "mod-arch-kubeflow": "*",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0",
     "react-router-dom": ">=6.4.0"
@@ -87,7 +88,8 @@
     "ts-jest": "^29.2.6",
     "tsc-alias": "^1.8.15",
     "typescript": "^5.0.4",
-    "mod-arch-core": "0.0.0-semantically-released"
+    "mod-arch-core": "0.0.0-semantically-released",
+    "mod-arch-kubeflow": "0.0.0-semantically-released"
   },
   "dependencies": {
     "@patternfly/patternfly": "^6.4.0",
