@@ -66,8 +66,44 @@ for (const relPath of packagePaths) {
   validated.push({ absPath, relPath, pkg });
 }
 
+const workspacePackageNames = new Set(
+  validated
+    .filter(({ relPath }) => relPath !== "package.json")
+    .map(({ pkg }) => pkg.name)
+    .filter((name) => typeof name === "string" && name.length > 0),
+);
+
+const dependencyFields = [
+  "dependencies",
+  "devDependencies",
+  "peerDependencies",
+  "optionalDependencies",
+];
+
+const updateWorkspaceDependencyVersions = (pkg, pkgVersion) => {
+  for (const field of dependencyFields) {
+    const deps = pkg[field];
+    if (!deps || typeof deps !== "object") {
+      continue;
+    }
+
+    for (const depName of Object.keys(deps)) {
+      if (!workspacePackageNames.has(depName)) {
+        continue;
+      }
+
+      if (field === "peerDependencies") {
+        deps[depName] = `>=${pkgVersion}`;
+      } else {
+        deps[depName] = pkgVersion;
+      }
+    }
+  }
+};
+
 for (const { absPath, relPath, pkg } of validated) {
   pkg.version = version;
+  updateWorkspaceDependencyVersions(pkg, version);
   fs.writeFileSync(absPath, JSON.stringify(pkg, null, 2) + "\n");
   console.log("%s -> %s", relPath, version);
 }

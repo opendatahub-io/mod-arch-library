@@ -52,6 +52,7 @@
     "access": "public"
   },
   "peerDependencies": {
+    "mod-arch-core": "*",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0",
     "react-router-dom": ">=6.4.0"
@@ -85,7 +86,8 @@
     "sass": "^1.83.0",
     "ts-jest": "^29.2.6",
     "tsc-alias": "^1.8.15",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "mod-arch-core": "0.0.0-semantically-released"
   },
   "dependencies": {
     "@patternfly/patternfly": "^6.4.0",
@@ -93,7 +95,6 @@
     "classnames": "^2.2.6",
     "dompurify": "^3.2.4",
     "lodash-es": "^4.17.23",
-    "mod-arch-core": "0.0.0-semantically-released",
     "showdown": "^2.1.0"
   },
   "optionalDependencies": {
