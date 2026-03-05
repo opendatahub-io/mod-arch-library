@@ -50,6 +50,8 @@ When the MUI theme is active, PatternFly form inputs must be wrapped to maintain
 
 These components handle theme branching internally — **do not add `isMUITheme` checks in the consuming component** to conditionally render or style the input. The wrapper reads the theme context itself and applies the correct structure. If you find yourself writing `isMUITheme ? <ThemeAwareFormGroupWrapper> : <FormGroup>`, that is wrong — use `ThemeAwareFormGroupWrapper` unconditionally.
 
+**Exception — auto-resizing `TextArea`**: `TextArea` with `autoResize` cannot be safely wrapped by `ThemeAwareFormGroupWrapper` (the fieldset structure would prevent it from expanding), so this is the one case where branching on `isMUITheme` is permitted in a consuming component. Use `FormFieldset` directly when `isMUITheme` is true and render the bare `<TextArea>` when it is false. This is the **only** pattern where a consumer may branch on `isMUITheme` — all other inputs must use `ThemeAwareFormGroupWrapper` or `ThemeAwareSearchInput` unconditionally.
+
 ### Components that need a wrapper
 
 | Component | When to use |
@@ -84,7 +86,7 @@ const descriptionInput = <TextArea value={description} onChange={...} autoResize
 )}
 ```
 
-Components that render their own visual affordances (`Switch`, `Radio`, `Checkbox`, `FileUpload`) do not need a wrapper — the SCSS handles their MUI styling natively.
+`Switch`, `Radio`, `Checkbox`, and `FileUpload` do not need a wrapper — they have no bordered text input, so the MUI theme styles them entirely through SCSS without any wrapper component.
 
 If you add a new bordered input without a wrapper under the MUI theme, the floating label and border will not match the MUI styles. Code reviewers must reject any PR that introduces bare bordered inputs without a wrapper.
 

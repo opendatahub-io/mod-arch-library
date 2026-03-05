@@ -2,7 +2,13 @@
 
 ## Form fields under the MUI theme
 
-When `isMUITheme` is true, all form inputs **must** be wrapped with `ThemeAwareFormGroupWrapper` and all search inputs **must** use `ThemeAwareSearchInput`. Both are exported from `mod-arch-shared`. Without this wrapper, form fields under the MUI theme will have native PatternFly borders and a stacked label, deviating from the MUI theme.
+When `isMUITheme` is true, **bordered** form inputs (`TextInput`, `Select`, `TypeaheadSelect`, `MultiTypeaheadSelect`, `NumberInput`, etc.) **must** be wrapped with `ThemeAwareFormGroupWrapper`, and search/filter inputs **must** use `ThemeAwareSearchInput`. Both are exported from `mod-arch-shared`. Without this wrapper, bordered inputs will render native PatternFly borders and a stacked label instead of the MUI floating-label style.
+
+**Exceptions — do not apply `ThemeAwareFormGroupWrapper` to:**
+- `Switch`, `Radio`, `Checkbox`, and `FileUpload` — these have no bordered text input, so the MUI theme styles them entirely through SCSS; no wrapper is needed.
+- Auto-resizing `TextArea` — use `FormFieldset` directly (with an `isMUITheme` guard) so the textarea can expand freely; see the `TextArea` pattern documented in `mod-arch-kubeflow/AGENTS.md`.
+
+Reviewers must reject PRs that add bare bordered inputs without a wrapper when `isMUITheme` is active, and must equally reject PRs that apply `ThemeAwareFormGroupWrapper` to affordance-specific components or to `TextArea` (which has its own special handling).
 
 ```tsx
 import { ThemeAwareFormGroupWrapper, ThemeAwareSearchInput } from 'mod-arch-shared';
