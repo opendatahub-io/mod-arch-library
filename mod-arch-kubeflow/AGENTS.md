@@ -84,16 +84,7 @@ const descriptionInput = <TextArea value={description} onChange={...} autoResize
 )}
 ```
 
-### Components that do not need a wrapper
-
-These components render their own visual affordances rather than a bordered input box — there is no `OutlinedInput`-style fieldset to replicate. The SCSS handles their MUI styling natively.
-
-| Component | Reason |
-| ----------- | ------- |
-| `Switch` | Renders a pill toggle; the SCSS handles the shape via `--mui-switch--BorderRadius` |
-| `Radio` | Renders a custom dot; the SCSS handles the styling natively |
-| `Checkbox` | Renders a tick box; no text input border in MUI either |
-| `FileUpload` | Has dedicated SCSS rules for its filename input and textarea; wrapping in `FormFieldset` would add a conflicting outer fieldset around a component with its own complex internal structure |
+Components that render their own visual affordances (`Switch`, `Radio`, `Checkbox`, `FileUpload`) do not need a wrapper — the SCSS handles their MUI styling natively.
 
 If you add a new bordered input without a wrapper under the MUI theme, the floating label and border will not match the MUI styles. Code reviewers must reject any PR that introduces bare bordered inputs without a wrapper.
 
