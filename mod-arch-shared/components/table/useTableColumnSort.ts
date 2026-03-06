@@ -117,14 +117,22 @@ const useTableColumnSort = <T>(
 
   // Resolve sort index: from sortIndex, or from sortField via columns
   const resolvedSortIndex = React.useMemo(() => {
+    const normalizeSortIndex = (index: number | undefined): number | undefined =>
+      typeof index === 'number' &&
+      Number.isInteger(index) &&
+      index >= 0 &&
+      index < allColumns.length
+        ? index
+        : undefined;
+
     if (controlledSortProps?.sortIndex !== undefined) {
-      return controlledSortProps.sortIndex;
+      return normalizeSortIndex(controlledSortProps.sortIndex);
     }
     if (controlledSortProps?.sortField !== undefined) {
       const idx = allColumns.findIndex((c) => c.field === controlledSortProps.sortField);
-      return idx >= 0 ? idx : undefined;
+      return normalizeSortIndex(idx);
     }
-    return internalSortIndex;
+    return normalizeSortIndex(internalSortIndex);
   }, [
     controlledSortProps?.sortIndex,
     controlledSortProps?.sortField,
