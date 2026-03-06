@@ -45,11 +45,13 @@ export const getTableColumnSort = <T>({
   ...sortProps
 }: TableColumnSortByFieldProps<T>): GetColumnSort => {
   const allColumns = [...columns, ...subColumns];
-  const resolvedSortIndex = allColumns.findIndex((c) => c.field === sortField);
+  const resolvedSortIndex =
+    sortField === undefined ? undefined : allColumns.findIndex((c) => c.field === sortField);
   return getTableColumnSortByIndex<T>({
     columns,
     subColumns,
-    sortIndex: resolvedSortIndex >= 0 ? resolvedSortIndex : undefined,
+    sortIndex:
+      resolvedSortIndex !== undefined && resolvedSortIndex >= 0 ? resolvedSortIndex : undefined,
     setSortIndex: (index: number) => {
       const column = allColumns[index];
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive coding
@@ -130,7 +132,7 @@ const useTableColumnSort = <T>(
     }
     if (controlledSortProps?.sortField !== undefined) {
       const idx = allColumns.findIndex((c) => c.field === controlledSortProps.sortField);
-      return normalizeSortIndex(idx);
+      return idx >= 0 ? idx : undefined;
     }
     return normalizeSortIndex(internalSortIndex);
   }, [
