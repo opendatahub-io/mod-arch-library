@@ -108,12 +108,15 @@ function ToolbarFilterInner<K extends string>(
   }: ToolbarFilterProps<K>,
   ref: React.ForwardedRef<ToolbarFilterRef<K>>,
 ) {
-  const [activeFilterKey, setActiveFilterKey] = useState<K>(visibleFilterKeys[0]);
+  const [activeFilterKey, setActiveFilterKey] = useState<K | undefined>(
+    visibleFilterKeys.length > 0 ? visibleFilterKeys[0] : undefined,
+  );
   const [isAttributeMenuOpen, setIsAttributeMenuOpen] = useState(false);
   const [isSelectFilterOpen, setIsSelectFilterOpen] = useState(false);
   const [isMultiselectFilterOpen, setIsMultiselectFilterOpen] = useState(false);
 
-  const activeFilterLabel = visibleFilterKeys.length > 0 ? filterConfig[activeFilterKey].label : '';
+  const activeFilterLabel =
+    activeFilterKey !== undefined ? filterConfig[activeFilterKey].label : '';
 
   useImperativeHandle(ref, () => ({
     clearAll: onClearAllFilters,
@@ -121,10 +124,13 @@ function ToolbarFilterInner<K extends string>(
   }));
 
   useEffect(() => {
-    if (visibleFilterKeys.includes(activeFilterKey) || visibleFilterKeys.length === 0) {
+    if (visibleFilterKeys.length === 0) {
+      setActiveFilterKey(undefined);
       return;
     }
-    setActiveFilterKey(visibleFilterKeys[0]);
+    if (activeFilterKey === undefined || !visibleFilterKeys.includes(activeFilterKey)) {
+      setActiveFilterKey(visibleFilterKeys[0]);
+    }
   }, [activeFilterKey, visibleFilterKeys]);
 
   const onAttributeSelect = useCallback(
@@ -191,7 +197,7 @@ function ToolbarFilterInner<K extends string>(
           value={textValue}
           onChange={(newValue: string) => onFilterChange(key, newValue)}
           placeholder={config.placeholder}
-          fieldLabel={config.placeholder}
+          fieldLabel={config.label}
           aria-label={config.placeholder}
           data-testid={`${testIdPrefix}-${key}-input`}
         />
@@ -328,20 +334,28 @@ function ToolbarFilterInner<K extends string>(
   );
 
   const getFilterLabels = (key: K): string[] => {
+    const config = filterConfig[key];
     const value = filterValues[key];
+    const options = 'options' in config ? config.options : undefined;
+    const toDisplayLabel = (v: string): string =>
+      options?.find((opt) => opt.value === v)?.label ?? v;
     if (Array.isArray(value)) {
-      return value;
+      return value.map(toDisplayLabel);
     }
-    return value ? [value] : [];
+    return value ? [toDisplayLabel(value)] : [];
   };
 
   const handleDeleteLabel = (key: K, labelToDelete?: string) => {
     const config = filterConfig[key];
     if (config.type === 'multiselect' && labelToDelete !== undefined) {
+      const rawValue =
+        config.options.find((opt) => opt.label === labelToDelete)?.value ?? labelToDelete;
       const value = filterValues[key];
       const currentValues = Array.isArray(value) ? value : [];
-      const newValues = currentValues.filter((v) => v !== labelToDelete);
-      onFilterChange(key, newValues);
+      onFilterChange(
+        key,
+        currentValues.filter((v) => v !== rawValue),
+      );
     } else {
       onFilterChange(key, config.type === 'multiselect' ? [] : '');
     }
@@ -365,22 +379,26 @@ function ToolbarFilterInner<K extends string>(
       <ToolbarContent>
         <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="xl">
           <ToolbarGroup variant="filter-group">
-            <ToolbarItem>{attributeDropdown}</ToolbarItem>
-            {visibleFilterKeys.map((key) => (
-              <PFToolbarFilter
-                key={key}
-                labels={getFilterLabels(key)}
-                deleteLabel={(_category, label) => {
-                  const labelStr = typeof label === 'string' ? label : label.key;
-                  handleDeleteLabel(key, labelStr);
-                }}
-                deleteLabelGroup={() => handleDeleteLabel(key)}
-                categoryName={filterConfig[key].label}
-                showToolbarItem={activeFilterKey === key}
-              >
-                {renderFilterInput(key)}
-              </PFToolbarFilter>
-            ))}
+            {visibleFilterKeys.length > 0 && (
+              <>
+                <ToolbarItem>{attributeDropdown}</ToolbarItem>
+                {visibleFilterKeys.map((key) => (
+                  <PFToolbarFilter
+                    key={key}
+                    labels={getFilterLabels(key)}
+                    deleteLabel={(_category, label) => {
+                      const labelStr = typeof label === 'string' ? label : label.key;
+                      handleDeleteLabel(key, labelStr);
+                    }}
+                    deleteLabelGroup={() => handleDeleteLabel(key)}
+                    categoryName={filterConfig[key].label}
+                    showToolbarItem={activeFilterKey === key}
+                  >
+                    {renderFilterInput(key)}
+                  </PFToolbarFilter>
+                ))}
+              </>
+            )}
             {hiddenActiveKeys.map((key) => (
               <PFToolbarFilter
                 key={key}
