@@ -1181,6 +1181,10 @@
   --pf-v6-c-menu__item--PaddingInlineStart: var(--mui-menu__item--PaddingInlineStart);
   --pf-v6-c-menu__item--PaddingInlineEnd: var(--mui-menu__item--PaddingInlineEnd);
   --pf-v6-c-menu__item--FontSize: var(--mui-menu__item--FontSize);
+  --pf-v6-c-menu__group-title--PaddingBlockStart: var(--mui-menu__item--PaddingBlockStart);
+  --pf-v6-c-menu__group-title--PaddingBlockEnd: var(--mui-menu__item--PaddingBlockEnd);
+  --pf-v6-c-menu__group-title--PaddingInlineStart: var(--mui-menu__item--PaddingInlineStart);
+  --pf-v6-c-menu__group-title--PaddingInlineEnd: var(--mui-menu__item--PaddingInlineEnd);
 }
 
 // Remove negative margins on scrollable menu content that clip the scrollbar
