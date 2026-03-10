@@ -248,7 +248,7 @@ function ToolbarFilterInner<K extends string>(
               <SelectOption
                 key={option.value}
                 value={option.value}
-                data-testid={`${testIdPrefix}-${key}-${option.value.toLowerCase()}`}
+                data-testid={`${testIdPrefix}-${key}-${option.value.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
               >
                 {option.label}
               </SelectOption>
@@ -307,7 +307,7 @@ function ToolbarFilterInner<K extends string>(
                 value={option.value}
                 hasCheckbox
                 isSelected={selectedValues.includes(option.value)}
-                data-testid={`${testIdPrefix}-${key}-${option.value.toLowerCase()}`}
+                data-testid={`${testIdPrefix}-${key}-${option.value.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
               >
                 {option.label}
               </SelectOption>
@@ -333,28 +333,38 @@ function ToolbarFilterInner<K extends string>(
     [filterConfig, renderTextFilter, renderSelectFilter, renderMultiselectFilter],
   );
 
-  const getFilterLabels = (key: K): string[] => {
+  // For text filters the raw value is the display string, so return plain strings.
+  // For select/multiselect, embed the raw option value in chip.key so the delete
+  // handler can remove the correct entry without a label→value reverse lookup.
+  const getFilterLabels = (key: K): (string | { key: string; node: string })[] => {
     const config = filterConfig[key];
     const value = filterValues[key];
-    const options = 'options' in config ? config.options : undefined;
-    const toDisplayLabel = (v: string): string =>
-      options?.find((opt) => opt.value === v)?.label ?? v;
-    if (Array.isArray(value)) {
-      return value.map(toDisplayLabel);
+    if (!('options' in config)) {
+      if (Array.isArray(value)) {
+        return value;
+      }
+      return value ? [value] : [];
     }
-    return value ? [toDisplayLabel(value)] : [];
+    const toChip = (rawValue: string): { key: string; node: string } => ({
+      key: rawValue,
+      node: config.options.find((opt) => opt.value === rawValue)?.label ?? rawValue,
+    });
+    if (Array.isArray(value)) {
+      return value.map(toChip);
+    }
+    return value ? [toChip(value)] : [];
   };
 
+  // labelToDelete is always the raw value: plain string for text filters,
+  // chip.key (raw option value) for select/multiselect — no reverse lookup needed.
   const handleDeleteLabel = (key: K, labelToDelete?: string) => {
     const config = filterConfig[key];
     if (config.type === 'multiselect' && labelToDelete !== undefined) {
-      const rawValue =
-        config.options.find((opt) => opt.label === labelToDelete)?.value ?? labelToDelete;
       const value = filterValues[key];
       const currentValues = Array.isArray(value) ? value : [];
       onFilterChange(
         key,
-        currentValues.filter((v) => v !== rawValue),
+        currentValues.filter((v) => v !== labelToDelete),
       );
     } else {
       onFilterChange(key, config.type === 'multiselect' ? [] : '');
