@@ -88,7 +88,6 @@ export interface ToolbarFilterRef<K extends string> {
  *
  * <ToolbarFilter
  *   filterConfig={filterConfig}
- *   allFilterKeys={allKeys}
  *   visibleFilterKeys={allKeys}
  *   filterValues={{ name: '', status: '' }}
  *   onFilterChange={(key, value) => handleChange(key, value)}
