@@ -11,6 +11,21 @@ export { default as EditableTextDescriptionListGroup } from './EditableTextDescr
 export { default as EmptyStateErrorMessage } from './EmptyStateErrorMessage';
 export { default as FieldGroupHelpLabelIcon } from './FieldGroupHelpLabelIcon';
 export { default as FormFieldset } from './FormFieldset';
+export { default as ThemeAwareFormGroupWrapper } from './ThemeAwareFormGroupWrapper';
+export { default as ThemeAwareSearchInput } from './ThemeAwareSearchInput';
+export { default as ToolbarFilter } from './ToolbarFilter';
+export type {
+  FilterConfig,
+  FilterConfigMap,
+  FilterState,
+  FilterType,
+  FilterValue,
+  MultiselectFilterConfig,
+  SelectFilterConfig,
+  TextFilterConfig,
+  ToolbarFilterProps,
+  ToolbarFilterRef,
+} from './ToolbarFilter';
 export { default as InlineTruncatedClipboardCopy } from './InlineTruncatedClipboardCopy';
 export { default as KubeflowDocs } from './KubeflowDocs';
 export { default as MarkdownView } from './MarkdownView';
