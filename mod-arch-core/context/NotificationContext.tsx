@@ -31,6 +31,9 @@ const notificationReducer: React.Reducer<Notification[], NotificationAction> = (
           timestamp: action.payload.timestamp,
           message: action.payload.message,
           id: action.payload.id,
+          linkUrl: action.payload.linkUrl,
+          linkLabel: action.payload.linkLabel,
+          messageText: action.payload.messageText,
         },
       ];
     }

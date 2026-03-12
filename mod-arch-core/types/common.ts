@@ -68,6 +68,9 @@ export type Notification = {
   hidden?: boolean;
   read?: boolean;
   timestamp: Date;
+  linkUrl?: string;
+  linkLabel?: string;
+  messageText?: string;
 };
 
 export enum NotificationActionTypes {
