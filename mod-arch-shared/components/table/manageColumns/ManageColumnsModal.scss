@@ -1,0 +1,8 @@
+/* PatternFly DragDropSort (variant="default") renders each draggable item as a
+   plain wrapper element around the drag handle and content. Ensure the wrapper
+   uses a single-row flex layout so the handle doesn't wrap onto its own line. */
+.mod-arch-manage-columns__draggable {
+  display: flex;
+  align-items: center;
+}
+

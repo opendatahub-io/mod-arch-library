@@ -22,6 +22,7 @@ import ContentModal, { ButtonAction } from '~/components/modals/ContentModal';
 import { ManageColumnSearchInput } from './ManageColumnSearchInput';
 import { reorderColumns } from './utils';
 import type { ManagedColumn, UseManageColumnsResult } from '../useManageColumns';
+import './ManageColumnsModal.scss';
 
 /**
  * Configuration for the ManageColumnsModal
@@ -227,7 +228,10 @@ export const ManageColumnsModal: React.FC<ManageColumnsModalProps> = ({
           </Flex>
         </div>
       ),
-      props: { checked: currentCol.isVisible },
+      props: {
+        checked: currentCol.isVisible,
+        className: 'mod-arch-manage-columns__draggable',
+      },
     };
   });
 
