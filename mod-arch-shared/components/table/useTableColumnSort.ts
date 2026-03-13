@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { EitherOrNone } from '~/types/typeHelpers';
 import { GetColumnSort, SortableData } from './types';
 
 type TableColumnSortProps<DataType> = {
@@ -8,10 +9,21 @@ type TableColumnSortProps<DataType> = {
   setSortDirection: (dir: 'asc' | 'desc') => void;
 };
 
-export type ControlledSortProps = {
-  sortIndex?: number | undefined;
-  sortDirection?: 'asc' | 'desc' | undefined;
+type ControlledSortByIndexProps = {
+  sortIndex?: number;
   onSortIndexChange?: (index: number) => void;
+};
+
+type ControlledSortByFieldProps = {
+  sortField?: string;
+  onSortFieldChange?: (field: string) => void;
+};
+
+export type ControlledSortProps = EitherOrNone<
+  ControlledSortByIndexProps,
+  ControlledSortByFieldProps
+> & {
+  sortDirection?: 'asc' | 'desc';
   onSortDirectionChange?: (direction: 'asc' | 'desc') => void;
 };
 
@@ -27,18 +39,30 @@ type TableColumnSortByIndexProps<DataType> = TableColumnSortProps<DataType> & {
 
 export const getTableColumnSort = <T>({
   columns,
-  subColumns,
+  subColumns = [],
   sortField,
   setSortField,
   ...sortProps
-}: TableColumnSortByFieldProps<T>): GetColumnSort =>
-  getTableColumnSortByIndex<T>({
+}: TableColumnSortByFieldProps<T>): GetColumnSort => {
+  const allColumns = [...columns, ...subColumns];
+  const resolvedSortIndex =
+    sortField === undefined ? undefined : allColumns.findIndex((c) => c.field === sortField);
+  return getTableColumnSortByIndex<T>({
     columns,
     subColumns,
-    sortIndex: columns.findIndex((c) => c.field === sortField),
-    setSortIndex: (index: number) => setSortField(String(columns[index].field)),
+    sortIndex:
+      resolvedSortIndex !== undefined && resolvedSortIndex >= 0 ? resolvedSortIndex : undefined,
+    setSortIndex: (index: number) => {
+      const column = allColumns[index];
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive coding
+      if (!column || column.field == null) {
+        return;
+      }
+      setSortField(column.field);
+    },
     ...sortProps,
   });
+};
 
 const getTableColumnSortByIndex =
   <T>({
@@ -91,20 +115,61 @@ const useTableColumnSort = <T>(
     'desc' | 'asc' | undefined
   >('asc');
 
-  // Use controlled props if provided, otherwise use internal state
-  const activeSortIndex =
-    controlledSortProps?.sortIndex !== undefined
-      ? controlledSortProps.sortIndex
-      : internalSortIndex;
+  const allColumns = React.useMemo(() => [...columns, ...subColumns], [columns, subColumns]);
+
+  // Resolve sort index: from sortIndex, or from sortField via columns
+  const resolvedSortIndex = React.useMemo(() => {
+    const normalizeSortIndex = (index: number | undefined): number | undefined =>
+      typeof index === 'number' &&
+      Number.isInteger(index) &&
+      index >= 0 &&
+      index < allColumns.length
+        ? index
+        : undefined;
+
+    if (controlledSortProps?.sortIndex !== undefined) {
+      return normalizeSortIndex(controlledSortProps.sortIndex);
+    }
+    if (controlledSortProps?.sortField !== undefined) {
+      const idx = allColumns.findIndex((c) => c.field === controlledSortProps.sortField);
+      return idx >= 0 ? idx : undefined;
+    }
+    return normalizeSortIndex(internalSortIndex);
+  }, [
+    controlledSortProps?.sortIndex,
+    controlledSortProps?.sortField,
+    allColumns,
+    internalSortIndex,
+  ]);
+
+  const activeSortIndex = resolvedSortIndex;
   const activeSortDirection =
     controlledSortProps?.sortDirection !== undefined
       ? controlledSortProps.sortDirection
       : internalSortDirection;
-  const isSortIndexControlled = controlledSortProps?.sortIndex !== undefined;
+  const isSortIndexControlled =
+    controlledSortProps?.sortIndex !== undefined || controlledSortProps?.sortField !== undefined;
   const isSortDirectionControlled = controlledSortProps?.sortDirection !== undefined;
 
   const handleSortIndexChange = (index: number): void => {
-    controlledSortProps?.onSortIndexChange?.(index);
+    const onFieldChange =
+      controlledSortProps && 'onSortFieldChange' in controlledSortProps
+        ? controlledSortProps.onSortFieldChange
+        : undefined;
+    if (onFieldChange) {
+      const column = allColumns[index];
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive coding
+      if (!column || column.field == null) {
+        return;
+      }
+      onFieldChange(column.field);
+    } else {
+      const onIndexChange =
+        controlledSortProps && 'onSortIndexChange' in controlledSortProps
+          ? controlledSortProps.onSortIndexChange
+          : undefined;
+      onIndexChange?.(index);
+    }
     if (!isSortIndexControlled) {
       setInternalSortIndex(index);
     }

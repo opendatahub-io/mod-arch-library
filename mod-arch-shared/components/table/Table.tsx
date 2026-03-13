@@ -29,10 +29,12 @@ const Table = <T,>({
   enablePagination,
   defaultSortColumn = 0,
   truncateRenderingAt = 0,
-  sortIndex: controlledSortIndex,
-  sortDirection: controlledSortDirection,
+  sortIndex,
+  sortDirection,
   onSortIndexChange,
   onSortDirectionChange,
+  sortField,
+  onSortFieldChange,
   page: controlledPage,
   pageSize: controlledPageSize,
   onPageChange,
@@ -53,18 +55,26 @@ const Table = <T,>({
   const page = controlledPage !== undefined ? controlledPage : internalPage;
   const pageSize = controlledPageSize !== undefined ? controlledPageSize : internalPageSize;
 
-  const controlledSortProps =
-    controlledSortIndex !== undefined ||
-    controlledSortDirection !== undefined ||
-    onSortIndexChange ||
-    onSortDirectionChange
-      ? {
-          sortIndex: controlledSortIndex,
-          sortDirection: controlledSortDirection,
-          onSortIndexChange,
-          onSortDirectionChange,
-        }
+  const controlledSortProps = React.useMemo((): ControlledSortProps | undefined => {
+    const hasField = sortField !== undefined || onSortFieldChange !== undefined;
+    if (hasField) {
+      return { sortField, sortDirection, onSortFieldChange, onSortDirectionChange };
+    }
+    const hasIndex = sortIndex !== undefined || onSortIndexChange !== undefined;
+    if (hasIndex) {
+      return { sortIndex, sortDirection, onSortIndexChange, onSortDirectionChange };
+    }
+    return sortDirection !== undefined || onSortDirectionChange !== undefined
+      ? { sortDirection, onSortDirectionChange }
       : undefined;
+  }, [
+    sortIndex,
+    sortField,
+    sortDirection,
+    onSortIndexChange,
+    onSortFieldChange,
+    onSortDirectionChange,
+  ]);
 
   const sort = useTableColumnSort<T>(
     columns,
