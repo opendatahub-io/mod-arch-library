@@ -189,11 +189,23 @@ module.exports = {
 | **Target Platform** | Kubeflow Central Dashboard | ODH/RHOAI Dashboard | Independent/External |
 | **Integration** | iframe rendering | Module Federation | External Integration |
 | **Theme** | Material-UI | PatternFly | TBD |
-| **Authentication** | Kubeflow Auth | OpenShift OAuth | Flexible/Mock |
+| **Authentication** | `internal` (kubeflow-userid) | `user_token` (x-forwarded-access-token) | `user_token` (default) |
+| **Auth Method** | Header impersonation | Bearer token from proxy | Bearer token / Mock |
 | **Infrastructure** | Kubernetes Required | OpenShift Required | Optional |
 | **Deployment** | Kubernetes Manifests | Kubernetes Manifests | TBD |
-| **Development** | Mock Mode | Cluster Required | Local Development |
+| **Development** | `dev-start-kubeflow` | `dev-start-federated` | `dev-start` (mock mode) |
 | **Dependencies** | Kubeflow Services | ODH/RHOAI Services | Self-contained |
+
+## Authentication Modes
+
+The BFF supports two authentication methods:
+
+| Auth Method | Description | Use Case |
+|-------------|-------------|----------|
+| **`user_token`** (default) | Extracts bearer token from `x-forwarded-access-token` header (ODH) or `Authorization` header | ODH/RHOAI deployments, Standalone mode, Mock development |
+| **`internal`** | Impersonates user via `kubeflow-userid` header using cluster credentials | Kubeflow Central Dashboard only |
+
+> **Note:** `user_token` is the default and recommended authentication method for most use cases, including local development in mock mode.
 
 ## Choosing the Right Mode
 
