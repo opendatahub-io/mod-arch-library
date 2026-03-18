@@ -65,7 +65,7 @@ dev-frontend-kubeflow:
 
 .PHONY: dev-bff-kubeflow
 dev-bff-kubeflow:
-	cd bff && make run PORT=4000 MOCK_K8S_CLIENT=false MOCK_HTTP_CLIENT=false DEV_MODE=true DEPLOYMENT_MODE=kubeflow DEV_MODE_CLIENT_PORT=8085 
+	cd bff && make run PORT=4000 MOCK_K8S_CLIENT=false MOCK_HTTP_CLIENT=false DEV_MODE=true DEPLOYMENT_MODE=kubeflow DEV_MODE_CLIENT_PORT=8085 AUTH_METHOD=internal
 
 ########### Dev Federated ###########
 .PHONY: dev-start-federated

@@ -55,8 +55,8 @@ make run LOG_LEVEL=DEBUG
 | `-log-level` | `LOG_LEVEL` | ERROR, WARN, INFO, DEBUG (default INFO) |
 | `-allowed-origins` | `ALLOWED_ORIGINS` | Comma separated CORS origins |
 | `-auth-method` | `AUTH_METHOD` | `user_token` (default, recommended) or `internal` (Kubeflow only) |
-| `-auth-header` | `AUTH_HEADER` | Header to read bearer token from (default `x-forwarded-access-token` for ODH) |
-| `-auth-prefix` | `AUTH_PREFIX` | Expected value prefix (default empty for ODH, use `Bearer` for standard Authorization header) |
+| `-auth-token-header` | `AUTH_TOKEN_HEADER` | Header to read token from (default `x-forwarded-access-token` for ODH) |
+| `-auth-token-prefix` | `AUTH_TOKEN_PREFIX` | Expected value prefix (default empty for ODH; use `Bearer` with standard `Authorization`) |
 | `-cert-file` | `CERT_FILE` | TLS certificate path (enables TLS when paired with key) |
 | `-key-file` | `KEY_FILE` | TLS key path |
 | `-insecure-skip-verify` | `INSECURE_SKIP_VERIFY` | Skip upstream TLS verify (dev only) |
@@ -123,13 +123,9 @@ Two modes are supported (flag `--auth-method` / env `AUTH_METHOD`):
 
 ### Overriding token header / prefix
 
-By default, the BFF expects the token to be passed in the standard Authorization header with a Bearer prefix:
+By default, the BFF expects the token in the `x-forwarded-access-token` header with no prefix (ODH/RHOAI default). If using the standard `Authorization` header, set the prefix to `Bearer`.
 
-```shell
-Authorization: Bearer <your-token>
-```
-
-If you're integrating with a proxy or tool that uses a custom header (e.g., X-Forwarded-Access-Token without a prefix), you can override this behavior using environment variables or Makefile arguments.
+If you're integrating with a proxy or tool that uses a different header, you can override this behavior using environment variables or Makefile arguments.
 
 ```shell
 make run AUTH_METHOD=user_token AUTH_TOKEN_HEADER=X-Forwarded-Access-Token AUTH_TOKEN_PREFIX=""
