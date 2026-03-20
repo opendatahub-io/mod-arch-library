@@ -31,6 +31,7 @@ type ApplicationsPageProps = {
   subtext?: React.ReactNode;
   loadingContent?: React.ReactNode;
   noHeader?: boolean;
+  noTitle?: boolean;
 };
 
 const ApplicationsPage: React.FC<ApplicationsPageProps> = ({
@@ -51,6 +52,7 @@ const ApplicationsPage: React.FC<ApplicationsPageProps> = ({
   subtext,
   loadingContent,
   noHeader,
+  noTitle,
 }) => {
   const renderHeader = () => (
     <PageSection hasBodyWrapper={false}>
@@ -61,9 +63,11 @@ const ApplicationsPage: React.FC<ApplicationsPageProps> = ({
             flexWrap={{ default: 'nowrap' }}
           >
             <Content className="pf-m-full-width">
-              <Content component="h1" data-testid="app-page-title">
-                {title}
-              </Content>
+              {!noTitle && (
+                <Content component="h1" data-testid="app-page-title">
+                  {title}
+                </Content>
+              )}
               <Stack hasGutter>
                 {subtext && <StackItem>{subtext}</StackItem>}
                 {description && <StackItem>{description}</StackItem>}
