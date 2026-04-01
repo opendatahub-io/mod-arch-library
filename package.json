@@ -14,7 +14,7 @@
     "npm": ">=10.0.0"
   },
   "scripts": {
-    "build": "npm run build --workspaces",
+    "build": "npm run build:core && npm run build:kubeflow && npm run build:shared && npm run build:installer",
     "build:core": "npm run build --workspace=mod-arch-core",
     "build:shared": "npm run build --workspace=mod-arch-shared",
     "build:kubeflow": "npm run build --workspace=mod-arch-kubeflow",
