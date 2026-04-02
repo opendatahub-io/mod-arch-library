@@ -5,8 +5,8 @@
   "private": true,
   "workspaces": [
     "mod-arch-core",
-    "mod-arch-shared",
     "mod-arch-kubeflow",
+    "mod-arch-shared",
     "mod-arch-installer"
   ],
   "engines": {
