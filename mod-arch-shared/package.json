@@ -26,8 +26,7 @@
     "test:type-check": "tsc --noEmit",
     "test:fix": "eslint --ext .js,.ts,.jsx,.tsx . --fix",
     "test:lint": "eslint --max-warnings 0 --ext .js,.ts,.jsx,.tsx .",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run test"
+    "prepublishOnly": "npm run build && npm run test"
   },
   "repository": {
     "type": "git",

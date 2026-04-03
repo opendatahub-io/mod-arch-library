@@ -50,14 +50,14 @@ jobs:
     - name: Install dependencies
       run: npm ci
       
+    - name: Build all packages
+      run: npm run build
+
     - name: Run linting
       run: npm run lint
       
     - name: Run all tests
       run: npm run test
-      
-    - name: Build all packages
-      run: npm run build
 
   test-coverage:
     name: Test Coverage
@@ -102,7 +102,10 @@ jobs:
         
     - name: Install dependencies
       run: npm ci
-      
+
+    - name: Build all packages
+      run: npm run build
+
     - name: Test ${{ matrix.package }}
       run: |
         if [ "${{ matrix.package }}" = "mod-arch-core" ]; then
@@ -111,14 +114,4 @@ jobs:
           npm run test:shared
         elif [ "${{ matrix.package }}" = "mod-arch-kubeflow" ]; then
           npm run test:kubeflow
-        fi
-        
-    - name: Build ${{ matrix.package }}
-      run: |
-        if [ "${{ matrix.package }}" = "mod-arch-core" ]; then
-          npm run build:core
-        elif [ "${{ matrix.package }}" = "mod-arch-shared" ]; then
-          npm run build:shared
-        elif [ "${{ matrix.package }}" = "mod-arch-kubeflow" ]; then
-          npm run build:kubeflow
         fi
