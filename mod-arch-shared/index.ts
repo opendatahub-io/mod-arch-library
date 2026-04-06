@@ -1,3 +1,6 @@
+// Side-effect: shared utility classes (e.g. odh-u-spin) for any package entrypoint.
+import './components/design/utilities.scss';
+
 // Export components
 export * from './components';
 
