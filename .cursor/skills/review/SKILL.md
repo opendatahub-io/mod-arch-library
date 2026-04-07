@@ -88,7 +88,7 @@ Search TSX files for bordered form input components that should be wrapped:
 - `<Select`, `<TypeaheadSelect`, `<MultiTypeaheadSelect` without wrapper
 - `<NumberInput` without wrapper (should use `skipFieldset` prop)
 - `<SearchInput` that should use `<ThemeAwareSearchInput` instead
-- `isMUITheme` conditionals wrapping anything other than `<TextArea` with `autoResize`
+- Ad-hoc inline `isMUITheme` conditionals (e.g., `{isMUITheme ? <A /> : <B />}`) used directly in consumer components to branch rendering for anything other than `<TextArea` with `autoResize`. Named wrapper components like `ThemeAwareFormGroupWrapper` and `ThemeAwareSearchInput` that encapsulate `isMUITheme` logic internally are exempt — those are the intended pattern
 
 ### Check 8: Inline styles in TSX with hardcoded values
 
