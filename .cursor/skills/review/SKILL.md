@@ -32,7 +32,7 @@ Read these files into context. They are the sources of truth for the review.
 |---|---|
 | No arguments | All `*.scss` and `*.tsx` files under `mod-arch-kubeflow/` and `mod-arch-shared/` |
 | File or directory path | Only the specified path(s) |
-| PR number (`#N`) | Run `git diff main...HEAD -- '*.scss' '*.tsx'` (or `gh pr diff N`) to get changed files and review only those |
+| PR number (`#N`) | Run `gh pr diff N` to get changed files and review only those matching `*.scss` or `*.tsx` |
 | Branch name | Validate the branch ref matches `^[A-Za-z0-9._/][A-Za-z0-9._/-]*$` (anchored, no leading hyphens, no whitespace or shell metacharacters), then resolve it with `git rev-parse --verify <branch>` before use; if it resolves cleanly, run `git diff "main...<branch>" -- '*.scss' '*.tsx'` using the validated ref and review the changed files |
 
 ## Phase 3: Run checks
@@ -100,13 +100,7 @@ Search TSX files for `style={{` or `style={` containing hardcoded pixel values, 
 
 The following checks apply only to files under `mod-arch-shared/`.
 
-### Check 9: Shared `vars.scss` using hardcoded hex instead of PF palette tokens
-
-`mod-arch-shared/components/design/vars.scss` defines project-level `--ai-*` color variables. These **must** reference PF palette tokens (`var(--pf-t--color--orange--10)`, etc.) — not hardcoded hex values like `#ffe8cc`. Hardcoded hex breaks dark mode and theme switching because the values don't respond to the active PF theme.
-
-Compare each `--ai-*` variable definition against the equivalent in the downstream `vars.scss` (e.g., odh-dashboard's `frontend/src/concepts/design/vars.scss`) to check for drift. The downstream version is the reference for correct token usage.
-
-### Check 10: Theme-aware component contract integrity
+### Check 9: Theme-aware component contract integrity
 
 Review the canonical theme-aware wrapper components to verify their contract is maintained:
 
@@ -128,7 +122,7 @@ Review the canonical theme-aware wrapper components to verify their contract is 
 
 Flag any changes that break these contracts (removed props, changed branching logic, missing `aria-hidden`, etc.).
 
-### Check 11: Shared component SCSS using PF tokens
+### Check 10: Shared component SCSS using PF tokens
 
 Search all SCSS files under `mod-arch-shared/` for the same hardcoded value patterns as Check 1, but with shared-specific context:
 
@@ -173,7 +167,7 @@ For each violation:
 
 | Severity | Criteria |
 |---|---|
-| Critical | Hardcoded colors/spacing in component selectors; missing `.mui-theme` scope; bare bordered inputs without wrapper; shared `vars.scss` hardcoded hex colors; theme-aware component contract broken |
+| Critical | Hardcoded colors/spacing in component selectors; missing `.mui-theme` scope; bare bordered inputs without wrapper; theme-aware component contract broken |
 | Warning | Redundant component variable overrides; global tokens in component selectors; auto-available MUI vars redefined; shared component SCSS hardcoded values |
 | Info | Direct CSS where a PF variable probably exists but isn't in the SSOT file; minor style improvements |
 
