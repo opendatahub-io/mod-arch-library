@@ -11,7 +11,7 @@ Audit source files against the project's design token SSOT files and styling con
 
 The user may provide:
 
-- **No arguments** — review the main `MUI-theme.scss` and all SCSS/TSX files in the repo.
+- **No arguments** — review all SCSS and TSX files under `mod-arch-kubeflow/` and `mod-arch-shared/`.
 - **A file or directory path** — review only those files.
 - **A PR number or branch** — review the diff (changed files only).
 
@@ -33,7 +33,7 @@ Read these files into context. They are the sources of truth for the review.
 | No arguments | All `*.scss` and `*.tsx` files under `mod-arch-kubeflow/` and `mod-arch-shared/` |
 | File or directory path | Only the specified path(s) |
 | PR number (`#N`) | Run `git diff main...HEAD -- '*.scss' '*.tsx'` (or `gh pr diff N`) to get changed files and review only those |
-| Branch name | Run `git diff main...<branch> -- '*.scss' '*.tsx'` and review the changed files |
+| Branch name | Validate the branch ref matches `^[A-Za-z0-9._/][A-Za-z0-9._/-]*$` (anchored, no leading hyphens, no whitespace or shell metacharacters), then resolve it with `git rev-parse --verify <branch>` before use; if it resolves cleanly, run `git diff "main...<branch>" -- '*.scss' '*.tsx'` using the validated ref and review the changed files |
 
 ## Phase 3: Run checks
 
@@ -56,7 +56,7 @@ Search for `--pf-t--global--` being set (not referenced) inside a selector other
 
 Pattern to flag:
 
-```
+```scss
 .mui-theme .pf-v6-c-* {
   --pf-t--global--*: ...;  // VIOLATION
 }
@@ -140,7 +140,7 @@ Search all SCSS files under `mod-arch-shared/` for the same hardcoded value patt
 
 Produce a structured report with the following format:
 
-```
+```md
 ## Design Token & Convention Review
 
 ### Summary
@@ -181,7 +181,7 @@ For each violation:
 
 For each critical and warning violation, provide the exact replacement code. For example:
 
-```
+```text
 Found:  padding: 16px;
 Fix:    --pf-v6-c-card--PaddingBlockStart: var(--pf-t--global--spacer--md);
 ```

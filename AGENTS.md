@@ -141,8 +141,8 @@ before starting the task.
 
 | Skill | Directory | Use when |
 | ------------------- | -------------------------------- | ------------------------------------------------------------------- |
-| **Release Version** | `skills/release-version/` | Preparing a release, bumping version, or creating a release PR |
-| **Review** | `skills/review/` | Reviewing code for design token violations, SCSS convention drift, or theme wrapper compliance |
+| **Release Version** | `.cursor/skills/release-version/` | Preparing a release, bumping version, or creating a release PR |
+| **Review** | `.cursor/skills/review/` | Reviewing code for design token violations, SCSS convention drift, or theme wrapper compliance |
 
 ---
 
