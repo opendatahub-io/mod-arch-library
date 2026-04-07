@@ -1,4 +1,17 @@
 // Shared dashboard utility classes (consumed by host and federated MF remotes).
+
+// Local fallback so the rotation works without importing PatternFly v6 spinner CSS.
+// If your app already includes @patternfly/patternfly/components/Spinner/spinner.css
+// (or the full patternfly.css bundle), this is a harmless duplicate.
+@keyframes pf-v6-c-spinner-animation-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .odh-u-spin {
   animation: pf-v6-c-spinner-animation-rotate 3s linear infinite;
 }
