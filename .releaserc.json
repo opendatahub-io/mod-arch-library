@@ -32,7 +32,7 @@
       "@semantic-release/exec",
       {
         "prepareCmd": "node scripts/release-set-version.mjs ${nextRelease.version}",
-        "publishCmd": "npm publish --workspaces --provenance --access public"
+        "publishCmd": "npm publish -w mod-arch-core --provenance --access public && npm publish -w mod-arch-kubeflow --provenance --access public && npm publish -w mod-arch-shared --provenance --access public && npm publish -w mod-arch-installer --provenance --access public"
       }
     ],
     [
