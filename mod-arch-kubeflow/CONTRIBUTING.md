@@ -1,8 +1,8 @@
 [contributing guidelines]: ../CONTRIBUTING.md
 [AGENTS.md]: ./AGENTS.md
-[patternfly-design-tokens]: .cursor/rules/patternfly-design-tokens.mdc
-[scss-architecture]: .cursor/rules/scss-architecture.mdc
-[workflow]: .cursor/rules/workflow.mdc
+[patternfly-design-tokens]: .claude/rules/patternfly-design-tokens.md
+[scss-architecture]: .claude/rules/scss-architecture.md
+[workflow]: .claude/rules/workflow.md
 
 # Contributing to mod-arch-kubeflow
 
@@ -13,7 +13,7 @@ This package has theming and styling specifics that go beyond the repo-wide proc
 All styling decisions in this package follow a strict priority order and workflow. Before making changes:
 
 1. Read [AGENTS.md] — covers the package structure, key files, and compliance requirements.
-2. Follow the Cursor rules in `.cursor/rules/`:
+2. Follow the rules in `.claude/rules/`:
    - [patternfly-design-tokens] — how to map PatternFly design tokens to MUI variables
    - [scss-architecture] — SCSS patterns and file organization
    - [workflow] — decision trees for choosing the right override approach

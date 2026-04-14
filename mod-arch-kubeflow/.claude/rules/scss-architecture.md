@@ -1,3 +1,9 @@
+---
+description: SCSS architecture patterns and best practices for MUI-theme.scss PatternFly component overrides
+globs: "**/*.scss"
+alwaysApply: false
+---
+
 # SCSS Architecture: MUI-theme.scss Pattern
 
 This project follows a specific pattern for styling PatternFly components to match Material UI design.
@@ -47,8 +53,8 @@ This project follows a specific pattern for styling PatternFly components to mat
 **Why**: One override affects all components. Scalable and efficient.
 
 **Value Source**:
-- Auto-available: ThemeProvider → MUI variable (already exists) → PF global token
-- Custom: Define MUI variable → PF global token
+- Auto-available: ThemeProvider -> MUI variable (already exists) -> PF global token
+- Custom: Define MUI variable -> PF global token
 
 ### 2. Second Priority: PF Component Variables (only when different from global)
 
@@ -95,7 +101,7 @@ This project follows a specific pattern for styling PatternFly components to mat
 
 ## Critical Rules
 
-### ✅ DO: Use PF component variables or tokens
+### DO: Use PF component variables or tokens
 
 ```scss
 .mui-theme .pf-v6-c-button {
@@ -104,19 +110,19 @@ This project follows a specific pattern for styling PatternFly components to mat
 }
 
 .mui-theme .pf-v6-c-text-input-group::before {
-  border: none; // ✅ OK - no PF variable exists for ::before border
+  border: none; // OK - no PF variable exists for ::before border
 }
 ```
 
-### ✅ DO: Always scope to `.mui-theme`
+### DO: Always scope to `.mui-theme`
 
 ```scss
 .mui-theme .pf-v6-c-button {
-  --pf-v6-c-button--FontWeight: var(--mui-button-FontWeight); // ✅ GOOD
+  --pf-v6-c-button--FontWeight: var(--mui-button-FontWeight); // GOOD
 }
 ```
 
-### ✅ DO: Use PF variable references in direct CSS when applicable
+### DO: Use PF variable references in direct CSS when applicable
 
 ```scss
 .mui-theme .pf-v6-c-menu-toggle.pf-m-disabled {
@@ -125,27 +131,27 @@ This project follows a specific pattern for styling PatternFly components to mat
 }
 ```
 
-### ❌ DON'T: Use direct CSS properties when PF variables exist
+### DON'T: Use direct CSS properties when PF variables exist
 
 ```scss
 .mui-theme .pf-v6-c-button {
-  padding: 6px 16px; // ❌ BAD
-  border: 1px solid #ccc;      // ❌ BAD
-  inset: 0px;        // ❌ BAD
+  padding: 6px 16px; // BAD
+  border: 1px solid #ccc;      // BAD
+  inset: 0px;        // BAD
 }
 ```
 
-### ❌ DON'T: Forget `.mui-theme` scope
+### DON'T: Forget `.mui-theme` scope
 
 ```scss
 .pf-v6-c-button {
-  --pf-v6-c-button--FontWeight: 500; // ❌ BAD - not scoped
+  --pf-v6-c-button--FontWeight: 500; // BAD - not scoped
 }
 ```
 
 ## When Direct CSS Properties Are Acceptable
 
-### ✅ Acceptable Use Cases:
+### Acceptable Use Cases:
 
 1. **Properties with no PF variable equivalent**
    ```scss
@@ -185,17 +191,17 @@ This project follows a specific pattern for styling PatternFly components to mat
    }
    ```
 
-### ❌ Unacceptable Use Cases:
+### Unacceptable Use Cases:
 
-- ❌ Padding/margin when `--pf-v6-c-*--Padding*` variables exist
-- ❌ Colors when PF tokens or variables exist
-- ❌ Border width/radius when PF variables exist  
-- ❌ Font properties when PF variables exist
-- ❌ Any property where a PF component variable exists
+- Padding/margin when `--pf-v6-c-*--Padding*` variables exist
+- Colors when PF tokens or variables exist
+- Border width/radius when PF variables exist  
+- Font properties when PF variables exist
+- Any property where a PF component variable exists
 
 ## Example: Converting Hardcoded Styles
 
-### Before (❌ Bad - Direct CSS):
+### Before (Bad - Direct CSS):
 
 ```scss
 .mui-theme .pf-v6-c-card {
@@ -210,7 +216,7 @@ This project follows a specific pattern for styling PatternFly components to mat
 }
 ```
 
-### After (✅ Good - PF Component Variables):
+### After (Good - PF Component Variables):
 
 ```scss
 // Step 1: Define MUI values at top of file (if needed)

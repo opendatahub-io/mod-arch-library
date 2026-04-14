@@ -4,11 +4,11 @@ This package provides Kubeflow-specific theming, styling, and Material UI integr
 
 ## Rule Organization
 
-The detailed rules and guidelines are organized in the `.cursor/rules/` directory. **Read these before making any SCSS changes** — they define the token priority order, naming conventions, and architecture patterns that all overrides must follow.
+The detailed rules and guidelines are organized in the `.claude/rules/` directory. **Read these before making any SCSS changes** — they define the token priority order, naming conventions, and architecture patterns that all overrides must follow.
 
-- **[patternfly-design-tokens.mdc](.cursor/rules/patternfly-design-tokens.mdc)** - PatternFly design token usage and MUI theme integration
-- **[scss-architecture.mdc](.cursor/rules/scss-architecture.mdc)** - SCSS architecture patterns and best practices
-- **[workflow.mdc](.cursor/rules/workflow.mdc)** - Development workflow and decision trees
+- **[patternfly-design-tokens.md](.claude/rules/patternfly-design-tokens.md)** - PatternFly design token usage and MUI theme integration
+- **[scss-architecture.md](.claude/rules/scss-architecture.md)** - SCSS architecture patterns and best practices
+- **[workflow.md](.claude/rules/workflow.md)** - Development workflow and decision trees
 
 ## Quick Reference
 
@@ -30,11 +30,11 @@ When working with styling in this package:
 ```
 mod-arch-kubeflow/
 ├── AGENTS.md                          # This file
-├── .cursor/
-│   └── rules/                         # Cursor rules for theming
-│       ├── patternfly-design-tokens.mdc
-│       ├── scss-architecture.mdc
-│       └── workflow.mdc
+├── .claude/
+│   └── rules/                         # Claude rules for theming
+│       ├── patternfly-design-tokens.md
+│       ├── scss-architecture.md
+│       └── workflow.md
 ├── style/                             # Theming files
 │   ├── MUI-theme.scss                 # Main SCSS file with PF overrides
 │   ├── MUI-default-theme-object.json  # MUI theme reference

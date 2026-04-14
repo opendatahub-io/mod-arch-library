@@ -1,3 +1,9 @@
+---
+description: PatternFly design token usage rules and MUI theme integration priority order for styling overrides
+globs: "**/*.scss"
+alwaysApply: false
+---
+
 # PatternFly Design Token Usage Rules
 
 ## Priority Order for Styling Overrides
@@ -10,7 +16,7 @@ When adding **ANY** styling override, follow this strict priority order:
 
 Look for `--pf-t--global--*` tokens in `pf-tokens-SSOT.json` or [PatternFly documentation](https://www.patternfly.org/tokens/all-patternfly-tokens/)
 
-**If found** → Override it at `.mui-theme:root` with MUI equivalent:
+**If found** -> Override it at `.mui-theme:root` with MUI equivalent:
 
 ```scss
 .mui-theme:root {
@@ -75,8 +81,8 @@ This means if you override `--pf-t--global--text--color--on-disabled` at `:root`
 ### 3. THIRD PRIORITY: Determine the MUI Value
 
 Check `MUI-default-theme-object.json` for the equivalent value
-- If it's a standard theme property → **Use auto-available MUI variable** (from `<MUIThemeProvider>`)
-- If it's computed/custom → **Define a custom MUI variable** in SCSS
+- If it's a standard theme property -> **Use auto-available MUI variable** (from `<MUIThemeProvider>`)
+- If it's computed/custom -> **Define a custom MUI variable** in SCSS
 
 ### 4. LAST RESORT: Use Hardcoded CSS
 
