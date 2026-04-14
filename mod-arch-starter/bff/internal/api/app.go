@@ -10,6 +10,8 @@ import (
 	"path"
 	"strings"
 
+	"github.com/opendatahub-io/mod-arch-library/bff/internal/integrations/bffclient"
+	"github.com/opendatahub-io/mod-arch-library/bff/internal/integrations/bffclient/bffmocks"
 	k8s "github.com/opendatahub-io/mod-arch-library/bff/internal/integrations/kubernetes"
 	k8mocks "github.com/opendatahub-io/mod-arch-library/bff/internal/integrations/kubernetes/k8mocks"
 	"k8s.io/client-go/kubernetes"
@@ -28,8 +30,8 @@ const (
 	PathPrefix      = "/mod-arch"
 	ApiPathPrefix   = "/api/v1"
 	HealthCheckPath = "/healthcheck"
-	UserPath        = ApiPathPrefix + "/user"
-	NamespacePath   = ApiPathPrefix + "/namespaces"
+	UserPath      = ApiPathPrefix + "/user"
+	NamespacePath = ApiPathPrefix + "/namespaces"
 )
 
 type App struct {
@@ -41,6 +43,8 @@ type App struct {
 	testEnv *envtest.Environment
 	// rootCAs used for outbound TLS connections to Client Service
 	rootCAs *x509.CertPool
+	// bffClientFactory creates clients for inter-BFF communication
+	bffClientFactory bffclient.BFFClientFactory
 }
 
 func NewApp(cfg config.EnvConfig, logger *slog.Logger) (*App, error) {
@@ -109,6 +113,29 @@ func NewApp(cfg config.EnvConfig, logger *slog.Logger) (*App, error) {
 		return nil, fmt.Errorf("failed to create Kubernetes client: %w", err)
 	}
 
+	// Initialize BFF client factory for inter-BFF communication
+	var bffFactory bffclient.BFFClientFactory
+	bffConfig := bffclient.NewDefaultBFFClientConfig()
+	bffConfig.MockBFFClients = cfg.MockBFFClients
+	bffConfig.InsecureSkipVerify = cfg.InsecureSkipVerify
+
+	// Apply target-specific configuration overrides from CLI flags/env vars here.
+	// Example: to configure a target BFF, add fields to EnvConfig and apply them:
+	//
+	//   if targetCfg := bffConfig.GetServiceConfig(bffclient.BFFTargetMaaS); targetCfg != nil {
+	//       targetCfg.ServiceName = cfg.BFFTargetServiceName
+	//       targetCfg.Port = cfg.BFFTargetServicePort
+	//       targetCfg.DevOverrideURL = cfg.BFFTargetDevURL
+	//   }
+
+	if cfg.MockBFFClients {
+		logger.Info("Using mock BFF client factory")
+		bffFactory = bffmocks.NewMockClientFactory(logger)
+	} else {
+		logger.Info("Using real BFF client factory")
+		bffFactory = bffclient.NewRealClientFactory(bffConfig, rootCAs, cfg.InsecureSkipVerify, logger)
+	}
+
 	app := &App{
 		config:                  cfg,
 		logger:                  logger,
@@ -116,6 +143,7 @@ func NewApp(cfg config.EnvConfig, logger *slog.Logger) (*App, error) {
 		repositories:            repositories.NewRepositories(),
 		testEnv:                 testEnv,
 		rootCAs:                 rootCAs,
+		bffClientFactory:        bffFactory,
 	}
 	return app, nil
 }
@@ -140,6 +168,14 @@ func (app *App) Routes() http.Handler {
 	// Minimal Kubernetes-backed starter endpoints
 	apiRouter.GET(UserPath, app.UserHandler)
 	apiRouter.GET(NamespacePath, app.GetNamespacesHandler)
+
+	// Inter-BFF Communication routes — wire your target BFF endpoints here.
+	// Example:
+	//
+	//   apiRouter.POST(ApiPathPrefix+"/bff/<target>/endpoint",
+	//       app.AttachNamespace(
+	//           bffclient.AttachBFFClient(app.bffClientFactory, bffclient.BFFTarget<Target>)(
+	//               app.YourHandler)))
 
 	// App Router
 	appMux := http.NewServeMux()

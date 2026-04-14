@@ -53,6 +53,11 @@ func main() {
 	// TLS configuration flags
 	flag.BoolVar(&cfg.InsecureSkipVerify, "insecure-skip-verify", getEnvAsBool("INSECURE_SKIP_VERIFY", false), "Skip TLS certificate verification (useful for development, default: false)")
 
+	// ─── BFF Inter-Communication ─────────────────────────────────
+	flag.BoolVar(&cfg.MockBFFClients, "mock-bff-clients",
+		getEnvAsBool("MOCK_BFF_CLIENTS", false),
+		"Enable mock BFF clients (no real HTTP calls to other BFFs)")
+
 	// Deprecated flags - kept for backward compatibility
 	flag.BoolVar(&cfg.StandaloneMode, "standalone-mode", false, "DEPRECATED: Use -deployment-mode=standalone instead")
 	flag.BoolVar(&cfg.FederatedPlatform, "federated-platform", false, "DEPRECATED: Use -deployment-mode=federated instead")

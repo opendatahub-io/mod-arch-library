@@ -60,6 +60,7 @@ make run LOG_LEVEL=DEBUG
 | `-cert-file` | `CERT_FILE` | TLS certificate path (enables TLS when paired with key) |
 | `-key-file` | `KEY_FILE` | TLS key path |
 | `-insecure-skip-verify` | `INSECURE_SKIP_VERIFY` | Skip upstream TLS verify (dev only) |
+| `-mock-bff-clients` | `MOCK_BFF_CLIENTS` | Use mock BFF clients (no real HTTP calls to other BFFs) |
 
 TLS: If both `cert-file` and `key-file` are provided the server starts with HTTPS.
 
@@ -110,7 +111,37 @@ curl -i -H "kubeflow-userid: user@example.com" localhost:4000/api/v1/user
 curl -i -H "kubeflow-userid: user@example.com" localhost:4000/api/v1/namespaces   # (dev / mock only)
 ```
 
-<!-- Minimal scope: all former Mod Arch examples removed -->
+### Inter-BFF Communication
+
+The BFF includes a `bffclient` package (`internal/integrations/bffclient/`) that provides the scaffolding for calling other BFF services in a multi-BFF pod deployment. The package is target-agnostic — teams wire up their own target BFF endpoints on top of this infrastructure.
+
+#### Architecture
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                        ODH Dashboard Pod                     │
+├──────────────────────────────────────────────────────────────┤
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────┐   │
+│  │  Gen-AI BFF  │──│   MaaS BFF   │──│ Model Registry   │   │
+│  │    :8143     │  │    :8243     │  │   BFF :8043      │   │
+│  └──────────────┘  └──────────────┘  └──────────────────┘   │
+│         │                  │                    │            │
+│  ┌──────────────┐          │                    │            │
+│  │  MLflow BFF  │──────────┴────────────────────┘            │
+│  │    :8343     │     Inter-BFF HTTP Calls                   │
+│  └──────────────┘  (K8s service DNS or localhost)            │
+└──────────────────────────────────────────────────────────────┘
+```
+
+#### Adding a BFF target
+
+1. Add target-specific config fields to `internal/config/environment.go` (e.g. `BFF<Target>ServiceName`, `BFF<Target>ServicePort`, etc.)
+2. Add corresponding CLI flags to `cmd/main.go`
+3. Apply config overrides in `NewApp()` in `internal/api/app.go`
+4. Create a handler in `internal/api/` using `bffclient.GetClient()` and `bffclient.AttachBFFClient()` middleware
+5. Wire routes in `Routes()`
+
+See the `bffclient` package README and the implementation spec for detailed guidance.
 
 ### Authentication modes
 

@@ -8,6 +8,7 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/opendatahub-io/mod-arch-library/bff/internal/config"
+	"github.com/opendatahub-io/mod-arch-library/bff/internal/integrations/bffclient"
 	k8s "github.com/opendatahub-io/mod-arch-library/bff/internal/integrations/kubernetes"
 	"github.com/opendatahub-io/mod-arch-library/bff/internal/repositories"
 )
@@ -71,4 +72,10 @@ func (app *App) KubernetesClientFactory() k8s.KubernetesClientFactory { //nolint
 // This allows downstream extensions to access the repositories.
 func (app *App) Repositories() *repositories.Repositories { //nolint:unused
 	return app.repositories
+}
+
+// BFFClientFactory returns the BFF client factory for inter-BFF communication.
+// This allows downstream extensions to create BFF clients.
+func (app *App) BFFClientFactory() bffclient.BFFClientFactory { //nolint:unused
+	return app.bffClientFactory
 }

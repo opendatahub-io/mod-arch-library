@@ -98,6 +98,11 @@ type EnvConfig struct {
 	// Default is false (secure) for production environments
 	InsecureSkipVerify bool
 
+	// ─── BFF INTER-COMMUNICATION ─────────────────────────────────
+	// MockBFFClients enables mock mode for BFF inter-communication clients.
+	// When true, BFF clients return mock responses instead of making real HTTP calls.
+	MockBFFClients bool
+
 	// ─── DEPRECATED ─────────────────────────────────────────────
 	// The following fields are deprecated and maintained for backward compatibility
 	// Use DeploymentMode instead
