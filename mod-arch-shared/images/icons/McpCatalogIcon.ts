@@ -1,7 +1,7 @@
 import { createIcon } from '@patternfly/react-icons/dist/esm/createIcon';
 
-const SkillsIcon = createIcon({
-  name: 'SkillsIcon',
+const McpCatalogIcon = createIcon({
+  name: 'McpCatalogIcon',
   width: 36,
   height: 36,
   svgPath:
@@ -10,4 +10,4 @@ const SkillsIcon = createIcon({
   yOffset: 0,
 });
 
-export default SkillsIcon;
+export default McpCatalogIcon;

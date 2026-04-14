@@ -4,7 +4,7 @@ import { ProjectObjectType, typedColor } from '~/components/design/utils';
 import {
   GroupIcon,
   RegisteredModelIcon,
-  SkillsIcon,
+  McpCatalogIcon,
   UserIcon,
   ModelCatalogIcon,
   ModelRegistryNavigatorIcon,
@@ -40,8 +40,8 @@ const TypedObjectIcon: React.FC<TypedObjectIconProps> = ({
     case ProjectObjectType.group:
       Icon = GroupIcon;
       break;
-    case ProjectObjectType.skills:
-      Icon = SkillsIcon;
+    case ProjectObjectType.mcpCatalog:
+      Icon = McpCatalogIcon;
       break;
     default:
       return null;
