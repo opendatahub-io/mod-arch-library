@@ -39,43 +39,56 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run tests
-        run: npm run test
-
       - name: Build packages
         run: npm run build
+
+      - name: Verify dist output
+        run: node scripts/verify-dist.mjs
+
+      - name: Run tests
+        run: npm run test
 
       - name: Set package versions
         env:
           VERSION: ${{ github.event.inputs.version }}
-        run: npm version "$VERSION" --no-git-tag-version && npm version "$VERSION" --workspaces --no-git-tag-version
+        run: node scripts/release-set-version.mjs "$VERSION"
+
+      - name: Rebuild after version bump
+        run: npm run build
+
+      - name: Verify dist output after rebuild
+        run: node scripts/verify-dist.mjs
 
       - name: Publish all packages
         if: github.event.inputs.package == 'all'
-        run: npm run publish:all
+        run: |
+          npm publish -w mod-arch-core --provenance --access public --ignore-scripts
+          npm publish -w mod-arch-kubeflow --provenance --access public --ignore-scripts
+          npm publish -w mod-arch-shared --provenance --access public --ignore-scripts
+          npm publish -w mod-arch-installer --provenance --access public --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish core package
         if: github.event.inputs.package == 'core'
-        run: npm run publish:core
+        run: npm publish -w mod-arch-core --provenance --access public --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish shared package
         if: github.event.inputs.package == 'shared'
-        run: npm run publish:shared
+        run: npm publish -w mod-arch-shared --provenance --access public --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish kubeflow package
         if: github.event.inputs.package == 'kubeflow'
-        run: npm run publish:kubeflow
+        run: npm publish -w mod-arch-kubeflow --provenance --access public --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish installer package
         if: github.event.inputs.package == 'installer'
-        run: npm run publish:installer
+        run: npm publish -w mod-arch-installer --provenance --access public --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

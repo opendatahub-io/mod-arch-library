@@ -31,8 +31,8 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "node scripts/release-set-version.mjs ${nextRelease.version}",
-        "publishCmd": "npm publish -w mod-arch-core --provenance --access public && npm publish -w mod-arch-kubeflow --provenance --access public && npm publish -w mod-arch-shared --provenance --access public && npm publish -w mod-arch-installer --provenance --access public"
+        "prepareCmd": "node scripts/release-set-version.mjs ${nextRelease.version} && npm run build && node scripts/verify-dist.mjs",
+        "publishCmd": "npm publish -w mod-arch-core --provenance --access public --ignore-scripts && npm publish -w mod-arch-kubeflow --provenance --access public --ignore-scripts && npm publish -w mod-arch-shared --provenance --access public --ignore-scripts && npm publish -w mod-arch-installer --provenance --access public --ignore-scripts"
       }
     ],
     [

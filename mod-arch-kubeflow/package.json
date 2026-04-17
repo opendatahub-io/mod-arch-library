@@ -19,7 +19,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc && tsc-alias && npm run copy-assets",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json && npm run copy-assets && tsc-alias -p tsconfig.build.json",
     "copy-assets": "mkdir -p dist/style dist/images && cp -r style/* dist/style/ && cp -r images/* dist/images/",
     "generate-mui-theme-object": "node scripts/generate-mui-theme.mjs",
     "test": "run-s test:lint test:unit test:type-check",

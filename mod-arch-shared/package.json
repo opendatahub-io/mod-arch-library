@@ -18,7 +18,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc && tsc-alias && npm run copy-assets",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json && npm run copy-assets && tsc-alias -p tsconfig.build.json",
     "copy-assets": "mkdir -p dist/images && cp -r images/* dist/images/ && find components \\( -name '*.scss' -o -name '*.css' \\) -exec rsync -R {} dist/ \\;",
     "test": "run-s test:lint test:unit test:type-check",
     "test:jest": "jest --passWithNoTests",

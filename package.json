@@ -35,12 +35,12 @@
     "version:minor": "npm version minor --no-git-tag-version && npm version minor --workspaces --no-git-tag-version && npm run version:commit",
     "version:major": "npm version major --no-git-tag-version && npm version major --workspaces --no-git-tag-version && npm run version:commit",
     "version:commit": "git add -A && git commit -m \"chore: version bump\" --allow-empty",
-    "publish:all": "npm run build && npm publish --workspaces",
-    "publish:core": "npm run build:core && npm publish --workspace=mod-arch-core",
-    "publish:shared": "npm run build:shared && npm publish --workspace=mod-arch-shared",
-    "publish:kubeflow": "npm run build:kubeflow && npm publish --workspace=mod-arch-kubeflow",
-    "publish:installer": "npm run build:installer && npm publish --workspace=mod-arch-installer",
-    "prepublish:all": "npm run test",
+    "verify-dist": "node scripts/verify-dist.mjs",
+    "publish:all": "npm publish -w mod-arch-core --access public --ignore-scripts && npm publish -w mod-arch-kubeflow --access public --ignore-scripts && npm publish -w mod-arch-shared --access public --ignore-scripts && npm publish -w mod-arch-installer --access public --ignore-scripts",
+    "publish:core": "npm publish -w mod-arch-core --access public --ignore-scripts",
+    "publish:shared": "npm publish -w mod-arch-shared --access public --ignore-scripts",
+    "publish:kubeflow": "npm publish -w mod-arch-kubeflow --access public --ignore-scripts",
+    "publish:installer": "npm publish -w mod-arch-installer --access public --ignore-scripts",
     "prepare": "husky"
   },
   "repository": {
