@@ -15,7 +15,14 @@ Browser (React)
 
 Each BFF is scoped to a single module — it exposes exactly the API surface that its companion frontend needs and nothing more.
 
-For the full architectural picture of how BFFs fit into the broader modular architecture — including the balance of responsibilities between BFFs, UIs, and platform services — see the [architecture Miro board](https://miro.com/app/board/uXjVG_Uq3DU=/?share_link_id=393835067369). For historical context and an in-depth overview of why this architecture exists, see the [modular architecture blog post](https://ederign.me/blog/2026-02-20-modular-architecture-ai-platform).
+After working through this guide, these are good follow-ups for broader context:
+
+- [Overview](./overview.md) — the why behind modular architecture: micro-frontends, BFFs, and module federation.
+- [Architecture](./architecture.md) — system layers, the frontend ↔ BFF contract, and mode-specific behavior (Kubeflow vs. federated).
+- [Architecture Miro board](https://miro.com/app/board/uXjVG_Uq3DU=/?share_link_id=393835067369) — visual breakdown of responsibilities across BFFs, UIs, and platform services.
+- [Modular architecture blog post](https://ederign.me/blog/2026-02-20-modular-architecture-ai-platform) — historical context and in-depth overview of how this architecture came to be.
+- [Deployment Modes](./deployment-modes.md) — how the BFF behaves differently in Kubeflow, federated (RHOAI), and standalone deployments.
+- [Golden Path](./golden-path.md) — prescriptive checklists for standing up a new module end-to-end.
 
 ---
 
