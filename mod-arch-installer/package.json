@@ -36,9 +36,13 @@
     "typescript": "^5.8.2"
   },
   "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/opendatahub-io/mod-arch-library.git"
+    "url": "git+https://github.com/opendatahub-io/mod-arch-library.git",
+    "directory": "mod-arch-installer"
   },
   "bugs": {
     "url": "https://github.com/opendatahub-io/mod-arch-library/issues"

@@ -15,17 +15,39 @@ jobs:
       id-token: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0
           fetch-tags: true
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
-          cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
+
+      - name: Upgrade npm for OIDC trusted publishing
+        run: npm install -g npm@11.5.1
+
+      - name: Verify toolchain versions
+        run: |
+          echo "Node $(node -v)"
+          echo "npm $(npm -v)"
+          node -e "
+            const [major, minor, patch] = process.versions.node.split('.').map(Number);
+            if (major < 22 || (major === 22 && minor < 14)) {
+              console.error('Node.js >= 22.14.0 required for OIDC trusted publishing');
+              process.exit(1);
+            }
+          "
+          node -e "
+            const { execSync } = require('child_process');
+            const ver = execSync('npm -v').toString().trim().split('.').map(Number);
+            if (ver[0] < 11 || (ver[0] === 11 && ver[1] < 5) || (ver[0] === 11 && ver[1] === 5 && ver[2] < 1)) {
+              console.error('npm >= 11.5.1 required for OIDC trusted publishing');
+              process.exit(1);
+            }
+          "
 
       - name: Install dependencies
         run: npm ci
@@ -43,5 +65,3 @@ jobs:
         run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
