@@ -40,6 +40,7 @@ After the CLI runs, jump into `my-module/frontend/` and run `npm run start:dev` 
 
 - [Overview](./overview.md) – concise rationale, shared platform responsibilities, and success measures.
 - [Architecture](./architecture.md) – system layers, module federation flow, and how the starter enforces BFF + OpenAPI contracts.
+- [BFF Guide](./bff-guide.md) – how the Go BFF is structured, key patterns (repositories, middleware, handlers), and a step-by-step walkthrough for adding new resources.
 - [Deployment Modes](./deployment-modes.md) – compare Kubeflow, Federated (RHOAI), and Standalone expectations.
 - [Golden Path](./golden-path.md) – prescriptive checklists for new vs. migration scenarios.
 - [Onboard Modular Architecture](onboard-modular-architecture.md) - onboard modular architecture to the dashboard.
