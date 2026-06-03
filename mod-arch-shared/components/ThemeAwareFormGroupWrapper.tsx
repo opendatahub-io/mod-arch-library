@@ -8,6 +8,8 @@ type ThemeAwareFormGroupWrapperProps = {
   label?: string;
   fieldId: string;
   isRequired?: boolean;
+  /** Always-visible description text rendered outside the fieldset (MUI) or before children (PF) */
+  descriptionTextNode?: React.ReactNode;
   helperTextNode?: React.ReactNode;
   hasError?: boolean;
   className?: string;
@@ -24,6 +26,7 @@ const ThemeAwareFormGroupWrapper: React.FC<ThemeAwareFormGroupWrapperProps> = ({
   label,
   fieldId,
   isRequired,
+  descriptionTextNode,
   helperTextNode,
   hasError = false,
   className,
@@ -51,6 +54,7 @@ const ThemeAwareFormGroupWrapper: React.FC<ThemeAwareFormGroupWrapperProps> = ({
   if (isMUITheme) {
     return (
       <>
+        {descriptionTextNode}
         <FormGroup {...formGroupProps}>
           {skipFieldset ? children : <FormFieldset component={children} field={label} />}
         </FormGroup>
@@ -62,6 +66,7 @@ const ThemeAwareFormGroupWrapper: React.FC<ThemeAwareFormGroupWrapperProps> = ({
   return (
     <>
       <FormGroup {...formGroupProps}>
+        {descriptionTextNode}
         {children}
         {helperTextNode}
       </FormGroup>
