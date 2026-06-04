@@ -541,6 +541,29 @@ func (s *FederatedModelService) ListModels(ctx context.Context, namespace string
 }
 ```
 
+### Using the K8s API Proxy Locally
+
+The BFF includes a built-in K8s API proxy (`/api/k8s/*`) and WebSocket relay (`/wss/k8s/*`). During local development:
+
+**Mock mode** (`--mock-k8s-client`): The proxy connects to the envtest control plane. Client certificates from the envtest config are used for mTLS authentication. HTTP targets are allowed since envtest typically uses plain HTTP.
+
+**Dev mode** (`--dev-mode`): SSRF protection is disabled so the proxy can reach local kind/minikube clusters on private IPs. Insecure HTTP targets are also permitted.
+
+**Production mode**: SSRF protection is active — the proxy validates that the K8s API server hostname does not resolve to private IPs (the configured K8s host is automatically allowlisted). TLS 1.2 minimum is enforced.
+
+To test WebSocket watch streams locally:
+
+```bash
+# Start the BFF with mock K8s client
+make run MOCK_K8S_CLIENT=true
+
+# In another terminal, open a WebSocket connection
+websocat ws://localhost:4000/wss/k8s/api/v1/configmaps?watch=true \
+  -H "Authorization: Bearer <your-token>"
+```
+
+The proxy automatically injects the bearer token from the request identity into the upstream K8s API connection.
+
 ## Feature Flagging
 
 Feature flags enable gradual rollout and A/B testing of new functionality.

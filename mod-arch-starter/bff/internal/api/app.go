@@ -20,6 +20,7 @@ import (
 	helper "github.com/opendatahub-io/mod-arch-library/bff/internal/helpers"
 
 	"github.com/opendatahub-io/mod-arch-library/bff/internal/config"
+	"github.com/opendatahub-io/mod-arch-library/bff/internal/proxy"
 	"github.com/opendatahub-io/mod-arch-library/bff/internal/repositories"
 
 	"github.com/julienschmidt/httprouter"
@@ -45,6 +46,9 @@ type App struct {
 	rootCAs *x509.CertPool
 	// bffClientFactory creates clients for inter-BFF communication
 	bffClientFactory bffclient.BFFClientFactory
+	k8sProxy                http.Handler
+	wsTracker               *proxy.ConnectionTracker
+	wsProxy                 http.Handler
 }
 
 func NewApp(cfg config.EnvConfig, logger *slog.Logger) (*App, error) {
@@ -145,15 +149,22 @@ func NewApp(cfg config.EnvConfig, logger *slog.Logger) (*App, error) {
 		rootCAs:                 rootCAs,
 		bffClientFactory:        bffFactory,
 	}
+
+	if err := app.initK8sProxy(); err != nil {
+		logger.Error("failed to initialize K8s proxy", slog.Any("error", err))
+	}
+
 	return app, nil
 }
 
 func (app *App) Shutdown() error {
 	app.logger.Info("shutting down app...")
+	if app.wsTracker != nil {
+		app.wsTracker.Stop()
+	}
 	if app.testEnv == nil {
 		return nil
 	}
-	//shutdown the envtest control plane when we are in the mock mode.
 	app.logger.Info("shutting env test...")
 	return app.testEnv.Stop()
 }
@@ -183,6 +194,16 @@ func (app *App) Routes() http.Handler {
 	// handler for api calls
 	appMux.Handle(ApiPathPrefix+"/", apiRouter)
 	appMux.Handle(PathPrefix+ApiPathPrefix+"/", http.StripPrefix(PathPrefix, apiRouter))
+
+	// K8s API proxy handlers
+	if app.k8sProxy != nil {
+		appMux.Handle(proxy.K8sProxyPrefix, app.k8sProxy)
+		appMux.Handle(PathPrefix+proxy.K8sProxyPrefix, http.StripPrefix(PathPrefix, app.k8sProxy))
+	}
+	if app.wsProxy != nil {
+		appMux.Handle(proxy.WssProxyPrefix, app.wsProxy)
+		appMux.Handle(PathPrefix+proxy.WssProxyPrefix, http.StripPrefix(PathPrefix, app.wsProxy))
+	}
 
 	// file server for the frontend file and SPA routes
 	staticDir := http.Dir(app.config.StaticAssetsDir)

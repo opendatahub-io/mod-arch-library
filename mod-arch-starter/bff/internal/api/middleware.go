@@ -12,6 +12,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/opendatahub-io/mod-arch-library/bff/internal/constants"
 	helper "github.com/opendatahub-io/mod-arch-library/bff/internal/helpers"
+	"github.com/opendatahub-io/mod-arch-library/bff/internal/proxy"
 	"github.com/rs/cors"
 )
 
@@ -29,10 +30,26 @@ func (app *App) RecoverPanic(next http.Handler) http.Handler {
 	})
 }
 
+func requiresAuth(path string) bool {
+	prefixes := []string{
+		ApiPathPrefix,
+		PathPrefix + ApiPathPrefix,
+		proxy.K8sProxyPrefix,
+		PathPrefix + proxy.K8sProxyPrefix,
+		proxy.WssProxyPrefix,
+		PathPrefix + proxy.WssProxyPrefix,
+	}
+	for _, p := range prefixes {
+		if strings.HasPrefix(path, p) {
+			return true
+		}
+	}
+	return false
+}
+
 func (app *App) InjectRequestIdentity(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		//skip use headers check if we are not on /api/v1 (i.e. we are on /healthcheck and / (static fe files) )
-		if !strings.HasPrefix(r.URL.Path, ApiPathPrefix) && !strings.HasPrefix(r.URL.Path, PathPrefix+ApiPathPrefix) {
+		if !requiresAuth(r.URL.Path) {
 			next.ServeHTTP(w, r)
 			return
 		}

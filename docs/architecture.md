@@ -62,6 +62,36 @@ Standalone or preview environments follow the federated pattern but run everythi
 - Terminates authentication differently per mode (Kubeflow headers vs. OpenShift OAuth tokens) but always returns normalized identity info to the frontend.
 - Aggregates platform APIs, applies authorization checks, and transforms responses into the OpenAPI schema the UI expects.
 - Provides health/readiness endpoints plus metrics so SREs can monitor latency, error rates, and namespace access patterns.
+- Exposes a K8s API proxy and WebSocket relay so the frontend can reach the Kubernetes API server through the BFF (see below).
+
+### K8s API proxy and WebSocket passthrough
+
+Every BFF scaffolded by the installer includes a built-in proxy layer that lets the frontend interact with the Kubernetes API server without direct cluster access.
+
+**HTTP proxy (`/api/k8s/*`):**
+
+- Reverse proxy via `httputil.ReverseProxy` with path rewriting — the `/api/k8s/` prefix is stripped before forwarding to the K8s API server.
+- Authorization header injected from the authenticated user's token (extracted by `InjectRequestIdentity` middleware).
+- Sensitive ingress headers stripped before forwarding (cookies, `x-forwarded-*`, impersonation headers).
+- SSRF protection blocks requests to private IPs (RFC 1918, loopback, link-local) with DNS rebinding prevention and redirect validation.
+- Dual-path mounting: both `/api/k8s/*` and `/mod-arch/api/k8s/*` are registered.
+
+**WebSocket proxy (`/wss/k8s/*`):**
+
+- Full-duplex bidirectional relay for K8s watch streams (e.g., `watch=true` on resources).
+- Bearer token authentication via K8s subprotocol (`base64url.bearer.authorization.k8s.io.<base64token>`).
+- Client subprotocol negotiation forwarded to upstream.
+- Origin checking: same-origin by default, configurable via `ALLOWED_ORIGINS`.
+- 15-second heartbeat pings to keep connections alive.
+- Connection tracking with per-connection metrics and stale cleanup (5-minute inactivity threshold, 60-second cleanup interval).
+- RFC 6455 close code sanitization (reserved codes 1004/1005/1006 mapped to 1011).
+
+**Security:**
+
+- SSRF protection via `SafeDialContext` — DNS resolution + private IP validation + redirect checking.
+- The K8s API server hostname is automatically allowlisted so private-IP blocking does not reject the proxy's own target.
+- SSRF protection is disabled in dev mode (`--dev-mode`) to allow local development with kind/minikube clusters.
+- TLS 1.2 minimum enforced; insecure mode gated to dev environments via `--insecure-skip-verify`.
 
 ### Shared contracts
 
