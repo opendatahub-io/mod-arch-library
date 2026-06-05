@@ -22,9 +22,9 @@ Testing in a modular architecture requires a multi-layered approach that ensures
 
 *Coming soon: Comprehensive BFF testing patterns including Go service unit testing, mock external service dependencies, OpenAPI contract validation, authentication/authorization testing, and error handling validation.*
 
-#### K8s Proxy and SSRF Tests
+#### WebSocket Toolkit and SSRF Tests
 
-The BFF includes dedicated test suites for the proxy and SSRF packages:
+The BFF includes dedicated test suites for the WebSocket toolkit and SSRF packages:
 
 ```bash
 # Run proxy and SSRF tests
@@ -37,12 +37,11 @@ go test ./... -v
 | Package | File | Coverage |
 | --- | --- | --- |
 | `internal/ssrf` | `ssrf_test.go` | Private IP validation, hostname resolution, redirect checking, safe dial |
-| `internal/proxy` | `factory_test.go` | Reverse proxy creation, path rewriting, auth injection, header stripping, SSRF blocking |
-| `internal/proxy` | `k8s_proxy_test.go` | K8s path stripping, query forwarding, auth header, sensitive header removal, response passthrough |
-| `internal/proxy` | `ws_proxy_test.go` | WebSocket upgrade, origin checking, bearer subprotocol, bidirectional forwarding, connection tracking |
+| `internal/proxy` | `tls_test.go` | TLS config creation with custom CA pools and insecure skip verify |
+| `internal/proxy` | `websocket_test.go` | WebSocket upgrader, origin checking, bearer subprotocol, K8s dial auth/headers/subprotocols, bidirectional bridging, connection tracking, close code sanitization, deadline clearing |
 | `internal/proxy` | `ws_tracker_test.go` | Track/untrack, stale cleanup, ping keepalive, bookmark resource version tracking |
 
-The proxy tests use `httptest.NewServer` for backend simulation and `gorilla/websocket` for WebSocket client connections. No external cluster is needed — all tests are self-contained and validate the proxy and SSRF packages in isolation regardless of deployment mode (standalone or federated).
+The tests use `httptest.NewServer` for backend simulation and `gorilla/websocket` for WebSocket client connections. No external cluster is needed — all tests are self-contained and validate the WebSocket toolkit and SSRF packages in isolation regardless of deployment mode (standalone or federated).
 
 ## Integration Testing (Mock)
 

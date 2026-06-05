@@ -12,7 +12,6 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/opendatahub-io/mod-arch-library/bff/internal/constants"
 	helper "github.com/opendatahub-io/mod-arch-library/bff/internal/helpers"
-	"github.com/opendatahub-io/mod-arch-library/bff/internal/proxy"
 	"github.com/rs/cors"
 )
 
@@ -34,10 +33,6 @@ func requiresAuth(path string) bool {
 	prefixes := []string{
 		ApiPathPrefix,
 		PathPrefix + ApiPathPrefix,
-		proxy.K8sProxyPrefix,
-		PathPrefix + proxy.K8sProxyPrefix,
-		proxy.WssProxyPrefix,
-		PathPrefix + proxy.WssProxyPrefix,
 	}
 	for _, p := range prefixes {
 		if strings.HasPrefix(path, p) {

@@ -541,30 +541,42 @@ func (s *FederatedModelService) ListModels(ctx context.Context, namespace string
 }
 ```
 
-### Using the K8s API Proxy Locally
+### Using the WebSocket Toolkit Locally
 
-The BFF includes a built-in K8s API proxy (`/api/k8s/*`) and WebSocket relay (`/wss/k8s/*`). This proxy is primarily used in standalone/Kubeflow mode where the module BFF is the sole backend. In federated mode, the core BFF handles K8s API traffic, so these module-level routes are not exercised in production — but they are useful for local development and testing regardless of target deployment mode.
+The BFF includes a WebSocket toolkit (`internal/proxy`) with exported building blocks for creating custom endpoints that communicate with Kubernetes or other WebSocket backends. The toolkit does not register any routes — module developers build explicit endpoints with business logic and use the toolkit internally.
 
 During local development:
 
-**Mock mode** (`--mock-k8s-client`): The proxy connects to the envtest control plane. Client certificates from the envtest config are used for mTLS authentication. HTTP targets are allowed since envtest typically uses plain HTTP.
+**Mock mode** (`--mock-k8s-client`): The BFF connects to an envtest control plane. Client certificates from the envtest config are used for mTLS authentication. HTTP targets are allowed since envtest typically uses plain HTTP.
 
-**Dev mode** (`--dev-mode`): SSRF protection is disabled so the proxy can reach local kind/minikube clusters on private IPs. Insecure HTTP targets are also permitted.
+**Dev mode** (`--dev-mode`): SSRF protection is disabled so the BFF can reach local kind/minikube clusters on private IPs. Insecure HTTP targets are also permitted.
 
-**Production mode**: SSRF protection is active — the proxy validates that the K8s API server hostname does not resolve to private IPs (the configured K8s host is automatically allowlisted). TLS 1.2 minimum is enforced.
+**Production mode**: SSRF protection is active — the toolkit validates that target hostnames do not resolve to private IPs. TLS 1.2 minimum is enforced.
 
-To test WebSocket watch streams locally:
+To build a custom WebSocket endpoint using the toolkit:
 
-```bash
-# Start the BFF with mock K8s client
-make run MOCK_K8S_CLIENT=true
+```go
+func (app *App) WatchPodsHandler(w http.ResponseWriter, r *http.Request) {
+    identity := getIdentity(r)
+    namespace := r.URL.Query().Get("namespace")
 
-# In another terminal, open a WebSocket connection
-websocat ws://localhost:4000/wss/k8s/api/v1/configmaps?watch=true \
-  -H "Authorization: Bearer <your-token>"
+    // Build K8s API URL — business logic decides what to watch
+    targetWSURL := fmt.Sprintf("wss://%s/api/v1/namespaces/%s/pods?watch=true", k8sHost, namespace)
+
+    // Dial K8s using the toolkit
+    tlsConfig := proxy.NewTLSConfig(app.rootCAs, false)
+    targetConn, _, err := proxy.DialK8sWebSocket(targetWSURL, tlsConfig, identity.Token, targetURL, nil, nil)
+    if err != nil { /* handle error */ }
+
+    // Accept frontend WebSocket
+    upgrader := proxy.NewUpgrader(app.Config().AllowedOrigins)
+    clientConn, _ := upgrader.Upgrade(w, r, nil)
+    proxy.ClearHTTPDeadlines(clientConn)
+
+    // Bridge with tracking
+    proxy.BridgeConnections(app.WebSocketTracker(), clientConn, targetConn)
+}
 ```
-
-The proxy automatically injects the bearer token from the request identity into the upstream K8s API connection.
 
 ## Feature Flagging
 

@@ -46,9 +46,7 @@ type App struct {
 	rootCAs *x509.CertPool
 	// bffClientFactory creates clients for inter-BFF communication
 	bffClientFactory bffclient.BFFClientFactory
-	k8sProxy                http.Handler
-	wsTracker               *proxy.ConnectionTracker
-	wsProxy                 http.Handler
+	wsTracker        *proxy.ConnectionTracker
 }
 
 func NewApp(cfg config.EnvConfig, logger *slog.Logger) (*App, error) {
@@ -150,9 +148,7 @@ func NewApp(cfg config.EnvConfig, logger *slog.Logger) (*App, error) {
 		bffClientFactory:        bffFactory,
 	}
 
-	if err := app.initK8sProxy(); err != nil {
-		logger.Error("failed to initialize K8s proxy", slog.Any("error", err))
-	}
+	app.wsTracker = proxy.NewConnectionTracker(app.logger)
 
 	return app, nil
 }
@@ -194,16 +190,6 @@ func (app *App) Routes() http.Handler {
 	// handler for api calls
 	appMux.Handle(ApiPathPrefix+"/", apiRouter)
 	appMux.Handle(PathPrefix+ApiPathPrefix+"/", http.StripPrefix(PathPrefix, apiRouter))
-
-	// K8s API proxy handlers
-	if app.k8sProxy != nil {
-		appMux.Handle(proxy.K8sProxyPrefix, app.k8sProxy)
-		appMux.Handle(PathPrefix+proxy.K8sProxyPrefix, http.StripPrefix(PathPrefix, app.k8sProxy))
-	}
-	if app.wsProxy != nil {
-		appMux.Handle(proxy.WssProxyPrefix, app.wsProxy)
-		appMux.Handle(PathPrefix+proxy.WssProxyPrefix, http.StripPrefix(PathPrefix, app.wsProxy))
-	}
 
 	// file server for the frontend file and SPA routes
 	staticDir := http.Dir(app.config.StaticAssetsDir)
