@@ -543,7 +543,9 @@ func (s *FederatedModelService) ListModels(ctx context.Context, namespace string
 
 ### Using the K8s API Proxy Locally
 
-The BFF includes a built-in K8s API proxy (`/api/k8s/*`) and WebSocket relay (`/wss/k8s/*`). During local development:
+The BFF includes a built-in K8s API proxy (`/api/k8s/*`) and WebSocket relay (`/wss/k8s/*`). This proxy is primarily used in standalone/Kubeflow mode where the module BFF is the sole backend. In federated mode, the core BFF handles K8s API traffic, so these module-level routes are not exercised in production — but they are useful for local development and testing regardless of target deployment mode.
+
+During local development:
 
 **Mock mode** (`--mock-k8s-client`): The proxy connects to the envtest control plane. Client certificates from the envtest config are used for mTLS authentication. HTTP targets are allowed since envtest typically uses plain HTTP.
 

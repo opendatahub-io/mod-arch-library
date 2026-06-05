@@ -32,11 +32,18 @@ func resolveK8sHost(testEnvConfig *clientRest.Config) (string, *tls.Certificate,
 		cert, err := tls.X509KeyPair(kubeConfig.CertData, kubeConfig.KeyData)
 		if err == nil {
 			clientCert = &cert
+		} else {
+			slog.Warn("failed to load inline client certificate from kubeconfig", slog.Any("error", err))
 		}
 	} else if kubeConfig.CertFile != "" && kubeConfig.KeyFile != "" {
 		cert, err := tls.LoadX509KeyPair(kubeConfig.CertFile, kubeConfig.KeyFile)
 		if err == nil {
 			clientCert = &cert
+		} else {
+			slog.Warn("failed to load client certificate files from kubeconfig",
+				slog.String("certFile", kubeConfig.CertFile),
+				slog.String("keyFile", kubeConfig.KeyFile),
+				slog.Any("error", err))
 		}
 	}
 

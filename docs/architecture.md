@@ -44,6 +44,7 @@ Together these elements form a single module that can either be compiled directl
 | **Namespace & tenancy** | Kubeflow central dashboard drives namespace selection; modules consume shared state to scope requests. | The RHOAI dashboard injects namespace/project info via the federation runtime APIs. Modules must honor multi-tenancy and operator policies. |
 | **Delivery artifacts** | Kustomize overlays and manifests committed upstream; reviewers test them inside the Kubeflow build. | Remote URL + BFF route registered through CR/ConfigMap. Container images published to quay.io/ghcr.io with OpenShift Routes or ingress controllers serving them. |
 | **Observability** | Logs/metrics collected through Kubeflow’s Prometheus stack. | OpenShift Monitoring (Prometheus + Loki) ingests module metrics/logs, and teams add telemetry hooks for platform correlation. |
+| **K8s proxy & WebSocket** | BFF provides `/api/k8s/*` and `/wss/k8s/*` directly — the only backend reaching the K8s API server. WebSocket infrastructure used for K8s watch streams. | Core BFF handles K8s proxy traffic directly. Module-level `/api/k8s/*` and `/wss/k8s/*` routes are unused. WebSocket infrastructure is available for future custom endpoints once the core BFF enables WSS forwarding (`websocket: true` in `registerProxy()`). |
 
 Standalone or preview environments follow the federated pattern but run everything within the module repository for fast iteration.
 
@@ -64,9 +65,11 @@ Standalone or preview environments follow the federated pattern but run everythi
 - Provides health/readiness endpoints plus metrics so SREs can monitor latency, error rates, and namespace access patterns.
 - Exposes a K8s API proxy and WebSocket relay so the frontend can reach the Kubernetes API server through the BFF (see below).
 
-### K8s API proxy and WebSocket passthrough
+### K8s API proxy and WebSocket infrastructure
 
 Every BFF scaffolded by the installer includes a built-in proxy layer that lets the frontend interact with the Kubernetes API server without direct cluster access.
+
+> **Deployment mode note:** The K8s proxy routes are active in standalone and Kubeflow modes where the module BFF is the sole backend. In federated mode (ODH/RHOAI), the core BFF (odh-dashboard backend) handles K8s API traffic directly — these module-level proxy routes are never reached. The WebSocket infrastructure (upgrader, connection tracking, heartbeat, SSRF-safe dialing) is provided in all modes as reusable building blocks for future custom WebSocket endpoints.
 
 **HTTP proxy (`/api/k8s/*`):**
 

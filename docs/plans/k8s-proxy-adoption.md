@@ -1,8 +1,14 @@
-# K8s API Proxy and WebSocket Passthrough — Adoption Plan
+# K8s Proxy & WebSocket Infrastructure — Adoption Plan
 
 ## Summary
 
-Every BFF scaffolded by `mod-arch-installer` now includes a built-in K8s API proxy and WebSocket relay. This document explains what teams get out of the box, how to configure it, and how to use it from the frontend.
+Every BFF scaffolded by `mod-arch-installer` now includes a K8s API proxy, a WebSocket relay, and reusable WebSocket infrastructure. These serve different purposes depending on deployment mode:
+
+| Capability | Standalone / Kubeflow | Federated (ODH/RHOAI) |
+| --- | --- | --- |
+| **K8s HTTP proxy** (`/api/k8s/*`) | **Active** — the module BFF is the only backend, so it proxies K8s API traffic directly | **Unused** — the core BFF handles `/api/k8s/*` directly; traffic never reaches the module BFF |
+| **K8s WebSocket relay** (`/wss/k8s/*`) | **Active** — used for K8s watch streams (pod status, events, CRDs) | **Unused** — the core BFF handles `/wss/k8s/*` directly |
+| **WebSocket infrastructure** (gorilla/websocket, upgrader, connection tracker, heartbeat, SSRF) | **Active** — powers the K8s relay; available for custom WS endpoints | **Ready** — infrastructure is in place for custom WS endpoints, pending core BFF enabling WSS forwarding |
 
 ## What you get
 
@@ -15,17 +21,17 @@ Both paths are also available with the BFF path prefix (e.g., `/mod-arch/api/k8s
 
 ## Architecture
 
-```
+```text
 ┌──────────┐     ┌─────────────────────────────────────────────┐     ┌──────────┐
 │          │     │                    BFF                      │     │          │
-│ Frontend │────▶│  InjectRequestIdentity → K8s HTTP Proxy  ──┼────▶│   K8s    │
+│ Frontend │────>│  InjectRequestIdentity → K8s HTTP Proxy  ──┼────>│   K8s    │
 │          │     │                                             │     │   API    │
-│          │────▶│  InjectRequestIdentity → WS Proxy ─────────┼────▶│  Server  │
+│          │────>│  InjectRequestIdentity → WS Proxy ─────────┼────>│  Server  │
 │          │     │                        (bidirectional)       │     │          │
 └──────────┘     └─────────────────────────────────────────────┘     └──────────┘
 ```
 
-**Request flow:**
+**Request flow (standalone mode):**
 
 1. Frontend sends request to `/api/k8s/api/v1/pods`
 2. `InjectRequestIdentity` middleware extracts the user's token from headers
@@ -33,7 +39,34 @@ Both paths are also available with the BFF path prefix (e.g., `/mod-arch/api/k8s
 4. Request is forwarded to the K8s API server
 5. Response is returned to the frontend
 
-For WebSocket, the flow is similar but uses the `base64url.bearer.authorization.k8s.io.<token>` subprotocol for authentication.
+For WebSocket, the flow is similar but uses the `base64url.bearer.authorization.k8s.io.<base64url-encoded-token>` subprotocol for authentication.
+
+## Federated mode considerations
+
+In federated mode (ODH/RHOAI), the module frontend is loaded via Module Federation into the dashboard shell. All traffic flows through the core BFF:
+
+```text
+Browser ──→ Dashboard Ingress ──→ Core BFF ──→ Module BFF
+```
+
+### What works today
+
+- **Module HTTP APIs**: The core BFF proxies HTTP requests to module BFFs via `@fastify/http-proxy` at `/_mf/{moduleName}/*`. Module-specific REST endpoints work out of the box.
+- **K8s API access**: The core BFF handles `/api/k8s/*` and `/wss/k8s/*` directly. Module frontends use these paths to reach the K8s API — the traffic never reaches the module BFF.
+
+### What does NOT work yet
+
+- **Custom WebSocket endpoints on module BFFs**: The core BFF's `registerProxy()` does not set `websocket: true` in `@fastify/http-proxy`, so WebSocket upgrade requests are not forwarded to module BFFs. If a module BFF exposes a custom WebSocket endpoint (e.g., streaming logs, real-time notifications), it is unreachable in federated mode.
+
+### What needs to change upstream
+
+For custom module WebSocket endpoints to work in federated mode, the core BFF's `registerProxy()` (in `backend/src/utils/proxy.ts`) needs to enable WebSocket forwarding:
+
+```typescript
+fastify.register(httpProxy, { prefix, rewritePrefix, upstream, websocket: true, ... });
+```
+
+Once this is enabled, the WebSocket infrastructure already present in module BFFs (gorilla/websocket, upgrader, connection tracker, heartbeat) will handle incoming WebSocket connections without additional changes.
 
 ## Configuration
 
@@ -107,7 +140,7 @@ The proxy enforces several security layers:
 
 - **Authentication**: Every request must pass through `InjectRequestIdentity` middleware. Unauthenticated requests are rejected before reaching the proxy.
 - **SSRF protection**: DNS resolution validates that the K8s API server does not resolve to private IPs (configurable allowlist). Redirect responses are also validated.
-- **Header stripping**: Impersonation headers (`Impersonate-User`, `Impersonate-Group`) and sensitive ingress headers (cookies, forwarded headers) are stripped before forwarding.
+- **Header stripping**: Impersonation headers (`Impersonate-User`, `Impersonate-Group`) and sensitive ingress headers (cookies, `x-forwarded-*`) are stripped before forwarding.
 - **Origin checking**: WebSocket upgrades validate the `Origin` header against `ALLOWED_ORIGINS`. Default is same-origin only.
 - **TLS**: Minimum TLS 1.2 enforced. Client certificate (mTLS) support from kubeconfig.
 

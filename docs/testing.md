@@ -42,7 +42,7 @@ go test ./... -v
 | `internal/proxy` | `ws_proxy_test.go` | WebSocket upgrade, origin checking, bearer subprotocol, bidirectional forwarding, connection tracking |
 | `internal/proxy` | `ws_tracker_test.go` | Track/untrack, stale cleanup, ping keepalive, bookmark resource version tracking |
 
-The proxy tests use `httptest.NewServer` for backend simulation and `gorilla/websocket` for WebSocket client connections. No external cluster is needed — all tests are self-contained.
+The proxy tests use `httptest.NewServer` for backend simulation and `gorilla/websocket` for WebSocket client connections. No external cluster is needed — all tests are self-contained and validate the proxy and SSRF packages in isolation regardless of deployment mode (standalone or federated).
 
 ## Integration Testing (Mock)
 

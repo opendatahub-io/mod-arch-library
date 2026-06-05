@@ -264,6 +264,11 @@ func (p *wsProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Clear HTTP server deadlines (e.g. WriteTimeout) so they don't kill long-lived WebSocket streams.
+	if netConn := clientConn.UnderlyingConn(); netConn != nil {
+		netConn.SetDeadline(time.Time{})
+	}
+
 	bridgeConnections(p.tracker, clientConn, targetConn)
 }
 
