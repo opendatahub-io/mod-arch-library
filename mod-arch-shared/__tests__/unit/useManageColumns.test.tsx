@@ -18,8 +18,14 @@ const testColumns: SortableData<TestItem>[] = [
 
 let mockStorageData: Record<string, unknown> = {};
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 jest.mock('mod-arch-core', () => ({
-  useBrowserStorage: <T,>(key: string, defaultValue: T): [T, (value: T) => boolean] => {
+  useBrowserStorage: <T,>(
+    key: string,
+    defaultValue: T,
+    jsonify = true,
+    isSessionStorage = false,
+  ): [T, (value: T) => boolean] => {
     const [value, setValue] = React.useState<T>(() => (mockStorageData[key] as T) ?? defaultValue);
 
     const setStoredValue = React.useCallback(
@@ -35,6 +41,7 @@ jest.mock('mod-arch-core', () => ({
     return [value, setStoredValue];
   },
 }));
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 const renderManageColumnsHook = (overrides: Partial<UseManageColumnsConfig<TestItem>> = {}) =>
   renderHook(() =>
@@ -128,6 +135,7 @@ describe('useManageColumns', () => {
   it('should exclude non-manageable fields (checkbox, kebab, expand)', () => {
     const columnsWithChrome: SortableData<TestItem>[] = [
       { field: 'checkbox', label: '', sortable: false },
+      { field: 'expand', label: '', sortable: false },
       ...testColumns,
       { field: 'kebab', label: '', sortable: false },
     ];
@@ -138,6 +146,7 @@ describe('useManageColumns', () => {
 
     const managedIds = result.current.managedColumns.map((col) => col.id);
     expect(managedIds).not.toContain('checkbox');
+    expect(managedIds).not.toContain('expand');
     expect(managedIds).not.toContain('kebab');
     expect(managedIds).toEqual(['name', 'status', 'date', 'owner', 'priority']);
   });

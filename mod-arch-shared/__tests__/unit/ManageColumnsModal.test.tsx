@@ -135,6 +135,7 @@ describe('ManageColumnsModal', () => {
 
       fireEvent.click(screen.getByTestId('test-manage-columns-update-button'));
 
+      expect(setVisibleColumnIds).toHaveBeenCalledTimes(1);
       const calledWith = setVisibleColumnIds.mock.calls[0][0] as string[];
       expect(calledWith).not.toContain('replicas');
       expect(calledWith).not.toContain('vllm_version');
