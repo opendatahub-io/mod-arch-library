@@ -22,6 +22,8 @@ const (
 	WriteControlTimeout = 5 * time.Second
 	ConnectionTimeout   = 10 * time.Second
 	HeartbeatInterval   = 15 * time.Second
+	WriteMessageTimeout = 30 * time.Second
+	MaxConnections      = 1000
 )
 
 func NewUpgrader(allowedOrigins []string) websocket.Upgrader {
@@ -86,6 +88,7 @@ func ForwardTargetToClient(tracker *ConnectionTracker, connID string, target, cl
 		}
 		tracker.updateMetricsReceived(connID)
 		trackBookmark(tracker, connID, msg)
+		_ = client.SetWriteDeadline(time.Now().Add(WriteMessageTimeout))
 		if writeErr := client.WriteMessage(msgType, msg); writeErr != nil {
 			return
 		}
@@ -102,6 +105,7 @@ func ForwardClientToTarget(tracker *ConnectionTracker, connID string, client, ta
 			return
 		}
 		tracker.updateMetricsReceived(connID)
+		_ = target.SetWriteDeadline(time.Now().Add(WriteMessageTimeout))
 		if writeErr := target.WriteMessage(msgType, msg); writeErr != nil {
 			return
 		}
@@ -164,6 +168,14 @@ func NegotiatedSubprotocolHeader(targetConn *websocket.Conn, clientSubprotocols 
 }
 
 func BridgeConnections(tracker *ConnectionTracker, clientConn, targetConn *websocket.Conn) {
+	if tracker.ActiveCount() >= MaxConnections {
+		closeMsg := websocket.FormatCloseMessage(websocket.CloseTryAgainLater, "too many connections")
+		_ = clientConn.WriteControl(websocket.CloseMessage, closeMsg, time.Now().Add(WriteControlTimeout))
+		clientConn.Close()
+		targetConn.Close()
+		return
+	}
+
 	connID := tracker.Track(clientConn, targetConn)
 	heartbeat := time.NewTicker(HeartbeatInterval)
 	done := make(chan struct{})

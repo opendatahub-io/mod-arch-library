@@ -549,9 +549,9 @@ During local development:
 
 **Mock mode** (`--mock-k8s-client`): The BFF connects to an envtest control plane. Client certificates from the envtest config are used for mTLS authentication. HTTP targets are allowed since envtest typically uses plain HTTP.
 
-**Dev mode** (`--dev-mode`): SSRF protection is disabled so the BFF can reach local kind/minikube clusters on private IPs. Insecure HTTP targets are also permitted.
+**Dev mode** (`--dev-mode`): SSRF protection is disabled so the BFF can reach local kind/minikube clusters on private IPs. Insecure HTTP targets are also permitted. **Warning: `--dev-mode` must only be used for local development (localhost / non-production profiles). Never enable it in deployed environments — it disables SSRF protection and TLS verification, exposing the BFF to server-side request forgery attacks.**
 
-**Production mode**: SSRF protection is active — the toolkit validates that target hostnames do not resolve to private IPs. TLS 1.2 minimum is enforced.
+**Production mode**: SSRF protection is active — the toolkit validates that target hostnames do not resolve to private IPs (RFC 1918, loopback, link-local). TLS 1.2 minimum is enforced. Custom CA bundles can be provided via `--bundle-paths`.
 
 To build a custom WebSocket endpoint using the toolkit:
 
@@ -562,6 +562,7 @@ func (app *App) WatchPodsHandler(w http.ResponseWriter, r *http.Request) {
 
     // Build K8s API URL — business logic decides what to watch
     targetWSURL := fmt.Sprintf("wss://%s/api/v1/namespaces/%s/pods?watch=true", k8sHost, namespace)
+    targetURL, _ := url.Parse(fmt.Sprintf("https://%s", k8sHost))
 
     // Dial K8s using the toolkit
     tlsConfig := proxy.NewTLSConfig(app.rootCAs, false)

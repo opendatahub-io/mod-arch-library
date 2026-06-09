@@ -58,6 +58,11 @@ func TestIsPrivateIP(t *testing.T) {
 }
 
 func TestValidateHostname(t *testing.T) {
+	// Skip if DNS is unavailable (e.g., air-gapped CI environments)
+	if _, err := net.LookupHost("google.com"); err != nil {
+		t.Skip("skipping: DNS resolution unavailable")
+	}
+
 	tests := []struct {
 		name     string
 		hostname string

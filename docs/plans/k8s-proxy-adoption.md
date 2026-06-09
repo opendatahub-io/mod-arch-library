@@ -65,7 +65,7 @@ This follows the BFF pattern: frontends never call K8s API directly. Instead, ea
 
 | Function | Description |
 | --- | --- |
-| `BearerSubprotocol(token)` | Builds `base64url.bearer.authorization.k8s.io.<base64token>` |
+| `BearerSubprotocol(token)` | Builds `base64url.bearer.authorization.k8s.io.<base64url-encoded-token>` where the token is base64url-encoded (RFC 4648 §5, no padding) |
 | `NegotiatedSubprotocolHeader(targetConn, clientSubprotocols)` | Returns response header if target negotiated a client subprotocol |
 | `SanitizeCloseCode(code)` | Maps reserved codes 1004/1005/1006 to 1011 |
 | `CloseCodeFromError(err)` | Extracts and sanitizes close code from error |
