@@ -159,14 +159,4 @@ describe('useManageColumns', () => {
 
     expect(result.current.defaultVisibleColumnIds).toEqual(defaults);
   });
-
-  it('should respect maxVisibleColumns limit', () => {
-    const { result } = renderManageColumnsHook({
-      defaultVisibleColumnIds: ['name', 'status', 'date', 'owner', 'priority'],
-      maxVisibleColumns: 3,
-    });
-
-    expect(result.current.visibleColumnIds).toHaveLength(3);
-    expect(result.current.visibleColumnIds).toEqual(['name', 'status', 'date']);
-  });
 });

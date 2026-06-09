@@ -22,11 +22,11 @@ const createManagedColumns = (names: string[], visibleIds: string[] = []): Manag
   }));
 
 const defaultColumns = createManagedColumns(
-  ['Replicas', 'vLLM Version', 'Total RPS', 'Mean Input Tokens', 'Mean Output Tokens'],
-  ['replicas', 'vllm_version', 'total_rps'],
+  ['Name', 'Status', 'Date', 'Owner', 'Priority'],
+  ['name', 'status', 'date'],
 );
 
-const defaultDefaults = ['replicas', 'vllm_version', 'total_rps'];
+const defaultDefaults = ['name', 'status', 'date'];
 
 type ManageColumnsResultSubset = Pick<
   UseManageColumnsResult<unknown>,
@@ -85,38 +85,36 @@ describe('ManageColumnsModal', () => {
     it('should call setVisibleColumnIds without unchecked column when Update is clicked', () => {
       const { setVisibleColumnIds } = renderModal();
 
-      const replicasCheckbox = screen.getByRole('checkbox', { name: 'Replicas' });
-      expect(replicasCheckbox).toBeChecked();
+      const nameCheckbox = screen.getByRole('checkbox', { name: 'Name' });
+      expect(nameCheckbox).toBeChecked();
 
-      fireEvent.click(replicasCheckbox);
-      expect(replicasCheckbox).not.toBeChecked();
+      fireEvent.click(nameCheckbox);
+      expect(nameCheckbox).not.toBeChecked();
 
       fireEvent.click(screen.getByTestId('test-manage-columns-update-button'));
 
-      expect(setVisibleColumnIds).toHaveBeenCalledWith(expect.not.arrayContaining(['replicas']));
+      expect(setVisibleColumnIds).toHaveBeenCalledWith(expect.not.arrayContaining(['name']));
     });
 
     it('should call setVisibleColumnIds with re-checked column when Update is clicked', () => {
       const { setVisibleColumnIds } = renderModal();
 
-      const meanInputCheckbox = screen.getByRole('checkbox', { name: 'Mean Input Tokens' });
-      expect(meanInputCheckbox).not.toBeChecked();
+      const ownerCheckbox = screen.getByRole('checkbox', { name: 'Owner' });
+      expect(ownerCheckbox).not.toBeChecked();
 
-      fireEvent.click(meanInputCheckbox);
-      expect(meanInputCheckbox).toBeChecked();
+      fireEvent.click(ownerCheckbox);
+      expect(ownerCheckbox).toBeChecked();
 
       fireEvent.click(screen.getByTestId('test-manage-columns-update-button'));
 
-      expect(setVisibleColumnIds).toHaveBeenCalledWith(
-        expect.arrayContaining(['mean_input_tokens']),
-      );
+      expect(setVisibleColumnIds).toHaveBeenCalledWith(expect.arrayContaining(['owner']));
     });
 
     it('should not apply changes when Cancel is clicked', () => {
       const { setVisibleColumnIds, closeModal } = renderModal();
 
-      const replicasCheckbox = screen.getByRole('checkbox', { name: 'Replicas' });
-      fireEvent.click(replicasCheckbox);
+      const nameCheckbox = screen.getByRole('checkbox', { name: 'Name' });
+      fireEvent.click(nameCheckbox);
 
       fireEvent.click(screen.getByTestId('test-manage-columns-cancel-button'));
 
@@ -127,19 +125,19 @@ describe('ManageColumnsModal', () => {
     it('should toggle multiple columns at once', () => {
       const { setVisibleColumnIds } = renderModal();
 
-      const replicasCheckbox = screen.getByRole('checkbox', { name: 'Replicas' });
-      const vllmCheckbox = screen.getByRole('checkbox', { name: 'vLLM Version' });
+      const nameCheckbox = screen.getByRole('checkbox', { name: 'Name' });
+      const statusCheckbox = screen.getByRole('checkbox', { name: 'Status' });
 
-      fireEvent.click(replicasCheckbox);
-      fireEvent.click(vllmCheckbox);
+      fireEvent.click(nameCheckbox);
+      fireEvent.click(statusCheckbox);
 
       fireEvent.click(screen.getByTestId('test-manage-columns-update-button'));
 
       expect(setVisibleColumnIds).toHaveBeenCalledTimes(1);
       const calledWith = setVisibleColumnIds.mock.calls[0][0] as string[];
-      expect(calledWith).not.toContain('replicas');
-      expect(calledWith).not.toContain('vllm_version');
-      expect(calledWith).toContain('total_rps');
+      expect(calledWith).not.toContain('name');
+      expect(calledWith).not.toContain('status');
+      expect(calledWith).toContain('date');
     });
   });
 
@@ -147,20 +145,20 @@ describe('ManageColumnsModal', () => {
     it('should restore default column visibility when Restore default columns is clicked', () => {
       renderModal();
 
-      const replicasCheckbox = screen.getByRole('checkbox', { name: 'Replicas' });
-      const vllmCheckbox = screen.getByRole('checkbox', { name: 'vLLM Version' });
-      fireEvent.click(replicasCheckbox);
-      fireEvent.click(vllmCheckbox);
+      const nameCheckbox = screen.getByRole('checkbox', { name: 'Name' });
+      const statusCheckbox = screen.getByRole('checkbox', { name: 'Status' });
+      fireEvent.click(nameCheckbox);
+      fireEvent.click(statusCheckbox);
 
-      expect(replicasCheckbox).not.toBeChecked();
-      expect(vllmCheckbox).not.toBeChecked();
+      expect(nameCheckbox).not.toBeChecked();
+      expect(statusCheckbox).not.toBeChecked();
 
       fireEvent.click(screen.getByTestId('test-manage-columns-restore-defaults'));
 
-      const restoredReplicasCheckbox = screen.getByRole('checkbox', { name: 'Replicas' });
-      const restoredVllmCheckbox = screen.getByRole('checkbox', { name: 'vLLM Version' });
-      expect(restoredReplicasCheckbox).toBeChecked();
-      expect(restoredVllmCheckbox).toBeChecked();
+      const restoredNameCheckbox = screen.getByRole('checkbox', { name: 'Name' });
+      const restoredStatusCheckbox = screen.getByRole('checkbox', { name: 'Status' });
+      expect(restoredNameCheckbox).toBeChecked();
+      expect(restoredStatusCheckbox).toBeChecked();
     });
   });
 
@@ -170,11 +168,11 @@ describe('ManageColumnsModal', () => {
 
       const searchInput = screen.getByTestId('test-manage-columns-search');
       const input = within(searchInput).getByRole('textbox', { name: 'Search input' });
-      fireEvent.change(input, { target: { value: 'Replicas' } });
+      fireEvent.change(input, { target: { value: 'Name' } });
 
-      expect(screen.getByRole('checkbox', { name: 'Replicas' })).toBeInTheDocument();
-      expect(screen.queryByRole('checkbox', { name: 'vLLM Version' })).not.toBeInTheDocument();
-      expect(screen.queryByRole('checkbox', { name: 'Total RPS' })).not.toBeInTheDocument();
+      expect(screen.getByRole('checkbox', { name: 'Name' })).toBeInTheDocument();
+      expect(screen.queryByRole('checkbox', { name: 'Status' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('checkbox', { name: 'Date' })).not.toBeInTheDocument();
     });
 
     it('should show empty state when no columns match search', () => {
