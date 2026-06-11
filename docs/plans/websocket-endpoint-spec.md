@@ -555,7 +555,7 @@ proxy.BridgeConnections(app.WebSocketTracker(), clientConn, targetConn)
 | Mode | WebSocket behavior |
 | --- | --- |
 | **Standalone / Kubeflow** | Works out of the box. The module BFF is the only backend; WebSocket endpoints are directly accessible. |
-| **Federated (ODH/RHOAI)** | **Not yet supported.** The core BFF's `registerProxy()` does not forward WebSocket upgrades to module BFFs. A one-line change (`websocket: true` in `@fastify/http-proxy`) is needed upstream. The toolkit is ready — once the core BFF change lands, module WS endpoints work automatically. |
+| **Federated (ODH/RHOAI)** | **Not yet supported.** The host BFF's module proxy does not currently forward WebSocket upgrades to module BFFs. The toolkit is ready — once the host enables WebSocket forwarding, module WS endpoints work automatically. |
 
 ## Checklist
 

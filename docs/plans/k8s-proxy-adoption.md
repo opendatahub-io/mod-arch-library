@@ -128,29 +128,20 @@ appMux.HandleFunc("/api/v1/pods/watch", app.WatchPodsHandler)
 
 ## Federated mode considerations
 
-In federated mode (ODH/RHOAI), the module frontend is loaded via Module Federation into the dashboard shell. All traffic flows through the core BFF:
+In federated mode, the module frontend is loaded via Module Federation into a host application. All traffic flows through the host BFF:
 
 ```text
-Browser ──→ Dashboard Ingress ──→ Core BFF ──→ Module BFF
+Browser ──→ Ingress ──→ Host BFF ──→ Module BFF
 ```
 
 ### What works today
 
-- **Module HTTP APIs**: The core BFF proxies HTTP requests to module BFFs via `@fastify/http-proxy` at `/_mf/{moduleName}/*`. Module-specific REST endpoints work out of the box.
+- **Module HTTP APIs**: The host BFF proxies HTTP requests to module BFFs at `/_mf/{moduleName}/*`. Module-specific REST endpoints work out of the box.
 
-### What does NOT work yet
+### WebSocket forwarding
 
-- **Custom WebSocket endpoints on module BFFs**: The core BFF's `registerProxy()` does not set `websocket: true` in `@fastify/http-proxy`, so WebSocket upgrade requests are not forwarded to module BFFs.
-
-### What needs to change upstream
-
-For custom module WebSocket endpoints to work in federated mode, the core BFF's `registerProxy()` (in `backend/src/utils/proxy.ts`) needs to enable WebSocket forwarding:
-
-```typescript
-fastify.register(httpProxy, { prefix, rewritePrefix, upstream, websocket: true, ... });
-```
-
-Once this is enabled, the WebSocket toolkit already present in module BFFs will handle incoming WebSocket connections without additional changes.
+- **Custom WebSocket endpoints on module BFFs** require the host BFF's module proxy to forward WebSocket upgrade requests. If the host does not forward upgrades, clients cannot reach module WebSocket endpoints.
+- The WebSocket toolkit in module BFFs is ready — once the host enables WebSocket forwarding, module WS endpoints work automatically without additional changes.
 
 ## Configuration
 
