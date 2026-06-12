@@ -20,6 +20,7 @@ import (
 	helper "github.com/opendatahub-io/mod-arch-library/bff/internal/helpers"
 
 	"github.com/opendatahub-io/mod-arch-library/bff/internal/config"
+	"github.com/opendatahub-io/mod-arch-library/bff/internal/proxy"
 	"github.com/opendatahub-io/mod-arch-library/bff/internal/repositories"
 
 	"github.com/julienschmidt/httprouter"
@@ -45,6 +46,7 @@ type App struct {
 	rootCAs *x509.CertPool
 	// bffClientFactory creates clients for inter-BFF communication
 	bffClientFactory bffclient.BFFClientFactory
+	wsTracker        *proxy.ConnectionTracker
 }
 
 func NewApp(cfg config.EnvConfig, logger *slog.Logger) (*App, error) {
@@ -145,15 +147,20 @@ func NewApp(cfg config.EnvConfig, logger *slog.Logger) (*App, error) {
 		rootCAs:                 rootCAs,
 		bffClientFactory:        bffFactory,
 	}
+
+	app.wsTracker = proxy.NewConnectionTracker(app.logger)
+
 	return app, nil
 }
 
 func (app *App) Shutdown() error {
 	app.logger.Info("shutting down app...")
+	if app.wsTracker != nil {
+		app.wsTracker.Stop()
+	}
 	if app.testEnv == nil {
 		return nil
 	}
-	//shutdown the envtest control plane when we are in the mock mode.
 	app.logger.Info("shutting env test...")
 	return app.testEnv.Stop()
 }

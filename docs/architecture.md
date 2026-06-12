@@ -44,6 +44,7 @@ Together these elements form a single module that can either be compiled directl
 | **Namespace & tenancy** | Kubeflow central dashboard drives namespace selection; modules consume shared state to scope requests. | The RHOAI dashboard injects namespace/project info via the federation runtime APIs. Modules must honor multi-tenancy and operator policies. |
 | **Delivery artifacts** | Kustomize overlays and manifests committed upstream; reviewers test them inside the Kubeflow build. | Remote URL + BFF route registered through CR/ConfigMap. Container images published to quay.io/ghcr.io with OpenShift Routes or ingress controllers serving them. |
 | **Observability** | Logs/metrics collected through Kubeflow’s Prometheus stack. | OpenShift Monitoring (Prometheus + Loki) ingests module metrics/logs, and teams add telemetry hooks for platform correlation. |
+| **WebSocket infrastructure** | BFF exposes explicit WebSocket endpoints built with the WebSocket toolkit (upgrader, K8s dialer, connection tracker, heartbeat, SSRF-safe dialing). No raw K8s pass-through routes — every endpoint applies business logic. | WebSocket toolkit is available for custom endpoints. Custom WS endpoints on module BFFs require the host BFF to enable WebSocket forwarding in its module proxy configuration. |
 
 Standalone or preview environments follow the federated pattern but run everything within the module repository for fast iteration.
 
@@ -62,6 +63,28 @@ Standalone or preview environments follow the federated pattern but run everythi
 - Terminates authentication differently per mode (Kubeflow headers vs. OpenShift OAuth tokens) but always returns normalized identity info to the frontend.
 - Aggregates platform APIs, applies authorization checks, and transforms responses into the OpenAPI schema the UI expects.
 - Provides health/readiness endpoints plus metrics so SREs can monitor latency, error rates, and namespace access patterns.
+- Includes a WebSocket infrastructure toolkit for building custom endpoints that communicate with Kubernetes or other WebSocket backends (see below).
+
+### WebSocket infrastructure toolkit
+
+Every BFF scaffolded by the installer includes a WebSocket toolkit (`internal/proxy`) with exported building blocks for creating custom BFF endpoints that communicate with Kubernetes or other WebSocket backends. The toolkit does **not** register any routes — module developers build explicit endpoints with business logic and use the toolkit internally.
+
+**Exported utilities:**
+
+- `NewUpgrader(allowedOrigins)` — gorilla/websocket upgrader with origin checking (same-origin default, configurable via `ALLOWED_ORIGINS`)
+- `DialK8sWebSocket(...)` — dials a K8s API WebSocket with bearer token auth (both `Authorization` header and K8s subprotocol), TLS config, and optional SSRF-safe dialing
+- `BridgeConnections(tracker, client, target)` — bidirectional relay between client and target WebSocket connections with connection tracking
+- `ConnectionTracker` — tracks active connections with unique IDs, per-connection metrics, 15-second heartbeat pings, and 5-minute stale cleanup
+- `ClearHTTPDeadlines(conn)` — clears HTTP server deadlines on upgraded connections to prevent `WriteTimeout` from killing long-lived WebSocket streams
+- Helper functions: `BearerSubprotocol()`, `NegotiatedSubprotocolHeader()`, `SanitizeCloseCode()`, `CloseCodeFromError()`, `SendCloseMessage()`, `NewTLSConfig()`
+
+**Security:**
+
+- SSRF protection via `SafeDialContext` — DNS resolution + private IP validation + redirect checking
+- SSRF protection is disabled in dev mode (`--dev-mode`) to allow local development with kind/minikube clusters
+- TLS 1.2 minimum enforced; insecure mode gated to dev environments via `--insecure-skip-verify`
+- Origin checking: same-origin by default, configurable via `ALLOWED_ORIGINS`
+- RFC 6455 close code sanitization (reserved codes 1004/1005/1006 mapped to 1011)
 
 ### Shared contracts
 

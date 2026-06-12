@@ -20,13 +20,28 @@ Testing in a modular architecture requires a multi-layered approach that ensures
 
 ### BFF Unit Testing
 
-*Coming soon: Backend-for-Frontend testing patterns including:*
+*Coming soon: Comprehensive BFF testing patterns including Go service unit testing, mock external service dependencies, OpenAPI contract validation, authentication/authorization testing, and error handling validation.*
 
-- Go service unit testing
-- Mock external service dependencies
-- OpenAPI contract validation
-- Authentication/authorization testing
-- Error handling validation
+#### WebSocket Toolkit and SSRF Tests
+
+The BFF includes dedicated test suites for the WebSocket toolkit and SSRF packages:
+
+```bash
+# Run proxy and SSRF tests
+go test ./internal/proxy/... ./internal/ssrf/... -v
+
+# Run all BFF tests
+go test ./... -v
+```
+
+| Package | File | Coverage |
+| --- | --- | --- |
+| `internal/ssrf` | `ssrf_test.go` | Private IP validation, hostname resolution, redirect checking, safe dial |
+| `internal/proxy` | `tls_test.go` | TLS config creation with custom CA pools and insecure skip verify |
+| `internal/proxy` | `websocket_test.go` | WebSocket upgrader, origin checking, bearer subprotocol, K8s dial auth/headers/subprotocols, bidirectional bridging, connection tracking, close code sanitization, deadline clearing |
+| `internal/proxy` | `ws_tracker_test.go` | Track/untrack, stale cleanup, ping keepalive, bookmark resource version tracking |
+
+The tests use `httptest.NewServer` for backend simulation and `gorilla/websocket` for WebSocket client connections. No external cluster is needed — all tests are self-contained and validate the WebSocket toolkit and SSRF packages in isolation regardless of deployment mode (standalone or federated).
 
 ## Integration Testing (Mock)
 

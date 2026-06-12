@@ -541,6 +541,44 @@ func (s *FederatedModelService) ListModels(ctx context.Context, namespace string
 }
 ```
 
+### Using the WebSocket Toolkit Locally
+
+The BFF includes a WebSocket toolkit (`internal/proxy`) with exported building blocks for creating custom endpoints that communicate with Kubernetes or other WebSocket backends. The toolkit does not register any routes — module developers build explicit endpoints with business logic and use the toolkit internally.
+
+During local development:
+
+**Mock mode** (`--mock-k8s-client`): The BFF connects to an envtest control plane. Client certificates from the envtest config are used for mTLS authentication. HTTP targets are allowed since envtest typically uses plain HTTP.
+
+**Dev mode** (`--dev-mode`): SSRF protection is disabled so the BFF can reach local kind/minikube clusters on private IPs. Insecure HTTP targets are also permitted. **Warning: `--dev-mode` must only be used for local development (localhost / non-production profiles). Never enable it in deployed environments — it disables SSRF protection and TLS verification, exposing the BFF to server-side request forgery attacks.**
+
+**Production mode**: SSRF protection is active — the toolkit validates that target hostnames do not resolve to private IPs (RFC 1918, loopback, link-local). TLS 1.2 minimum is enforced. Custom CA bundles can be provided via `--bundle-paths`.
+
+To build a custom WebSocket endpoint using the toolkit:
+
+```go
+func (app *App) WatchPodsHandler(w http.ResponseWriter, r *http.Request) {
+    identity := getIdentity(r)
+    namespace := r.URL.Query().Get("namespace")
+
+    // Build K8s API URL — business logic decides what to watch
+    targetWSURL := fmt.Sprintf("wss://%s/api/v1/namespaces/%s/pods?watch=true", k8sHost, namespace)
+    targetURL, _ := url.Parse(fmt.Sprintf("https://%s", k8sHost))
+
+    // Dial K8s using the toolkit
+    tlsConfig := proxy.NewTLSConfig(app.rootCAs, false)
+    targetConn, _, err := proxy.DialK8sWebSocket(targetWSURL, tlsConfig, identity.Token, targetURL, nil, nil)
+    if err != nil { /* handle error */ }
+
+    // Accept frontend WebSocket
+    upgrader := proxy.NewUpgrader(app.Config().AllowedOrigins)
+    clientConn, _ := upgrader.Upgrade(w, r, nil)
+    proxy.ClearHTTPDeadlines(clientConn)
+
+    // Bridge with tracking
+    proxy.BridgeConnections(app.WebSocketTracker(), clientConn, targetConn)
+}
+```
+
 ## Feature Flagging
 
 Feature flags enable gradual rollout and A/B testing of new functionality.
