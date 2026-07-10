@@ -1,4 +1,5 @@
 export { default as AcceleratorProfileIcon } from './AcceleratorProfileIcon';
+export { default as AgentsCatalogIcon } from './AgentsCatalogIcon';
 export { default as ArtifactIcon } from './ArtifactIcon';
 export { default as BuildIcon } from './BuildIcon';
 export { default as ClusterSettingsIcon } from './ClusterSettingsIcon';
