@@ -70,6 +70,7 @@ export enum ProjectObjectType {
   exploreApplications = 'explore-applications',
   resources = 'resources',
   mcpCatalog = 'mcp-catalog',
+  agentsCatalog = 'agents-catalog',
 }
 
 export const typedIconColor = (objectType: ProjectObjectType): string => {
@@ -120,6 +121,7 @@ export const typedIconColor = (objectType: ProjectObjectType): string => {
     case ProjectObjectType.resources:
       return 'var(--ai-general--IconColor)';
     case ProjectObjectType.mcpCatalog:
+    case ProjectObjectType.agentsCatalog:
       return 'var(--ai-serving--IconColor)';
     case ProjectObjectType.distributedWorkload:
       return 'var(--ai-serving--IconColor)';
@@ -181,6 +183,7 @@ export const typedBackgroundColor = (objectType: ProjectObjectType): string => {
     case ProjectObjectType.resources:
       return 'var(--ai-general--BackgroundColor)';
     case ProjectObjectType.mcpCatalog:
+    case ProjectObjectType.agentsCatalog:
       return 'var(--ai-serving--BackgroundColor)';
     case ProjectObjectType.distributedWorkload:
       return 'var(--ai-serving--BackgroundColor)';
@@ -231,6 +234,7 @@ export const typedColor = (objectType: ProjectObjectType): string => {
     case ProjectObjectType.group:
       return 'var(--ai-group--Color)';
     case ProjectObjectType.mcpCatalog:
+    case ProjectObjectType.agentsCatalog:
       return 'var(--ai-serving--Color)';
     default:
       return '';
