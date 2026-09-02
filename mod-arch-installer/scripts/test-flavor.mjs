@@ -75,6 +75,29 @@ async function applyFlavorOverlays(flavorPath, workDir) {
 }
 
 /**
+ * Mirrors the installer's removeDefaultFolders() for the default flavor so the merged
+ * workdir matches the real installer output. Removes base starter frontend configs the
+ * overlay supersedes (webpack.*.js, the ESLint 9 flat config) and the standalone/shared
+ * sources that are dropped for federated modules (and depend on mod-arch-shared, which
+ * the default overlay no longer lists as a dependency).
+ * @param {string} frontendDir - The merged frontend directory
+ */
+async function removeDefaultBaseConfigs(frontendDir) {
+  const leftovers = [
+    path.join(frontendDir, 'config', 'webpack.common.js'),
+    path.join(frontendDir, 'config', 'webpack.dev.js'),
+    path.join(frontendDir, 'config', 'webpack.prod.js'),
+    path.join(frontendDir, 'eslint.config.mjs'),
+    path.join(frontendDir, 'src', 'shared'),
+    path.join(frontendDir, 'src', 'app', 'standalone'),
+    path.join(frontendDir, 'src', 'app', 'pages', 'SettingsMainPage.tsx'),
+  ];
+  for (const file of leftovers) {
+    await rm(file, { recursive: true, force: true });
+  }
+}
+
+/**
  * Runs npm install in the specified directory.
  * @param {string} dir - Directory to run npm install in
  * @returns {Promise<void>}
@@ -170,6 +193,13 @@ async function testFlavor() {
     // Apply flavor overlays
     console.log('[test-flavor] Applying flavor overlays...');
     await applyFlavorOverlays(flavorPath, testWorkDir);
+
+    // For the default flavor, remove base starter build/lint configs that the overlay
+    // replaces (webpack -> rspack, ESLint 9 flat -> ESLint 8 legacy). This mirrors the
+    // installer's removeDefaultFolders() so the harness validates exactly what ships.
+    if (flavorArg === 'default') {
+      await removeDefaultBaseConfigs(path.join(testWorkDir, 'frontend'));
+    }
 
     // Install dependencies in frontend
     const frontendDir = path.join(testWorkDir, 'frontend');
