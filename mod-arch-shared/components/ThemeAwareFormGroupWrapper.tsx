@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { FormGroup } from '@patternfly/react-core';
 import { useThemeContext } from 'mod-arch-kubeflow';
+import FieldGroupHelpLabelIcon from './FieldGroupHelpLabelIcon';
 import FormFieldset from './FormFieldset';
 
 type ThemeAwareFormGroupWrapperProps = {
@@ -18,6 +19,8 @@ type ThemeAwareFormGroupWrapperProps = {
   /** Skip wrapping in FormFieldset — use for components like NumberInput */
   skipFieldset?: boolean;
   labelHelp?: React.ReactElement;
+  /** Text content for a help popover icon shown next to the label */
+  popoverHelpText?: string;
   'data-testid'?: string;
 };
 
@@ -34,11 +37,16 @@ const ThemeAwareFormGroupWrapper: React.FC<ThemeAwareFormGroupWrapperProps> = ({
   isInline,
   skipFieldset = false,
   labelHelp,
+  popoverHelpText,
   'data-testid': dataTestId,
 }) => {
   const { isMUITheme } = useThemeContext();
 
   const errorClass = `${className || ''} ${hasError ? 'pf-m-error' : ''}`.trim();
+
+  const resolvedLabelHelp =
+    labelHelp ??
+    (popoverHelpText ? <FieldGroupHelpLabelIcon content={popoverHelpText} /> : undefined);
 
   const formGroupProps = {
     className: errorClass,
@@ -47,15 +55,26 @@ const ThemeAwareFormGroupWrapper: React.FC<ThemeAwareFormGroupWrapperProps> = ({
     fieldId,
     role,
     isInline,
-    labelHelp,
+    labelHelp: resolvedLabelHelp,
     'data-testid': dataTestId,
   };
 
   if (isMUITheme) {
+    const muiFormGroupProps = {
+      className: errorClass,
+      label,
+      isRequired,
+      fieldId,
+      role,
+      isInline,
+      labelHelp: resolvedLabelHelp,
+      'data-testid': dataTestId,
+    };
+
     return (
       <>
         {descriptionTextNode}
-        <FormGroup {...formGroupProps}>
+        <FormGroup {...muiFormGroupProps}>
           {skipFieldset ? children : <FormFieldset component={children} field={label} />}
         </FormGroup>
         {helperTextNode}
