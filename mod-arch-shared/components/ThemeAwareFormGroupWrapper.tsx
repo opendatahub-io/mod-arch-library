@@ -60,10 +60,21 @@ const ThemeAwareFormGroupWrapper: React.FC<ThemeAwareFormGroupWrapperProps> = ({
   };
 
   if (isMUITheme) {
+    const muiFormGroupProps = {
+      className: errorClass,
+      label,
+      isRequired,
+      fieldId,
+      role,
+      isInline,
+      labelHelp: resolvedLabelHelp,
+      'data-testid': dataTestId,
+    };
+
     return (
       <>
         {descriptionTextNode}
-        <FormGroup {...formGroupProps}>
+        <FormGroup {...muiFormGroupProps}>
           {skipFieldset ? children : <FormFieldset component={children} field={label} />}
         </FormGroup>
         {helperTextNode}

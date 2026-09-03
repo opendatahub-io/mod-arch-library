@@ -566,6 +566,24 @@
   z-index: 1;
 }
 
+// Position the help icon at the same vertical level as the label.
+// Both share the same containing block (.pf-v6-c-form__group-label), so top: 78%
+// produces the same absolute Y offset as on the label above.
+.mui-theme .pf-v6-c-form__group:has(.form-fieldset-wrapper) .pf-v6-c-form__group-label-help {
+  position: relative;
+  top: 78%;
+  transform: translateY(-50%);
+  z-index: 1;
+  pointer-events: auto;
+  background-color: var(--mui-palette-common-white);
+}
+
+// When help icon is present, use a smaller top value to compensate for the taller container.
+.mui-theme .pf-v6-c-form__group:has(.form-fieldset-wrapper):has(.pf-v6-c-form__group-label-help) .pf-v6-c-form__label,
+.mui-theme .pf-v6-c-form__group:has(.form-fieldset-wrapper):has(.pf-v6-c-form__group-label-help) .pf-v6-c-form__group-label-help {
+  top: 65%;
+}
+
 // Form controls with number inputs - specific styling overrides
 // (NumberInput does not use FormFieldset, so it is unaffected by the floating label rule above)
 .mui-theme .pf-v6-c-form__group:has(.pf-v6-c-number-input) {
