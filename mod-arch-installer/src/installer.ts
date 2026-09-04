@@ -83,6 +83,21 @@ async function removeDefaultFolders(flavor: StarterFlavor, targetDir: string) {
   if (hasKubeflowGuide) {
     await rm(kubeflowGuidePath, { force: true });
   }
+
+  // Remove base starter webpack configs - the default flavor overlay ships rspack instead
+  const webpackConfigs = ['webpack.common.js', 'webpack.dev.js', 'webpack.prod.js'];
+  for (const config of webpackConfigs) {
+    const configPath = path.join(targetDir, FRONTEND_DIR, 'config', config);
+    if (await fileExists(configPath)) {
+      await rm(configPath, { force: true });
+    }
+  }
+
+  // Remove base starter ESLint 9 flat config - the default flavor overlay ships ESLint 8 legacy (.eslintrc.js)
+  const flatEslintConfigPath = path.join(targetDir, FRONTEND_DIR, 'eslint.config.mjs');
+  if (await fileExists(flatEslintConfigPath)) {
+    await rm(flatEslintConfigPath, { force: true });
+  }
 }
 
 async function applyFrontendOverlay(flavor: StarterFlavor, targetDir: string) {

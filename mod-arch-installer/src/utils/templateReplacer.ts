@@ -65,7 +65,7 @@ const FILES_TO_PROCESS = [
   // Frontend
   'frontend/package.json',
   'frontend/config/moduleFederation.js',
-  'frontend/config/webpack.dev.js',
+  'frontend/config/rspack.dev.js',
   'frontend/src/app/utilities/const.ts',
   'frontend/src/odh/extensions.ts',
   'frontend/src/odh/ModArchWrapper.tsx',
