@@ -27,7 +27,7 @@ program
   .argument('[base-directory]', 'Base directory where the module folder will be created', '.')
   .option('-f, --flavor <flavor>', 'Starter flavor: default (PatternFly-only) or kubeflow (MUI theme)', 'default')
   .option('-n, --name <module-name>', 'Module name in kebab-case (e.g., auto-rag, model-registry)')
-  .option('--install', 'Run npm install after copying the template (skipped by default to avoid monorepo conflicts)')
+  .option('--install', 'Run pnpm install after copying the template (skipped by default to avoid monorepo conflicts)')
   .option('--git', 'Initialize a git repository after copying the template (disabled by default)')
   // Deprecated options (hidden but still functional for backward compatibility)
   .option('--skip-install', '(deprecated: use default behavior) Skip dependency installation', false)

@@ -17,6 +17,16 @@ const getRsdoctorPlugin = () => {
 setupDotenvFilesForEnv({ env: 'production' });
 const rspackCommon = require('./rspack.common.js');
 
+// See rspack.common.js: prefer odh-dashboard's pnpm-aware CSS include matcher when present,
+// fall back to the npm-era @patternfly prefixes for pre-pnpm odh-dashboard checkouts.
+let pnpmResolver = null;
+try {
+  // eslint-disable-next-line global-require, import/no-unresolved
+  pnpmResolver = require('../../../../scripts/webpack/pnpmResolverIncludes');
+} catch {
+  pnpmResolver = null;
+}
+
 const RELATIVE_DIRNAME = process.env._RELATIVE_DIRNAME;
 const IS_PROJECT_ROOT_DIR = process.env._IS_PROJECT_ROOT_DIR === 'true';
 const SRC_DIR = process.env._SRC_DIR;
@@ -66,12 +76,19 @@ module.exports = merge(
       rules: [
         {
           test: /\.css$/,
-          include: [
-            SRC_DIR,
-            COMMON_DIR,
-            path.resolve(RELATIVE_DIRNAME, 'node_modules/@patternfly'),
-            path.resolve(ROOT_NODE_MODULES, '@patternfly'),
-          ],
+          include: pnpmResolver
+            ? pnpmResolver.patternFlyCssIncludes(
+                RELATIVE_DIRNAME,
+                ROOT_NODE_MODULES,
+                SRC_DIR,
+                COMMON_DIR,
+              )
+            : [
+                SRC_DIR,
+                COMMON_DIR,
+                path.resolve(RELATIVE_DIRNAME, 'node_modules/@patternfly'),
+                path.resolve(ROOT_NODE_MODULES, '@patternfly'),
+              ],
           use: [rspack.CssExtractRspackPlugin.loader, 'css-loader'],
         },
       ],

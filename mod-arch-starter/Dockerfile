@@ -19,13 +19,10 @@ WORKDIR /usr/src/app
 # Copy the source code to the container
 COPY ${UI_SOURCE_CODE} /usr/src/app
 
-# Install the dependencies and build. Keep optional deps: rspack ships its native binding
-# (@rspack/binding-*) as platform-specific optionalDependencies, so --omit=optional would
-# strip it and break `build:prod`. --ignore-scripts skips the Cypress binary download (the
-# production build never needs it); the final distroless stage only copies dist/.
-RUN npm cache clean --force
-RUN npm ci --ignore-scripts
-RUN npm run build:prod
+# Install the dependencies and build (pnpm via corepack, pinned by package.json packageManager)
+RUN corepack enable
+RUN pnpm install --frozen-lockfile
+RUN pnpm run build:prod
 
 # BFF build stage
 FROM ${GOLANG_BASE_IMAGE} AS bff-builder

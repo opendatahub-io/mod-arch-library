@@ -14,7 +14,7 @@ This creates a `./my-new-module/` directory with the full starter template.
 | --- | --- | --- |
 | `-n, --name <module-name>` | Module name in kebab-case (e.g., `auto-rag`, `model-registry`) | Prompted if not provided |
 | `-f, --flavor <default\|kubeflow>` | Chooses between the PatternFly-only default flavor or Kubeflow (Material UI) | `default` |
-| `--install` | Run `npm install` inside `frontend/` (skipped by default to avoid monorepo conflicts) | Disabled |
+| `--install` | Run `pnpm install` inside `frontend/` (skipped by default to avoid monorepo conflicts) | Disabled |
 | `--git` | Initialize a git repository after copying | Disabled |
 
 Examples:
@@ -29,7 +29,7 @@ npx mod-arch-installer -n mr-ui --flavor kubeflow
 # Install into a specific directory (creates ./packages/my-module/)
 npx mod-arch-installer ./packages -n my-module
 
-# With npm install and git initialization
+# With pnpm install and git initialization
 npx mod-arch-installer -n my-module --install --git
 ```
 
@@ -44,7 +44,7 @@ npx mod-arch-installer -n my-module --install --git
 
 ## After running the installer
 
-1. `cd <your-project>/frontend` and run `npm run start:dev` (or `npm run start:default` if you generated the default flavor).
+1. `cd <your-project>/frontend` and run `pnpm run start:dev` (or `pnpm run start:default` if you generated the default flavor).
 2. Run the Go BFF locally: `cd <your-project>/bff && make run` (requires Go 1.24+).
 3. Update the OpenAPI spec inside `api/openapi/` to describe your module's contract.
 4. Customize namespaces, routes, and branding to match your feature.

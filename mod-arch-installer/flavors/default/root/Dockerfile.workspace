@@ -23,8 +23,8 @@ ARG PLATFORM_MODE
 WORKDIR /usr/src/workspace
 
 ### Workspace setup
-# Copy root workspace manifest first (allows npm to compute workspace graph)
-COPY --chown=default:root package.json package-lock.json* ./
+# Copy root workspace manifest + pnpm lockfile/workspace config for pnpm resolution
+COPY --chown=default:root package.json pnpm-lock.yaml* pnpm-workspace.yaml* ./
 # Copy the frontend workspace manifest so its dependencies can be resolved if referenced
 COPY --chown=default:root frontend/package.json ./frontend/
 # Copy required shared workspace packages needed for module builds
@@ -39,22 +39,14 @@ COPY --chown=default:root ${UI_SOURCE_CODE} ./${UI_SOURCE_CODE}
 # Change file ownership to the assemble user
 USER default
 
-# Install workspace dependencies first (this creates node_modules at workspace level)
-RUN npm cache clean --force
-# Install all workspace dependencies (includes root + any copied workspaces).
-# Keep optional deps: rspack ships its native binding (@rspack/binding-*) as platform-specific
-# optionalDependencies, so --omit=optional would strip it and break `build:prod`. --ignore-scripts
-# still skips the Cypress binary download; the final distroless stage only copies dist/.
-RUN npm ci --ignore-scripts
+# Install pnpm (pinned to the version used by odh-dashboard) and all workspace dependencies.
+# pnpm resolves the whole workspace in one pass; no separate per-module install is needed.
+RUN npm install -g pnpm@11.22.0
+RUN pnpm install --frozen-lockfile --ignore-scripts
 
-# Set up the specific module
+# Set up the specific module and build it
 WORKDIR /usr/src/workspace/${UI_SOURCE_CODE}
-
-# Install module dependencies (keep optional deps for rspack's native binding; see note above)
-RUN npm ci --ignore-scripts
-
-# Build the module
-RUN npm run build:prod
+RUN pnpm run build:prod
 
 # BFF build stage
 FROM ${GOLANG_BASE_IMAGE} AS bff-builder

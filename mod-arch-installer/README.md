@@ -21,7 +21,7 @@ npx mod-arch-installer -n my-new-module --flavor kubeflow
 | --- | --- | --- |
 | `-n, --name <module-name>` | Module name in kebab-case (e.g., `auto-rag`, `model-registry`) | Prompted if not provided |
 | `-f, --flavor <default\|kubeflow>` | Starter flavor: default (PatternFly-only) or kubeflow (MUI theme) | `default` |
-| `--install` | Run `npm install` after copying (skipped by default to avoid monorepo conflicts) | Disabled |
+| `--install` | Run `pnpm install` after copying (skipped by default to avoid monorepo conflicts) | Disabled |
 | `--git` | Initialize a git repository after copying | Disabled |
 
 The target directory is automatically created using `[base-directory]/[module-name]`.
