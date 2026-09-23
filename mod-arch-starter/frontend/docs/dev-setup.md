@@ -4,9 +4,10 @@
 
 This project requires the following tools to be installed on your system:
 
-- [NodeJS and NPM](https://nodejs.org/)
+- [NodeJS](https://nodejs.org/)
   - Node recommended version -> `22.17.0`
-  - NPM recommended version -> `10.8.2`
+- [pnpm](https://pnpm.io/) (enable via `corepack enable`; the version is pinned by `packageManager` in `package.json`)
+  - pnpm recommended version -> `11.22.0`
 
 ## Development
 
@@ -19,13 +20,13 @@ This project requires the following tools to be installed on your system:
 2. Within the repo context, install project dependencies
 
      ```bash
-     cd mod-arch/clients/ui/frontend && npm install
+     cd mod-arch/clients/ui/frontend && pnpm install
      ```
 
 ### Build project
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 ### Serve development content
@@ -33,7 +34,7 @@ npm run build
 This is the default context for running a local UI.  Make sure you build the project using the instructions above prior to running the command below.
 
 ```bash
-npm run start:dev
+pnpm run start:dev
 ```
 
 For in-depth local run guidance review the [contribution guidelines](../../../ui/CONTRIBUTING.md).
@@ -43,7 +44,7 @@ For in-depth local run guidance review the [contribution guidelines](../../../ui
 Run the mock tests.
 
   ```bash
-  npm run test:cypress-ci
+  pnpm run test:cypress-ci
   ```
 
 For in-depth testing guidance review the [testing guidelines](./testing.md)

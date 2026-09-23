@@ -91,6 +91,14 @@ async function removeDefaultFolders(flavor: StarterFlavor, targetDir: string) {
   if (await fileExists(flatEslintConfigPath)) {
     await rm(flatEslintConfigPath, { force: true });
   }
+
+  // Remove the standalone pnpm-workspace.yaml: a federated module is a member of the
+  // odh-dashboard pnpm workspace (its root pnpm-workspace.yaml governs settings/allowBuilds),
+  // so a per-module workspace file would create a conflicting nested workspace.
+  const pnpmWorkspacePath = path.join(targetDir, FRONTEND_DIR, 'pnpm-workspace.yaml');
+  if (await fileExists(pnpmWorkspacePath)) {
+    await rm(pnpmWorkspacePath, { force: true });
+  }
 }
 
 async function applyFrontendOverlay(flavor: StarterFlavor, targetDir: string) {
@@ -175,37 +183,11 @@ async function updateFrontendDependencies(options: InstallOptions, targetDir: st
   }
   packageJson.scripts = {
     ...packageJson.scripts,
-    'start:default': "STYLE_THEME=patternfly-theme npm run start:dev",
+    'start:default': 'STYLE_THEME=patternfly-theme pnpm run start:dev',
   };
   await writeJSON(packageJsonPath, packageJson);
-
-  if (options.flavor === 'default') {
-    const packageLockPath = path.join(targetDir, FRONTEND_DIR, 'package-lock.json');
-    const hasPackageLock = await fileExists(packageLockPath);
-    if (hasPackageLock) {
-      const packageLock = await readJSON(packageLockPath);
-      if (packageLock.packages) {
-        const rootPackage = packageLock.packages[''];
-        if (rootPackage) {
-          if (rootPackage.dependencies) {
-            delete rootPackage.dependencies['mod-arch-shared'];
-          }
-          if (rootPackage.devDependencies) {
-            delete rootPackage.devDependencies['mod-arch-shared'];
-          }
-        }
-        Object.keys(packageLock.packages).forEach((pkgKey) => {
-          if (pkgKey.startsWith('node_modules/mod-arch-shared')) {
-            delete packageLock.packages[pkgKey];
-          }
-        });
-      }
-      if (packageLock.dependencies) {
-        delete packageLock.dependencies['mod-arch-shared'];
-      }
-      await writeJSON(packageLockPath, packageLock);
-    }
-  }
+  // No lockfile surgery: the template ships no lockfile (pnpm regenerates pnpm-lock.yaml
+  // on first install), so editing package.json is sufficient.
 }
 
 async function initializeGitRepo(targetDir: string, initializeGit: boolean) {
@@ -222,28 +204,46 @@ async function initializeGitRepo(targetDir: string, initializeGit: boolean) {
   }
 }
 
-async function installDependencies(targetDir: string, skipInstall: boolean) {
-  if (skipInstall) {
-    return;
-  }
-
+// Resolve the pinned pnpm spec (e.g. "pnpm@11.22.0") from the frontend's packageManager field,
+// falling back to the version the templates pin.
+async function pinnedPnpmSpec(frontendDir: string): Promise<string> {
   try {
-    await runCommand('npm', ['install'], { cwd: path.join(targetDir, FRONTEND_DIR) });
-  } catch (error) {
-    logger.warn(`Dependency installation failed: ${error instanceof Error ? error.message : String(error)}`);
+    const pkg = await readJSON(path.join(frontendDir, 'package.json'));
+    if (typeof pkg.packageManager === 'string' && pkg.packageManager.startsWith('pnpm@')) {
+      return pkg.packageManager;
+    }
+  } catch {
+    // fall through to the default spec
   }
+  return 'pnpm@11.22.0';
 }
 
-async function renameGitignores(dir: string) {
+async function installDependencies(targetDir: string) {
+  // Run pnpm via `npx` (bundled with npm) so installation works without a global pnpm or
+  // Corepack, using the version pinned by the frontend's packageManager field. Errors propagate
+  // to the caller so the CLI never reports a successful install that did not actually happen.
+  const frontendDir = path.join(targetDir, FRONTEND_DIR);
+  const pnpmSpec = await pinnedPnpmSpec(frontendDir);
+  await runCommand('npx', ['--yes', pnpmSpec, 'install'], { cwd: frontendDir });
+}
+
+// npm strips dotfiles (.gitignore) from published tarballs, so the template bundles them
+// dot-less; restore the leading dot in the scaffolded project. (pnpm settings live in
+// pnpm-workspace.yaml, which is not a dotfile and ships as-is.)
+const DOTFILE_RESTORES: Record<string, string> = {
+  gitignore: '.gitignore',
+};
+
+async function renameDotfiles(dir: string) {
   const entries = await readdir(dir, { withFileTypes: true });
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       if (entry.name !== '.git' && entry.name !== 'node_modules') {
-        await renameGitignores(fullPath);
+        await renameDotfiles(fullPath);
       }
-    } else if (entry.name === 'gitignore') {
-      const newPath = path.join(dir, '.gitignore');
+    } else if (DOTFILE_RESTORES[entry.name]) {
+      const newPath = path.join(dir, DOTFILE_RESTORES[entry.name]);
       await rename(fullPath, newPath);
     }
   }
@@ -282,17 +282,27 @@ export async function installStarter(options: InstallOptions) {
   currentStep++;
   logger.step(currentStep, totalSteps, `Applying module name "${options.moduleName.kebabCase}"...`);
   await replaceModuleNames(targetDir, options.moduleName);
-  await renameGitignores(targetDir);
+  await renameDotfiles(targetDir);
   logger.success('Module name applied');
 
   // Step 4: Install dependencies (optional)
   currentStep++;
-  if (!options.skipInstall) {
-    logger.step(currentStep, totalSteps, 'Installing npm dependencies...');
-    await installDependencies(targetDir, options.skipInstall);
-    logger.success('Dependencies installed');
+  if (options.skipInstall) {
+    logger.step(currentStep, totalSteps, 'Skipping install (use --install to enable)');
+  } else if (options.flavor === 'default') {
+    // A federated (default) module installs as a member of the odh-dashboard pnpm workspace:
+    // its frontend ships no pnpm-workspace.yaml and its root package.json uses workspace:* deps,
+    // so a standalone `pnpm install` cannot resolve. Skip it and point at the host workspace
+    // rather than running a command that is guaranteed to fail.
+    logger.step(currentStep, totalSteps, 'Skipping install for the federated (default) flavor');
+    logger.warn(
+      'Federated modules install with the odh-dashboard workspace. Register the module in the ' +
+        'workspace pnpm-workspace.yaml, then run `pnpm install` from the workspace root.',
+    );
   } else {
-    logger.step(currentStep, totalSteps, 'Skipping npm install (use --install to enable)');
+    logger.step(currentStep, totalSteps, 'Installing dependencies (pnpm)...');
+    await installDependencies(targetDir);
+    logger.success('Dependencies installed');
   }
 
   // Step 5: Initialize git (optional)

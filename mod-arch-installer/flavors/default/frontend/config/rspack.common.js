@@ -5,6 +5,18 @@ const { moduleFederationPlugins } = require('./moduleFederation');
 const { setupWebpackDotenvFilesForEnv } = require('./dotenv');
 const { name } = require('../package.json');
 
+// odh-dashboard's pnpm migration (PR opendatahub-io/odh-dashboard#9361) adds a shared
+// pnpm-aware resolver at scripts/webpack/pnpmResolverIncludes.js. Prefer it when present;
+// fall back to the npm-era @odh-dashboard/internal alias so this config also works on an
+// npm-based odh-dashboard checkout (before that PR merges).
+let pnpmResolver = null;
+try {
+  // eslint-disable-next-line global-require, import/no-unresolved
+  pnpmResolver = require('../../../../scripts/webpack/pnpmResolverIncludes');
+} catch {
+  pnpmResolver = null;
+}
+
 const RELATIVE_DIRNAME = process.env._RELATIVE_DIRNAME;
 const IS_PROJECT_ROOT_DIR = process.env._IS_PROJECT_ROOT_DIR === 'true';
 const IMAGES_DIRNAME = process.env._IMAGES_DIRNAME;
@@ -245,7 +257,9 @@ module.exports = (env) => ({
     extensions: ['.js', '.ts', '.tsx', '.jsx'],
     alias: {
       '~': path.resolve(SRC_DIR),
-      '@odh-dashboard/internal': path.resolve(RELATIVE_DIRNAME, '../../../frontend/src'),
+      ...(pnpmResolver
+        ? pnpmResolver.pnpmWebpackResolveAliases(RELATIVE_DIRNAME)
+        : { '@odh-dashboard/internal': path.resolve(RELATIVE_DIRNAME, '../../../frontend/src') }),
     },
     symlinks: false,
     cacheWithContext: false,

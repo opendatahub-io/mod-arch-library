@@ -14,8 +14,11 @@ module.exports = {
     '~/(.*)': '<rootDir>/src/$1',
   },
   testEnvironment: 'jest-environment-jsdom',
+  // The optional `.pnpm/` segment lets the allow-list also match pnpm's nested layout
+  // (node_modules/.pnpm/<pkg>@<ver>/node_modules/<pkg>), so these ESM-only deps are transformed
+  // under both npm (flat) and pnpm.
   transformIgnorePatterns: [
-    'node_modules/(?!yaml|lodash-es|uuid|@patternfly|delaunator|mod-arch-core)',
+    'node_modules/(?!(\\.pnpm/)?(yaml|lodash-es|uuid|@patternfly|delaunator|mod-arch-core))',
   ],
   snapshotSerializers: [],
   setupFilesAfterEnv: ['<rootDir>/src/__tests__/unit/jest.setup.ts'],

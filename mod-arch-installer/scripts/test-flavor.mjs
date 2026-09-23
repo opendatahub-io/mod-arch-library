@@ -17,10 +17,46 @@
  *   node scripts/test-flavor.mjs kubeflow  # Tests the kubeflow flavor
  */
 
-import { cp, mkdir, rm, readdir, stat } from 'node:fs/promises';
+import { cp, mkdir, rm, readdir, stat, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
+import { readFileSync } from 'node:fs';
+
+/**
+ * Resolve the pinned pnpm spec (e.g. "pnpm@11.22.0") from the nearest package.json's
+ * `packageManager` field, falling back to the version the templates pin.
+ * @param {string} cwd - Directory whose package.json declares the pinned pnpm version
+ * @returns {string}
+ */
+function pinnedPnpmSpec(cwd) {
+  try {
+    const pkg = JSON.parse(readFileSync(path.join(cwd, 'package.json'), 'utf8'));
+    if (typeof pkg.packageManager === 'string' && pkg.packageManager.startsWith('pnpm@')) {
+      return pkg.packageManager;
+    }
+  } catch {
+    // fall through to the default spec
+  }
+  return 'pnpm@11.22.0';
+}
+
+/**
+ * Run pnpm via `npx`, which ships with npm and is therefore available in every environment
+ * that has Node (unlike Corepack or a global pnpm — the required Prow unit-tests image has
+ * neither, so `corepack`/`pnpm` fail with exit 127). npx runs the exact pinned version.
+ * @param {string[]} args - Arguments to pass to pnpm
+ * @param {string} cwd - Working directory
+ * @returns {import('node:child_process').ChildProcess}
+ */
+function spawnPnpm(args, cwd) {
+  return spawn('npx', ['--yes', pinnedPnpmSpec(cwd), ...args], {
+    cwd,
+    stdio: 'inherit',
+    shell: true,
+    env: { ...process.env, COREPACK_ENABLE_DOWNLOAD_PROMPT: '0' },
+  });
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -96,24 +132,52 @@ async function removeDefaultBaseConfigs(frontendDir) {
 }
 
 /**
- * Runs npm install in the specified directory.
- * @param {string} dir - Directory to run npm install in
+ * Reproduce the shipped federated (default) layout for install. The installer removes
+ * frontend/pnpm-workspace.yaml from a default module (it joins the odh-dashboard workspace,
+ * so a per-module workspace file would nest), which means a standalone frontend install would
+ * fail with ERR_PNPM_IGNORED_BUILDS. To validate exactly what ships, remove that file and
+ * recreate the host workspace: a minimal root carrying the same pnpm settings
+ * (allowBuilds/overrides/hoisting) with the frontend as its only member. Returns the directory
+ * pnpm install should run from.
+ * @param {string} workDir - The merged work directory (parent of frontend)
+ * @returns {Promise<string>} Directory to run install from
+ */
+async function mirrorFederatedWorkspaceRoot(workDir) {
+  const frontendDir = path.join(workDir, 'frontend');
+  const frontendWorkspaceFile = path.join(frontendDir, 'pnpm-workspace.yaml');
+  // Carry the base starter's pnpm settings up to the synthetic root, pointing at the frontend
+  // member instead of '.', then drop the per-module file so the frontend matches shipped output.
+  const baseWorkspace = await readFile(frontendWorkspaceFile, 'utf8');
+  await rm(frontendWorkspaceFile, { force: true });
+  const rootWorkspace = baseWorkspace.replace(/-\s*'\.'/, "- 'frontend'");
+  await writeFile(path.join(workDir, 'pnpm-workspace.yaml'), rootWorkspace);
+  // pnpm needs a root package.json; carry packageManager so the pinned pnpm version is used.
+  const frontendPkg = JSON.parse(await readFile(path.join(frontendDir, 'package.json'), 'utf8'));
+  const rootPkg = {
+    name: 'harness-workspace-root',
+    version: '0.0.0',
+    private: true,
+    ...(frontendPkg.packageManager ? { packageManager: frontendPkg.packageManager } : {}),
+  };
+  await writeFile(path.join(workDir, 'package.json'), `${JSON.stringify(rootPkg, null, 2)}\n`);
+  return workDir;
+}
+
+/**
+ * Runs pnpm install in the specified directory.
+ * @param {string} dir - Directory to run pnpm install in
  * @returns {Promise<void>}
  */
-function runNpmInstall(dir) {
+function runInstall(dir) {
   return new Promise((resolve, reject) => {
     console.log(`[test-flavor] Installing dependencies in ${dir}...`);
-    const proc = spawn('npm', ['install', '--legacy-peer-deps'], {
-      cwd: dir,
-      stdio: 'inherit',
-      shell: true,
-    });
+    const proc = spawnPnpm(['install'], dir);
 
     proc.on('close', (code) => {
       if (code === 0) {
         resolve();
       } else {
-        reject(new Error(`npm install failed with code ${code}`));
+        reject(new Error(`pnpm install failed with code ${code}`));
       }
     });
 
@@ -132,11 +196,7 @@ function runLint(dir, extraArgs = []) {
     console.log(`[test-flavor] Running lint in ${dir}...`);
     // Only run test:lint, skip type-check and unit tests since they require external dependencies
     const args = ['run', 'test:lint', ...extraArgs];
-    const proc = spawn('npm', args, {
-      cwd: dir,
-      stdio: 'inherit',
-      shell: true,
-    });
+    const proc = spawnPnpm(args, dir);
 
     proc.on('close', (code) => {
       resolve(code);
@@ -192,16 +252,23 @@ async function testFlavor() {
     console.log('[test-flavor] Applying flavor overlays...');
     await applyFlavorOverlays(flavorPath, testWorkDir);
 
+    const frontendDir = path.join(testWorkDir, 'frontend');
+
     // For the default flavor, remove base starter build/lint configs that the overlay
     // replaces (webpack -> rspack, ESLint 9 flat -> ESLint 8 legacy). This mirrors the
     // installer's removeDefaultFolders() so the harness validates exactly what ships.
+    // The default flavor also ships without frontend/pnpm-workspace.yaml, so reproduce the
+    // odh-dashboard host workspace (settings at a synthetic root) and install from there.
+    // The kubeflow/base flavor keeps its per-frontend pnpm-workspace.yaml and installs in place.
+    let installDir = frontendDir;
     if (flavorArg === 'default') {
-      await removeDefaultBaseConfigs(path.join(testWorkDir, 'frontend'));
+      await removeDefaultBaseConfigs(frontendDir);
+      installDir = await mirrorFederatedWorkspaceRoot(testWorkDir);
     }
 
-    // Install dependencies in frontend
-    const frontendDir = path.join(testWorkDir, 'frontend');
-    await runNpmInstall(frontendDir);
+    // Install dependencies (from the synthetic workspace root for the default flavor, else the
+    // frontend). pnpm honors the allowBuilds/overrides/hoisting settings from the workspace root.
+    await runInstall(installDir);
 
     // Run lint only (skip type-check and unit tests since they require external dependencies)
     const lintExtraArgs = process.argv.slice(3);

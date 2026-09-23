@@ -22,6 +22,42 @@ import { readdir, stat, readFile, writeFile, cp, rm, mkdir } from 'node:fs/promi
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
+import { readFileSync } from 'node:fs';
+
+/**
+ * Resolve the pinned pnpm spec (e.g. "pnpm@11.22.0") from the nearest package.json's
+ * `packageManager` field, falling back to the version the templates pin.
+ * @param {string} cwd - Directory whose package.json declares the pinned pnpm version
+ * @returns {string}
+ */
+function pinnedPnpmSpec(cwd) {
+  try {
+    const pkg = JSON.parse(readFileSync(path.join(cwd, 'package.json'), 'utf8'));
+    if (typeof pkg.packageManager === 'string' && pkg.packageManager.startsWith('pnpm@')) {
+      return pkg.packageManager;
+    }
+  } catch {
+    // fall through to the default spec
+  }
+  return 'pnpm@11.22.0';
+}
+
+/**
+ * Run pnpm via `npx`, which ships with npm and is therefore available in every environment
+ * that has Node (unlike Corepack or a global pnpm — the required Prow unit-tests image has
+ * neither, so `corepack`/`pnpm` fail with exit 127). npx runs the exact pinned version.
+ * @param {string[]} args - Arguments to pass to pnpm
+ * @param {string} cwd - Working directory
+ * @returns {import('node:child_process').ChildProcess}
+ */
+function spawnPnpm(args, cwd) {
+  return spawn('npx', ['--yes', pinnedPnpmSpec(cwd), ...args], {
+    cwd,
+    stdio: 'inherit',
+    shell: true,
+    env: { ...process.env, COREPACK_ENABLE_DOWNLOAD_PROMPT: '0' },
+  });
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -151,22 +187,18 @@ function runEslint(dir, files, fix = false) {
   
   return new Promise((resolve, reject) => {
     console.log(`[lint-flavor] Running ESLint on ${jsFiles.length} files...`);
-    // Run ESLint directly with npx to only lint the specified files
+    // Run ESLint via pnpm exec to only lint the specified files
     // Use --no-ignore to lint config files that would otherwise be ignored
     const args = [
+      'exec',
       'eslint',
-      '--ext', '.js,.ts,.jsx,.tsx',
       '--max-warnings', '0',
       '--no-ignore',
       ...(fix ? ['--fix'] : []),
       ...jsFiles
     ];
 
-    const proc = spawn('npx', args, {
-      cwd: dir,
-      stdio: 'inherit',
-      shell: true,
-    });
+    const proc = spawnPnpm(args, dir);
 
     proc.on('close', (code) => {
       resolve(code);
@@ -187,16 +219,13 @@ function runPrettier(dir, files, fix = false) {
   return new Promise((resolve, reject) => {
     console.log(`[lint-flavor] Running Prettier on ${files.length} files...`);
     const args = [
+      'exec',
       'prettier',
       ...(fix ? ['--write'] : ['--check']),
       ...files
     ];
 
-    const proc = spawn('npx', args, {
-      cwd: dir,
-      stdio: 'inherit',
-      shell: true,
-    });
+    const proc = spawnPnpm(args, dir);
 
     proc.on('close', (code) => {
       resolve(code);
@@ -207,29 +236,57 @@ function runPrettier(dir, files, fix = false) {
 }
 
 /**
- * Runs npm install in the specified directory.
- * @param {string} dir - Directory to run npm install in
+ * Runs pnpm install in the specified directory.
+ * @param {string} dir - Directory to run pnpm install in
  * @returns {Promise<void>}
  */
-function runNpmInstall(dir) {
+function runInstall(dir) {
   return new Promise((resolve, reject) => {
     console.log(`[lint-flavor] Installing dependencies in ${dir}...`);
-    const proc = spawn('npm', ['install', '--legacy-peer-deps'], {
-      cwd: dir,
-      stdio: 'inherit',
-      shell: true,
-    });
+    const proc = spawnPnpm(['install'], dir);
 
     proc.on('close', (code) => {
       if (code === 0) {
         resolve();
       } else {
-        reject(new Error(`npm install failed with code ${code}`));
+        reject(new Error(`pnpm install failed with code ${code}`));
       }
     });
 
     proc.on('error', reject);
   });
+}
+
+/**
+ * Reproduce the shipped federated (default) layout for install. The installer removes
+ * frontend/pnpm-workspace.yaml from a default module (it joins the odh-dashboard workspace),
+ * so a standalone frontend install would fail with ERR_PNPM_IGNORED_BUILDS. Mirror that by
+ * turning the work directory into a synthetic host workspace root: carry the base starter's
+ * pnpm settings (allowBuilds/overrides/hoisting) there with the frontend as the only member,
+ * and ensure the frontend itself has no workspace file. Returns the directory to install from.
+ * @param {string} rootDir - The lint work directory (parent of frontend)
+ * @param {string} baseFrontendDir - Base starter frontend (source of the pnpm settings)
+ * @returns {Promise<string>} Directory to run install from
+ */
+async function mirrorFederatedWorkspaceRoot(rootDir, baseFrontendDir) {
+  const frontendDir = path.join(rootDir, 'frontend');
+  // Frontend must not carry its own workspace file (matches shipped output).
+  await rm(path.join(frontendDir, 'pnpm-workspace.yaml'), { force: true });
+  // Carry the base pnpm settings to the root, pointing at the frontend member instead of '.'.
+  const baseWorkspace = await readFile(path.join(baseFrontendDir, 'pnpm-workspace.yaml'), 'utf8');
+  const rootWorkspace = baseWorkspace.replace(/-\s*'\.'/, "- 'frontend'");
+  await writeFile(path.join(rootDir, 'pnpm-workspace.yaml'), rootWorkspace);
+  // Replace the base frontend's package.json (copied to the root) with a minimal workspace root,
+  // so pnpm installs only the frontend member. Carry packageManager so the pinned pnpm is used.
+  const frontendPkg = JSON.parse(await readFile(path.join(frontendDir, 'package.json'), 'utf8'));
+  const rootPkg = {
+    name: 'harness-workspace-root',
+    version: '0.0.0',
+    private: true,
+    ...(frontendPkg.packageManager ? { packageManager: frontendPkg.packageManager } : {}),
+  };
+  await writeFile(path.join(rootDir, 'package.json'), `${JSON.stringify(rootPkg, null, 2)}\n`);
+  return rootDir;
 }
 
 /**
@@ -322,12 +379,25 @@ async function lintFlavor() {
     // .eslintrc.js) instead of walking up to a flat config whose plugins live only in the base.
     await rm(path.join(lintWorkDir, 'eslint.config.mjs'), { force: true });
 
-    // Install dependencies in the flavor frontend, not the workdir root. The overlay's
-    // frontend/package.json pins the flavor's own toolchain (the default flavor uses ESLint 8
-    // legacy config), which differs from the base starter copied at the workdir root. Installing
-    // and linting from here validates exactly the toolchain the generated module ships.
+    // Install dependencies in the flavor frontend. Its overlay package.json pins the flavor's
+    // own toolchain (e.g. the default flavor uses ESLint 8 legacy config), which can differ from
+    // the base starter copied at the workdir root, so we install and lint from here.
     const frontendWorkDir = path.join(lintWorkDir, 'frontend');
-    await runNpmInstall(frontendWorkDir);
+    // For the default flavor, mirror shipped output: the frontend ships without
+    // pnpm-workspace.yaml (federated modules join odh's root workspace), so reproduce that host
+    // workspace at a synthetic root and install from there. Other flavors keep a per-frontend
+    // workspace file and install in place.
+    let installDir = frontendWorkDir;
+    if (flavorArg === 'default') {
+      installDir = await mirrorFederatedWorkspaceRoot(lintWorkDir, starterFrontendRoot);
+    } else {
+      await cp(
+        path.join(starterFrontendRoot, 'pnpm-workspace.yaml'),
+        path.join(frontendWorkDir, 'pnpm-workspace.yaml'),
+        { force: true },
+      );
+    }
+    await runInstall(installDir);
 
     // Get paths of flavor files mapped to work directory
     const workdirFiles = flavorFiles.map((f) => {

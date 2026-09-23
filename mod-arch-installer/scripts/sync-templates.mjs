@@ -35,17 +35,28 @@ function shouldCopy(src) {
   if (relative.startsWith(path.join('bff', 'bin'))) {
     return false;
   }
+  // Never bundle lockfiles: the scaffold regenerates them with `pnpm install`, and the
+  // installer strips deps per flavor (a shipped lockfile would immediately be stale).
+  const base = segments[segments.length - 1];
+  if (base === 'package-lock.json' || base === 'pnpm-lock.yaml') {
+    return false;
+  }
   return !segments.some((segment) => IGNORE_DIRS.has(segment));
 }
 
-async function renameGitignores(dir) {
+// npm strips dotfiles like .gitignore from published tarballs, so we bundle them under a
+// dot-less name and the installer restores the dot on scaffold. (pnpm settings live in
+// pnpm-workspace.yaml, which is not a dotfile and ships as-is.)
+const DOTFILE_RENAMES = new Map([['.gitignore', 'gitignore']]);
+
+async function renameDotfiles(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      await renameGitignores(fullPath);
-    } else if (entry.name === '.gitignore') {
-      const newPath = path.join(dir, 'gitignore');
+      await renameDotfiles(fullPath);
+    } else if (DOTFILE_RENAMES.has(entry.name)) {
+      const newPath = path.join(dir, DOTFILE_RENAMES.get(entry.name));
       await rename(fullPath, newPath);
     }
   }
@@ -68,7 +79,7 @@ async function syncTemplates() {
     },
   });
 
-  await renameGitignores(targetRoot);
+  await renameDotfiles(targetRoot);
 
   console.log('[mod-arch-installer] Templates synced from mod-arch-starter.');
 }
