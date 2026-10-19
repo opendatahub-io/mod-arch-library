@@ -30,10 +30,10 @@ module.exports = {
 };
 ```
 
-2. Run the centraldashboard:
+2. Run the centraldashboard (the upstream Kubeflow Central Dashboard uses npm):
 
 ```shell
-pnpm run dev
+npm run dev
 ```
 
 ### Mod Arch repo

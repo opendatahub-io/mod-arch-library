@@ -19,9 +19,12 @@ WORKDIR /usr/src/app
 # Copy the source code to the container
 COPY ${UI_SOURCE_CODE} /usr/src/app
 
-# Install the dependencies and build (pnpm via corepack, pinned by package.json packageManager)
+# Install the dependencies and build (pnpm via corepack, pinned by package.json packageManager).
+# CYPRESS_INSTALL_BINARY=0 skips Cypress's multi-hundred-MB binary download: cypress is in the
+# pnpm allowBuilds list so its postinstall would otherwise run, and the UI production build never
+# needs the Cypress runner.
 RUN corepack enable
-RUN pnpm install --frozen-lockfile
+RUN CYPRESS_INSTALL_BINARY=0 pnpm install --frozen-lockfile
 RUN pnpm run build:prod
 
 # BFF build stage

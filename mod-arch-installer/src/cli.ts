@@ -27,7 +27,7 @@ program
   .argument('[base-directory]', 'Base directory where the module folder will be created', '.')
   .option('-f, --flavor <flavor>', 'Starter flavor: default (PatternFly-only) or kubeflow (MUI theme)', 'default')
   .option('-n, --name <module-name>', 'Module name in kebab-case (e.g., auto-rag, model-registry)')
-  .option('--install', 'Run pnpm install after copying the template (skipped by default to avoid monorepo conflicts)')
+  .option('--install', 'Run pnpm install after copying the template (kubeflow flavor only; not supported for the federated default flavor)')
   .option('--git', 'Initialize a git repository after copying the template (disabled by default)')
   // Deprecated options (hidden but still functional for backward compatibility)
   .option('--skip-install', '(deprecated: use default behavior) Skip dependency installation', false)
@@ -44,6 +44,20 @@ program
     const flavor = options.flavor as StarterFlavor;
     if (!FLAVORS.includes(flavor)) {
       logger.error(`Unknown flavor "${flavor}". Use one of: ${FLAVORS.join(', ')}`);
+      process.exitCode = 1;
+      return;
+    }
+
+    // --install is unsupported for the federated (default) flavor: a federated module installs as
+    // a member of the odh-dashboard pnpm workspace (its frontend ships no pnpm-workspace.yaml and
+    // its root uses workspace:* deps), so a standalone `pnpm install` cannot resolve. Reject the
+    // combination rather than accepting a flag whose action would be silently skipped.
+    if (options.install && flavor === 'default') {
+      logger.error(
+        '--install is not supported for the federated (default) flavor. Scaffold without --install, ' +
+          'register the module in your odh-dashboard pnpm-workspace.yaml, then run `pnpm install` from ' +
+          'the workspace root. (Use --install with `--flavor kubeflow` for a standalone install.)',
+      );
       process.exitCode = 1;
       return;
     }

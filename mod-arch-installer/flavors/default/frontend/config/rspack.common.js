@@ -13,7 +13,15 @@ let pnpmResolver = null;
 try {
   // eslint-disable-next-line global-require, import/no-unresolved
   pnpmResolver = require('../../../../scripts/webpack/pnpmResolverIncludes');
-} catch {
+} catch (error) {
+  // Only treat a genuinely absent resolver (pre-pnpm odh-dashboard checkout) as "fall back to
+  // the npm-era paths". Any other failure - including the resolver module itself throwing - is a
+  // real error that would otherwise silently produce a config with the wrong alias/CSS includes.
+  const resolverMissing =
+    error && error.code === 'MODULE_NOT_FOUND' && /pnpmResolverIncludes/.test(error.message);
+  if (!resolverMissing) {
+    throw error;
+  }
   pnpmResolver = null;
 }
 

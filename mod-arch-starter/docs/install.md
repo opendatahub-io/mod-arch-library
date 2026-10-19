@@ -14,7 +14,7 @@ This creates a `./my-new-module/` directory with the full starter template.
 | --- | --- | --- |
 | `-n, --name <module-name>` | Module name in kebab-case (e.g., `auto-rag`, `model-registry`) | Prompted if not provided |
 | `-f, --flavor <default\|kubeflow>` | Chooses between the PatternFly-only default flavor or Kubeflow (Material UI) | `default` |
-| `--install` | Run `pnpm install` inside `frontend/` (skipped by default to avoid monorepo conflicts) | Disabled |
+| `--install` | Run `pnpm install` inside `frontend/`. Kubeflow flavor only — rejected for the federated `default` flavor, which installs as part of the odh-dashboard workspace | Disabled |
 | `--git` | Initialize a git repository after copying | Disabled |
 
 Examples:
@@ -29,8 +29,8 @@ npx mod-arch-installer -n mr-ui --flavor kubeflow
 # Install into a specific directory (creates ./packages/my-module/)
 npx mod-arch-installer ./packages -n my-module
 
-# With pnpm install and git initialization
-npx mod-arch-installer -n my-module --install --git
+# With pnpm install and git initialization (--install is kubeflow-flavor only)
+npx mod-arch-installer -n my-module --flavor kubeflow --install --git
 ```
 
 ## What the CLI installs

@@ -29,6 +29,10 @@ function displayKubeflowChecklist(targetDir: string): void {
 
   logger.listItem(`${pc.bold('2.')} Install dependencies:`);
   logger.command('make dev-install-dependencies');
+  console.log(
+    `    ${pc.dim('Commit the generated')} ${pc.yellow('frontend/pnpm-lock.yaml')} ${pc.dim('before building the')}`,
+  );
+  console.log(`    ${pc.dim('container image — the Dockerfile installs with')} ${pc.cyan('--frozen-lockfile')}${pc.dim('.')}`);
   logger.blank();
 
   logger.listItem(`${pc.bold('3.')} Start development server:`);
