@@ -11,3 +11,7 @@ public-cypress
 .vscode
 mod-arch-installer/templates/
 tmp
+# The starter template ships no lockfile (sync-templates excludes it; each scaffold generates
+# and commits its own). Ignore the one a local `pnpm install` produces so it is never committed
+# to this library repo. This does not affect scaffolded projects (they use the template gitignore).
+mod-arch-starter/frontend/pnpm-lock.yaml

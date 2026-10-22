@@ -29,6 +29,10 @@ function displayKubeflowChecklist(targetDir: string): void {
 
   logger.listItem(`${pc.bold('2.')} Install dependencies:`);
   logger.command('make dev-install-dependencies');
+  console.log(
+    `    ${pc.dim('Commit the generated')} ${pc.yellow('frontend/pnpm-lock.yaml')} ${pc.dim('before building the')}`,
+  );
+  console.log(`    ${pc.dim('container image — the Dockerfile installs with')} ${pc.cyan('--frozen-lockfile')}${pc.dim('.')}`);
   logger.blank();
 
   logger.listItem(`${pc.bold('3.')} Start development server:`);
@@ -52,8 +56,9 @@ function displayDefaultChecklist(camelCase: string, pascalCase: string, targetDi
   logger.listItem(`${pc.bold('2.')} Add config to ${pc.yellow('frontend/src/concepts/areas/const.ts')}`);
   logger.blank();
 
-  logger.listItem(`${pc.bold('3.')} Install dependencies ${pc.dim('(from odh-dashboard root)')}:`);
-  logger.command('npm install');
+  logger.listItem(`${pc.bold('3.')} Register the module in ${pc.yellow('pnpm-workspace.yaml')} and install ${pc.dim('(from odh-dashboard root)')}:`);
+  console.log(`    ${pc.dim('Add')} ${pc.green(`packages/${moduleName}/frontend`)} ${pc.dim('to the packages list, then:')}`);
+  logger.command('pnpm install');
   logger.blank();
 
   logger.listItem(`${pc.bold('4.')} Configure port ${pc.dim('(if 9103 is already in use)')}:`);

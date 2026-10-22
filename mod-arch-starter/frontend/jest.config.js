@@ -25,9 +25,11 @@ module.exports = {
   // The test environment that will be used for testing.
   testEnvironment: 'jest-environment-jsdom',
 
-  // include projects from node_modules as required
+  // include projects from node_modules as required. The optional `.pnpm/` segment lets the
+  // allow-list also match pnpm's nested layout (node_modules/.pnpm/<pkg>@<ver>/node_modules/<pkg>),
+  // so these ESM-only deps are transformed under both npm (flat) and pnpm.
   transformIgnorePatterns: [
-    'node_modules/(?!yaml|lodash-es|uuid|@patternfly|delaunator|mod-arch-shared|mod-arch-core|mod-arch-kubeflow)',
+    'node_modules/(?!(\\.pnpm/)?(yaml|lodash-es|uuid|@patternfly|delaunator|mod-arch-shared|mod-arch-core|mod-arch-kubeflow))',
   ],
 
   // A list of paths to snapshot serializer modules Jest should use for snapshot testing
