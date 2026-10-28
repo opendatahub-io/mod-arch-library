@@ -71,7 +71,7 @@
     "@types/showdown": "^2.0.3",
     "@patternfly/react-core": "^6.6.2",
     "@patternfly/react-icons": "^6.6.1",
-    "@patternfly/react-styles": "^6.6.1",
+    "@patternfly/react-styles": "^6.7.0",
     "@patternfly/react-table": "^6.6.2",
     "core-js": "^3.50.0",
     "expect": "^29.7.0",
