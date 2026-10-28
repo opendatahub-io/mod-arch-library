@@ -14,6 +14,40 @@ updates:
     # mod-arch-installer) carry no lockfiles of their own — keep updates
     # rooted here so dependabot stops bumping files nothing reads.
 
+    # Major-update policy mirrors odh-dashboard (.github/dependabot.yml):
+    # majors are never batched into groups, age 30 days before a PR opens,
+    # and always require human review (PROW /lgtm + /approve — no
+    # auto-merge). Coordinated platform deps (PatternFly, react) are bumped
+    # deliberately alongside the consuming host, never by dependabot.
+    # Security updates are exempt from cooldown and ignore rules.
+    cooldown:
+      default-days: 14
+      semver-major-days: 30
+      semver-minor-days: 14
+      semver-patch-days: 14
+
+    ignore:
+      - dependency-name: "@patternfly/*"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+
+    groups:
+      npm-updates:
+        applies-to: version-updates
+        group-by: dependency-name
+        patterns:
+          - '*'
+        update-types:
+          - "minor"
+          - "patch"
+      npm-security:
+        applies-to: security-updates
+        patterns:
+          - '*'
+
   - package-ecosystem: github-actions
     directory: /
     schedule:
