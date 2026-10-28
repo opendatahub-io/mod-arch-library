@@ -1,0 +1,24 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
+    # This repo is an npm workspace: the root package-lock.json is the only
+    # lockfile consumed by CI, publishing, and local installs. The workspace
+    # members (mod-arch-core, mod-arch-kubeflow, mod-arch-shared,
+    # mod-arch-installer) carry no lockfiles of their own — keep updates
+    # rooted here so dependabot stops bumping files nothing reads.
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+      day: monday
+    open-pull-requests-limit: 2
+    labels:
+      - dependencies
