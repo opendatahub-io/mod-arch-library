@@ -17,9 +17,12 @@ updates:
     # Major-update policy mirrors odh-dashboard (.github/dependabot.yml):
     # majors are never batched into groups, age 30 days before a PR opens,
     # and always require human review (PROW /lgtm + /approve — no
-    # auto-merge). Coordinated platform deps (PatternFly, react) are bumped
-    # deliberately alongside the consuming host, never by dependabot.
-    # Security updates are exempt from cooldown and ignore rules.
+    # auto-merge). Coordinated platform deps track the consuming host:
+    # PatternFly major/minor and react/react-dom major updates are ignored,
+    # so react minor/patch and PatternFly patch bumps still open as PRs
+    # (react's in lockstep via the react group below). Security updates
+    # skip cooldown but not ignore — a CVE whose only fix lands in an
+    # ignored major needs a deliberate manual bump.
     cooldown:
       default-days: 14
       semver-major-days: 30
@@ -35,6 +38,19 @@ updates:
         update-types: ["version-update:semver-major"]
 
     groups:
+      # Version-coupled react family gets one PR (matched before the
+      # catch-all) so react and react-dom minors/patches can't drift out
+      # of lockstep — mirrors odh-dashboard's react group.
+      react:
+        applies-to: version-updates
+        patterns:
+          - "react"
+          - "react-dom"
+          - "react-router"
+          - "react-router-dom"
+        update-types:
+          - "minor"
+          - "patch"
       npm-updates:
         applies-to: version-updates
         group-by: dependency-name
