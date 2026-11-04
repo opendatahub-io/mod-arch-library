@@ -274,8 +274,27 @@ async function mirrorFederatedWorkspaceRoot(rootDir, baseFrontendDir) {
   await rm(path.join(frontendDir, 'pnpm-workspace.yaml'), { force: true });
   // Carry the base pnpm settings to the root, pointing at the frontend member instead of '.'.
   const baseWorkspace = await readFile(path.join(baseFrontendDir, 'pnpm-workspace.yaml'), 'utf8');
-  const rootWorkspace = baseWorkspace.replace(/-\s*'\.'/, "- 'frontend'");
+  const rootWorkspace = baseWorkspace.replace(/-\s*'\.'/, "- 'frontend'\n  - 'stubs/*'");
   await writeFile(path.join(rootDir, 'pnpm-workspace.yaml'), rootWorkspace);
+  // The federated frontend depends on odh-dashboard workspace packages (workspace:*), e.g.
+  // @odh-dashboard/plugin-core and @odh-dashboard/app-config. Provide empty stub members so the
+  // synthetic workspace resolves them; lint does not need their contents.
+  const frontendManifest = JSON.parse(await readFile(path.join(frontendDir, 'package.json'), 'utf8'));
+  const workspaceDeps = Object.entries({
+    ...frontendManifest.dependencies,
+    ...frontendManifest.devDependencies,
+    ...frontendManifest.optionalDependencies,
+  })
+    .filter(([, spec]) => typeof spec === 'string' && spec.startsWith('workspace:'))
+    .map(([name]) => name);
+  for (const name of workspaceDeps) {
+    const stubDir = path.join(rootDir, 'stubs', name.replace(/^@/, '').replace(/\//g, '__'));
+    await mkdir(stubDir, { recursive: true });
+    await writeFile(
+      path.join(stubDir, 'package.json'),
+      `${JSON.stringify({ name, version: '0.0.0', private: true }, null, 2)}\n`,
+    );
+  }
   // Replace the base frontend's package.json (copied to the root) with a minimal workspace root,
   // so pnpm installs only the frontend member. Carry packageManager so the pinned pnpm is used.
   const frontendPkg = JSON.parse(await readFile(path.join(frontendDir, 'package.json'), 'utf8'));

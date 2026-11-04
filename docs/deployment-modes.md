@@ -86,7 +86,7 @@ kubectl port-forward svc/model-registry-bff 8080:80
 # Configure frontend to use cluster BFF
 export REACT_APP_BFF_URL=http://localhost:8080
 export REACT_APP_THEME=mui-theme
-npm start
+npm run start:dev
 ```
 
 ### Authentication & Authorization
@@ -109,7 +109,7 @@ npm start
 
 ### Characteristics
 
-- **Module Federation**: Uses Webpack Module Federation for runtime composition within ODH/RHOAI Dashboard
+- **Module Federation**: Uses Module Federation (built with rspack) for runtime composition within ODH/RHOAI Dashboard
 - **Dynamic Loading**: Enables dynamic loading of micro-frontends at runtime
 - **Shared Dependencies**: Optimizes bundle sizes through shared dependencies between modules
 - **OpenShift Integration**: Optimized for ODH (Open Data Hub) and RHOAI (Red Hat OpenShift AI) platforms
@@ -117,24 +117,22 @@ npm start
 
 ### Module Federation Configuration
 
+ODH/RHOAI modules build with rspack and use `OdhFederationPlugin` from `@odh-dashboard/app-config/rspack`, which applies the dashboard's shared singleton policy (React, PatternFly, react-router, `@odh-dashboard/*`) based on the module's `frontend/package.json`, so no hand-maintained `shared` map is needed. This is the configuration the default flavor scaffolds:
+
 ```javascript
-// webpack.config.js for federated module
-const ModuleFederationPlugin = require('@module-federation/webpack');
+// frontend/config/moduleFederation.js
+const { OdhFederationPlugin } = require('@odh-dashboard/app-config/rspack');
 
 module.exports = {
-  plugins: [
-    new ModuleFederationPlugin({
-      name: 'modelRegistryModule',
-      filename: 'remoteEntry.js',
+  moduleFederationPlugins: [
+    new OdhFederationPlugin({
+      name: 'modelRegistry',
+      isHost: process.env.DEPLOYMENT_MODE === 'standalone',
       exposes: {
-        './ModelRegistryApp': './src/app/ModelRegistryApp',
-        './ModelRegistryRoutes': './src/app/ModelRegistryRoutes',
+        './extensions': './src/odh/extensions',
+        './extension-points': './src/odh/extension-points',
       },
-      shared: {
-        react: { singleton: true },
-        'react-dom': { singleton: true },
-        '@patternfly/react-core': { singleton: true },
-      },
+      dts: true,
     }),
   ],
 };

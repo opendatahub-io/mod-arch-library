@@ -1,32 +1,19 @@
-const { ModuleFederationPlugin } = require('@module-federation/enhanced/rspack');
-const deps = require('../package.json').dependencies;
-
-const moduleFederationConfig = {
-  name: 'modArch',
-  filename: 'remoteEntry.js',
-  shared: {
-    react: { singleton: true, requiredVersion: deps.react },
-    'react-dom': { singleton: true, requiredVersion: deps['react-dom'] },
-    'react-router': { singleton: true, requiredVersion: deps['react-router'] },
-    'react-router-dom': { singleton: true, requiredVersion: deps['react-router-dom'] },
-    '@patternfly/react-core': {
-      singleton: true,
-      requiredVersion: deps['@patternfly/react-core'],
-    },
-    '@odh-dashboard/plugin-core': {
-      singleton: true,
-      requiredVersion: '0.0.0',
-    },
-  },
-  exposes: {
-    './extensions': './src/odh/extensions',
-    './extension-points': './src/odh/extension-points',
-  },
-  runtime: false,
-  // Enable runtime for proper HMR in development
-  dts: true,
-};
+// odh-dashboard's OdhFederationPlugin applies the shared singleton policy (React, PatternFly,
+// react-router, @odh-dashboard/* ...) from the packages listed in this frontend's package.json,
+// so no hand-maintained `shared` map is needed. `isHost` makes standalone builds eager-share and
+// bundle their imports, while federated remotes use `import: false` and consume the host's copies.
+const { OdhFederationPlugin } = require('@odh-dashboard/app-config/rspack');
 
 module.exports = {
-  moduleFederationPlugins: [new ModuleFederationPlugin(moduleFederationConfig)],
+  moduleFederationPlugins: [
+    new OdhFederationPlugin({
+      name: 'modArch',
+      isHost: process.env.DEPLOYMENT_MODE === 'standalone',
+      exposes: {
+        './extensions': './src/odh/extensions',
+        './extension-points': './src/odh/extension-points',
+      },
+      dts: true,
+    }),
+  ],
 };

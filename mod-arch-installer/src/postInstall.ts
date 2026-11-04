@@ -46,23 +46,32 @@ function displayKubeflowChecklist(targetDir: string): void {
 
 function displayDefaultChecklist(camelCase: string, pascalCase: string, targetDir: string): void {
   const moduleName = path.basename(targetDir);
+  const upperSnake = moduleName.replace(/-/g, '_').toUpperCase();
 
   logger.header('Next Steps (ODH Dashboard Integration)');
-
-  logger.listItem(`${pc.bold('1.')} Add feature flag to ${pc.yellow('frontend/src/k8sTypes.ts')}:`);
-  console.log(`    ${pc.dim('Add:')} ${pc.green(`'${camelCase}Module'`)} to the feature flags`);
+  console.log(
+    `  ${pc.dim('Tip: the odh-dashboard')} ${pc.cyan('/module-onboarding')} ${pc.dim('Claude skill automates all of these steps.')}`,
+  );
   logger.blank();
 
-  logger.listItem(`${pc.bold('2.')} Add config to ${pc.yellow('frontend/src/concepts/areas/const.ts')}`);
+  logger.listItem(`${pc.bold('1.')} Register the frontend in the root ${pc.yellow('pnpm-workspace.yaml')}:`);
+  console.log(`    ${pc.dim('Add')} ${pc.green(`- packages/${moduleName}/frontend`)} ${pc.dim('to the packages list')}`);
   logger.blank();
 
-  logger.listItem(`${pc.bold('3.')} Register the module in ${pc.yellow('pnpm-workspace.yaml')} and install ${pc.dim('(from odh-dashboard root)')}:`);
-  console.log(`    ${pc.dim('Add')} ${pc.green(`packages/${moduleName}/frontend`)} ${pc.dim('to the packages list, then:')}`);
+  logger.listItem(`${pc.bold('2.')} Register the area and feature flag:`);
+  console.log(`    ${pc.yellow('packages/plugin-core/src/areas/types.ts')}  ${pc.green(`PLUGIN_${upperSnake} = 'plugin-${moduleName}'`)}`);
+  console.log(`    ${pc.yellow('packages/k8s-core/src/k8sTypes.ts')}       ${pc.green(`${camelCase}?: boolean;`)} ${pc.dim('(DashboardCommonConfig)')}`);
+  console.log(`    ${pc.yellow('frontend/src/concepts/areas/const.ts')}    ${pc.dim('flag default + SupportedAreasStateMap entry')}`);
+  console.log(`    ${pc.yellow('manifests/base/crd/odhdashboardconfigs.opendatahub.io.crd.yaml')} ${pc.dim('flag property')}`);
+  logger.blank();
+
+  logger.listItem(`${pc.bold('3.')} Install from the odh-dashboard root:`);
   logger.command('pnpm install');
   logger.blank();
 
-  logger.listItem(`${pc.bold('4.')} Configure port ${pc.dim('(if 9103 is already in use)')}:`);
-  console.log(`    ${pc.dim('Update')} ${pc.yellow('Makefile')} ${pc.dim('and')} ${pc.yellow('package.json')} ${pc.dim('with your port')}`);
+  logger.listItem(`${pc.bold('4.')} Validate ports ${pc.dim('(pass --port / --bff-port / --service-port to the installer to set them)')}:`);
+  logger.command('pnpm run validate:ports');
+  logger.command('pnpm run validate:cypress-mock');
   logger.blank();
 
   logger.listItem(`${pc.bold('5.')} Start development server ${pc.dim(`(from packages/${moduleName})`)}:`);
@@ -71,7 +80,6 @@ function displayDefaultChecklist(camelCase: string, pascalCase: string, targetDi
   logger.blank();
 
   logger.header('Optional Enhancements');
-  logger.listItem(`Export types via ${pc.yellow('package.json')} exports field`);
   logger.listItem(`Configure parent area (e.g., ${pc.cyan('gen-ai-studio')})`);
   logger.listItem(`Add navigation icon in ${pc.yellow(`${pascalCase}NavIcon.ts`)}`);
   logger.blank();

@@ -35,138 +35,68 @@ This path guides teams through creating entirely new features for Red Hat OpenSh
 
 #### 1.1 Repository Setup
 
+The ODH Dashboard is a pnpm workspace (pnpm 11.22.0, Node.js >= 22.18.0). Enable the pinned pnpm with `corepack enable`.
+
 ```bash
 # Clone the ODH Dashboard repository
 git clone https://github.com/opendatahub-io/odh-dashboard
 cd odh-dashboard
-
-# Create your feature package
-mkdir -p packages/my-feature
-cd packages/my-feature
-
-# Initialize package structure
-npm init -y
 ```
 
-#### 1.2 Package Structure Creation
+> **Tip:** The ODH Dashboard repository ships a `/module-onboarding` Claude skill that performs steps 1.2–1.4 for you, including port allocation.
+
+#### 1.2 Scaffold the Package
+
+Scaffold the module with `mod-arch-installer` (default, PatternFly-only flavor) from the `packages/` directory. Pick ports that no other module uses; the template defaults (`9103`, `4000`, `8043`) are placeholders.
 
 ```bash
-# Create standard package structure
-mkdir -p src/{app,components,pages,hooks,api,types,routes}
-mkdir -p src/{utils,constants,styles}
-mkdir -p __tests__/{unit,integration}
-mkdir -p public
-
-# Create essential files
-touch src/index.ts
-touch src/app/MyFeatureApp.tsx
-touch src/routes/MyFeatureRoutes.tsx
-touch webpack.config.js
-touch tsconfig.json
-touch README.md
+cd packages
+pnpm dlx mod-arch-installer -n my-feature --port <frontend-port> --bff-port <bff-port> --service-port <service-port>
 ```
 
-#### 1.3 Package Configuration
+This generates `packages/my-feature/` with the frontend, Go BFF, OpenAPI spec, manifests, and `Makefile`, with names and ports already applied.
 
-```json
-{
-  "name": "@odh-dashboard/my-feature",
-  "version": "1.0.0",
-  "description": "My Feature for ODH Dashboard",
-  "main": "src/index.ts",
-  "scripts": {
-    "start": "webpack serve --mode development",
-    "start:remote": "webpack serve --mode development --env remote",
-    "build": "webpack --mode production",
-    "build:federated": "webpack --mode production --env federated",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "type-check": "tsc --noEmit",
-    "lint": "eslint src --ext .ts,.tsx"
-  },
-  "dependencies": {
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "react-router-dom": "^6.8.0",
-    "@patternfly/react-core": "^5.0.0",
-    "@patternfly/react-table": "^5.0.0",
-    "@tanstack/react-query": "^4.0.0",
-    "axios": "^1.0.0"
-  },
-  "devDependencies": {
-    "@module-federation/webpack": "^0.0.1",
-    "webpack": "^5.0.0",
-    "webpack-cli": "^5.0.0",
-    "webpack-dev-server": "^4.0.0",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
-    "typescript": "^5.0.0",
-    "jest": "^29.0.0",
-    "@testing-library/react": "^13.0.0"
-  }
-}
+#### 1.3 Register the Package in the Workspace
+
+Add the module's frontend to the root `pnpm-workspace.yaml` and install from the repository root:
+
+```yaml
+packages:
+  # ...existing entries
+  - packages/my-feature/frontend
 ```
+
+```bash
+cd ..
+pnpm install
+```
+
+Then register the area and feature flag in the host: `PLUGIN_MY_FEATURE` in `packages/plugin-core/src/areas/types.ts`, `myFeature?: boolean` in `DashboardCommonConfig` (`packages/k8s-core/src/k8sTypes.ts`), the flag default and `SupportedAreasStateMap` entry in `frontend/src/concepts/areas/const.ts`, and the flag in `manifests/base/crd/odhdashboardconfigs.opendatahub.io.crd.yaml`. See [Onboarding a New Modular Architecture Module](./onboard-modular-architecture.md) for details.
 
 #### 1.4 Module Federation Configuration
 
-```javascript
-// webpack.config.js
-const ModuleFederationPlugin = require('@module-federation/webpack');
-const path = require('path');
+The scaffolded module builds with rspack and declares its remote in `frontend/config/moduleFederation.js` using `OdhFederationPlugin` from `@odh-dashboard/app-config/rspack`. The plugin applies the dashboard's shared singleton policy (React, PatternFly, react-router, `@odh-dashboard/*`), so there is no hand-maintained `shared` map:
 
-const isRemote = process.env.WEBPACK_SERVE && process.argv.includes('remote');
+```javascript
+// frontend/config/moduleFederation.js
+const { OdhFederationPlugin } = require('@odh-dashboard/app-config/rspack');
 
 module.exports = {
-  mode: process.env.NODE_ENV || 'development',
-  entry: './src/index.tsx',
-  
-  module: {
-    rules: [
-      {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
-      },
-    ],
-  },
-  
-  resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
-  },
-  
-  plugins: [
-    new ModuleFederationPlugin({
+  moduleFederationPlugins: [
+    new OdhFederationPlugin({
       name: 'myFeature',
-      filename: 'remoteEntry.js',
-      
+      isHost: process.env.DEPLOYMENT_MODE === 'standalone',
       exposes: {
-        './MyFeatureApp': './src/app/MyFeatureApp',
-        './MyFeatureRoutes': './src/routes/MyFeatureRoutes',
+        './extensions': './src/odh/extensions',
+        './extension-points': './src/odh/extension-points',
       },
-      
-      shared: {
-        react: { singleton: true, requiredVersion: '^18.0.0' },
-        'react-dom': { singleton: true, requiredVersion: '^18.0.0' },
-        'react-router-dom': { singleton: true },
-        '@patternfly/react-core': { singleton: true },
-        '@patternfly/react-table': { singleton: true },
-        '@tanstack/react-query': { singleton: true },
-      },
+      dts: true,
     }),
   ],
-  
-  devServer: isRemote ? {
-    port: 4005, // Assign unique port for your feature
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-    },
-  } : undefined,
 };
 ```
+
+The remote's dev host/port, production service, and API proxy paths live in the `module-federation` section of `packages/my-feature/package.json`.
 
 ### Phase 2: Follow Development Flow
 
@@ -641,17 +571,17 @@ export const useCreateItem = () => {
 #### 4.1 Local Development Testing
 
 ```bash
-# Terminal 1: Start BFF in mock mode
-cd backend
-go run cmd/bff/main.go
-
-# Terminal 2: Start frontend in development mode
+# Terminal 1: Start the module standalone with the BFF in mock mode
 cd packages/my-feature
-npm start
+make dev-start
 
-# Terminal 3: Start ODH Dashboard host (optional for integration testing)
-cd ../..
-npm run start:federated
+# Or, to integrate with the ODH Dashboard host:
+# Terminal 1: Start the ODH Dashboard backend + frontend from the repository root
+pnpm run start:dev
+
+# Terminal 2: Start the module (frontend + BFF) in federated mode
+cd packages/my-feature
+make dev-start-federated
 ```
 
 #### 4.2 Integration with ODH Dashboard

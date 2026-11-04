@@ -59,10 +59,12 @@ mod-arch-library/
 
 ## Development Requirements
 
-- **Node.js**: >= 20.0.0
+- **Node.js**: >= 22.0.0
 - **npm**: >= 10.0.0
-- **TypeScript**: ~5.0.x
+- **TypeScript**: ^5.x
 - **React**: >= 18.x
+
+> This repository uses npm workspaces. Projects scaffolded by `mod-arch-installer` (and `mod-arch-starter` itself) use pnpm 11.22.0 instead (pinned via `packageManager`); see `mod-arch-starter/AGENTS.md`.
 
 ## Common Commands
 

@@ -3,21 +3,22 @@ import type {
   RouteExtension,
   AreaExtension,
 } from '@odh-dashboard/plugin-core/extension-points';
-
-const MOD_ARCH = 'mod-arch-module';
+// The SupportedArea entry and feature flag must be registered in the host before building:
+// see the odh-dashboard /module-onboarding skill (Phase 3).
+import { SupportedArea } from '@odh-dashboard/plugin-core/areas';
 
 const extensions: (NavExtension | RouteExtension | AreaExtension)[] = [
   {
     type: 'app.area',
     properties: {
-      id: MOD_ARCH,
-      devFlags: [MOD_ARCH],
+      id: SupportedArea.PLUGIN_MOD_ARCH,
+      featureFlags: ['modArch'],
     },
   },
   {
     type: 'app.navigation/section',
     flags: {
-      required: [MOD_ARCH],
+      required: [SupportedArea.PLUGIN_MOD_ARCH],
     },
     properties: {
       id: 'mod-arch',
@@ -29,7 +30,7 @@ const extensions: (NavExtension | RouteExtension | AreaExtension)[] = [
   {
     type: 'app.navigation/href',
     flags: {
-      required: [MOD_ARCH],
+      required: [SupportedArea.PLUGIN_MOD_ARCH],
     },
     properties: {
       id: 'mod-arch-view',
@@ -43,7 +44,7 @@ const extensions: (NavExtension | RouteExtension | AreaExtension)[] = [
   {
     type: 'app.route',
     flags: {
-      required: [],
+      required: [SupportedArea.PLUGIN_MOD_ARCH],
     },
     properties: {
       path: '/mod-arch/main-view/*',

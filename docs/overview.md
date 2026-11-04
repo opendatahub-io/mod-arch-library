@@ -12,7 +12,7 @@ Modular Architecture is our plan to make Kubeflow and RHOAI scale: let every tea
 | **BFF** | Small Go service that terminates auth, talks to Kubernetes, and exposes a focused OpenAPI contract. |
 | **Module Federation Runtime** | The RHOAI Dashboard consumes remoteEntry files at runtime, while Kubeflow keeps the same code as a native component. |
 
-Every module starts from `mod-arch-starter`: same repo structure, same tooling, repeatable setup via `npx mod-arch-installer`. You choose the flavor:
+Every module starts from `mod-arch-starter`: same repo structure, same tooling, repeatable setup via `pnpm dlx mod-arch-installer`. You choose the flavor:
 
 - **Kubeflow** flavor keeps the `mod-arch-kubeflow` theme provider and matches upstream UX.
 - **Default** flavor drops Kubeflow dependencies, keeps PatternFly as the only theme, and is optimized for ODH/RHOAI federated remotes.
@@ -27,7 +27,7 @@ Every module starts from `mod-arch-starter`: same repo structure, same tooling, 
 
 ### Kubeflow (upstream flow)
 
-1. Scaffold with `npx mod-arch-installer -n <name> --flavor kubeflow`.
+1. Scaffold with `pnpm dlx mod-arch-installer -n <name> --flavor kubeflow`.
 2. Define your OpenAPI surface in `api/openapi/` and stub the BFF handlers.
 3. Build UI routes under `frontend/src/app/pages` and wire them through `AppRoutes`.
 4. Use the Kubeflow manifests in `manifests/kubeflow/` to test inside the central dashboard.
@@ -37,8 +37,8 @@ Every module starts from `mod-arch-starter`: same repo structure, same tooling, 
 
 ### ODH/RHOAI (federated module)
 
-1. Scaffold with `npx mod-arch-installer -n <name>` (default flavor removes `mod-arch-kubeflow`), then remove the `TODOs` to adapt the code to the dashboard.
-2. Configure `module-federation` metadata in `frontend/package.json` and expose `./extensions`.
+1. From the odh-dashboard `packages/` directory, scaffold with `pnpm dlx mod-arch-installer -n <name> --port <n> --bff-port <n> --service-port <n>` using ports unique to the module (default flavor removes `mod-arch-kubeflow`), add `packages/<name>/frontend` to the root `pnpm-workspace.yaml`, run `pnpm install` from the odh-dashboard root, then remove the `TODOs` to adapt the code to the dashboard. The odh-dashboard `/module-onboarding` Claude skill automates this, including area and feature flag registration (see [Onboarding a New Modular Architecture Module](./onboard-modular-architecture.md)).
+2. Review the `module-federation` metadata in the module's `package.json` and the `./extensions` exposed by `OdhFederationPlugin` in `frontend/config/moduleFederation.js`.
 3. Register API proxies in the Module Federation config so the dashboard can route to your BFF.
 4. Deploy the remote entry to OpenShift and register it in `odh-dashboard` via CR or config map.
 5. Ship telemetry/metrics hooks so the platform team can observe the module in production.

@@ -5,26 +5,39 @@
 ## Usage
 
 ```bash
-# Creates ./my-new-module/ in current directory (PatternFly-only flavor)
-npx mod-arch-installer -n my-new-module
+# Default (federated, PatternFly-only) flavor — run from odh-dashboard packages/
+# Creates ./my-new-module/ with unique ports for this module
+pnpm dlx mod-arch-installer -n my-new-module --port 9150 --bff-port 4050 --service-port 8143
 
-# Creates ./packages/my-new-module/
-npx mod-arch-installer ./packages -n my-new-module
+# Creates ./packages/my-new-module/ (a base directory is used as-is unless it already ends in the module name)
+pnpm dlx mod-arch-installer ./packages/my-new-module -n my-new-module
 
-# With Kubeflow flavor (MUI theme)
-npx mod-arch-installer -n my-new-module --flavor kubeflow
+# Kubeflow flavor (MUI theme), standalone, installing frontend dependencies with pnpm
+pnpm dlx mod-arch-installer -n my-new-module --flavor kubeflow --install
 ```
 
 ### Options
 
 | Option | Description | Default |
 | --- | --- | --- |
+| `[base-directory]` | Directory to scaffold into. When omitted, `./<module-name>/` is created | `.` |
 | `-n, --name <module-name>` | Module name in kebab-case (e.g., `auto-rag`, `model-registry`) | Prompted if not provided |
 | `-f, --flavor <default\|kubeflow>` | Starter flavor: default (PatternFly-only) or kubeflow (MUI theme) | `default` |
+| `--port <port>` | Frontend dev / Module Federation local port (`module-federation.local.port`). Default flavor only | `9103` (template) |
+| `--bff-port <port>` | BFF local development port (`PORT=` / `PROXY_PORT=` in the `Makefile` and `package.json` scripts). Default flavor only | `4000` (template) |
+| `--service-port <port>` | Production service port (`module-federation.service.port`). Default flavor only | `8043` (template) |
 | `--install` | Run `pnpm install` after copying. Kubeflow flavor only — rejected for the federated `default` flavor, which installs as part of the odh-dashboard workspace | Disabled |
 | `--git` | Initialize a git repository after copying | Disabled |
 
-The target directory is automatically created using `[base-directory]/[module-name]`.
+The port flags are ignored (with a warning) for the `kubeflow` flavor. The template ports are placeholders: every odh-dashboard module needs unique values, so always pass `--port`, `--bff-port`, and `--service-port` when scaffolding the default flavor.
+
+### Default flavor next steps (odh-dashboard)
+
+1. Add `packages/<module-name>/frontend` to the root `pnpm-workspace.yaml`.
+2. Run `pnpm install` from the odh-dashboard root.
+3. Register the area and feature flag in the host (`packages/plugin-core/src/areas/types.ts`, `packages/k8s-core/src/k8sTypes.ts`, `frontend/src/concepts/areas/const.ts`, and `manifests/base/crd/odhdashboardconfigs.opendatahub.io.crd.yaml`).
+
+The odh-dashboard `/module-onboarding` Claude skill automates all of the above, including port allocation. See [`docs/onboard-modular-architecture.md`](../docs/onboard-modular-architecture.md) for the manual walkthrough.
 
 ## Development
 

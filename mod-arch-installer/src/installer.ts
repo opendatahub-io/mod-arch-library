@@ -5,6 +5,7 @@ import { copyDirectory, ensureEmptyDirectory, fileExists, readJSON, writeJSON } 
 import { logger } from './utils/logger.js';
 import { runCommand } from './utils/runCommand.js';
 import { replaceModuleNames } from './utils/templateReplacer.js';
+import { applyModulePorts } from './utils/portConfig.js';
 import { displayPostInstallChecklist } from './postInstall.js';
 import type { InstallOptions, StarterFlavor } from './types.js';
 
@@ -98,6 +99,17 @@ async function removeDefaultFolders(flavor: StarterFlavor, targetDir: string) {
   const pnpmWorkspacePath = path.join(targetDir, FRONTEND_DIR, 'pnpm-workspace.yaml');
   if (await fileExists(pnpmWorkspacePath)) {
     await rm(pnpmWorkspacePath, { force: true });
+  }
+
+  // Remove the standalone Go workspace file: odh-dashboard BFFs are plain modules (no go.work),
+  // and a nested go.work would shadow `replace` directives and pin an older Go version.
+  const goWorkPath = path.join(targetDir, BFF_DIR, 'go.work');
+  if (await fileExists(goWorkPath)) {
+    await rm(goWorkPath, { force: true });
+  }
+  const goWorkSumPath = path.join(targetDir, BFF_DIR, 'go.work.sum');
+  if (await fileExists(goWorkSumPath)) {
+    await rm(goWorkSumPath, { force: true });
   }
 }
 
@@ -282,6 +294,9 @@ export async function installStarter(options: InstallOptions) {
   currentStep++;
   logger.step(currentStep, totalSteps, `Applying module name "${options.moduleName.kebabCase}"...`);
   await replaceModuleNames(targetDir, options.moduleName);
+  if (options.flavor === 'default' && options.ports) {
+    await applyModulePorts(targetDir, options.ports);
+  }
   await renameDotfiles(targetDir);
   logger.success('Module name applied');
 

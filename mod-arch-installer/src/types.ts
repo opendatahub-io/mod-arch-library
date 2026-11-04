@@ -15,6 +15,15 @@ export interface ModuleNames {
   upperSnakeCase: string;
 }
 
+export interface ModulePorts {
+  /** Frontend dev server / Module Federation local port (module-federation.local.port). */
+  frontend?: number;
+  /** BFF port used for local development (Makefile PORT / PROXY_PORT). */
+  bff?: number;
+  /** Production service port (module-federation.service.port). */
+  service?: number;
+}
+
 export interface InstallOptions {
   projectName: string;
   moduleName: ModuleNames;
@@ -22,4 +31,5 @@ export interface InstallOptions {
   flavor: StarterFlavor;
   skipInstall: boolean;
   initializeGit: boolean;
+  ports?: ModulePorts;
 }
