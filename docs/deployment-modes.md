@@ -126,7 +126,7 @@ const { OdhFederationPlugin } = require('@odh-dashboard/app-config/rspack');
 module.exports = {
   moduleFederationPlugins: [
     new OdhFederationPlugin({
-      name: 'modelRegistry',
+      name: 'modArch',
       isHost: process.env.DEPLOYMENT_MODE === 'standalone',
       exposes: {
         './extensions': './src/odh/extensions',

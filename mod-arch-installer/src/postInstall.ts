@@ -16,7 +16,7 @@ export function displayPostInstallChecklist(options: InstallOptions): void {
   if (flavor === 'kubeflow') {
     displayKubeflowChecklist(targetDir);
   } else {
-    displayDefaultChecklist(moduleName.camelCase, moduleName.pascalCase, targetDir);
+    displayDefaultChecklist(moduleName.camelCase, moduleName.pascalCase, moduleName.upperSnakeCase, moduleName.kebabCase, targetDir);
   }
 }
 
@@ -44,9 +44,16 @@ function displayKubeflowChecklist(targetDir: string): void {
   logger.blank();
 }
 
-function displayDefaultChecklist(camelCase: string, pascalCase: string, targetDir: string): void {
+function displayDefaultChecklist(
+  camelCase: string,
+  pascalCase: string,
+  upperSnake: string,
+  kebabCase: string,
+  targetDir: string,
+): void {
+  // The package directory can differ from the module name (e.g. `-n bar ./packages/foo`); paths use
+  // the directory, while area/flag identifiers must match what the templates generated from the name.
   const moduleName = path.basename(targetDir);
-  const upperSnake = moduleName.replace(/-/g, '_').toUpperCase();
 
   logger.header('Next Steps (ODH Dashboard Integration)');
   console.log(
@@ -59,7 +66,7 @@ function displayDefaultChecklist(camelCase: string, pascalCase: string, targetDi
   logger.blank();
 
   logger.listItem(`${pc.bold('2.')} Register the area and feature flag:`);
-  console.log(`    ${pc.yellow('packages/plugin-core/src/areas/types.ts')}  ${pc.green(`PLUGIN_${upperSnake} = 'plugin-${moduleName}'`)}`);
+  console.log(`    ${pc.yellow('packages/plugin-core/src/areas/types.ts')}  ${pc.green(`PLUGIN_${upperSnake} = 'plugin-${kebabCase}'`)}`);
   console.log(`    ${pc.yellow('packages/k8s-core/src/k8sTypes.ts')}       ${pc.green(`${camelCase}?: boolean;`)} ${pc.dim('(DashboardCommonConfig)')}`);
   console.log(`    ${pc.yellow('frontend/src/concepts/areas/const.ts')}    ${pc.dim('flag default + SupportedAreasStateMap entry')}`);
   console.log(`    ${pc.yellow('manifests/base/crd/odhdashboardconfigs.opendatahub.io.crd.yaml')} ${pc.dim('flag property')}`);

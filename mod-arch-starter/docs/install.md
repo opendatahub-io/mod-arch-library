@@ -6,7 +6,7 @@ Use the published `mod-arch-installer` CLI to scaffold a fresh copy of this star
 pnpm dlx mod-arch-installer -n my-new-module
 ```
 
-This creates a `./my-new-module/` directory with the full starter template. Generated projects use pnpm 11.22.0 (pinned via `packageManager`) and Node.js >= 22.
+This creates a `./my-new-module/` directory with the full starter template. Generated projects use pnpm 11.22.0 (pinned via `packageManager`) and Node.js >= 22.18.0.
 
 ## CLI options
 

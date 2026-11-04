@@ -46,7 +46,7 @@ dev-bff: ## Run BFF in mock mode with user_token auth (recommended for local dev
 
 .PHONY: dev-frontend
 dev-frontend:
-	cd frontend && DEPLOYMENT_MODE=standalone STYLE_THEME=mui-theme pnpm run start:dev
+	cd frontend && DEPLOYMENT_MODE=standalone STYLE_THEME=mui-theme PROXY_PORT=4000 pnpm run start:dev
 
 .PHONY: dev-start
 dev-start: ## Start in mock mode - recommended for local development
@@ -61,7 +61,7 @@ dev-start-kubeflow:
 
 .PHONY: dev-frontend-kubeflow
 dev-frontend-kubeflow:
-	cd frontend && DEPLOYMENT_MODE=kubeflow STYLE_THEME=mui-theme pnpm run start:dev
+	cd frontend && DEPLOYMENT_MODE=kubeflow STYLE_THEME=mui-theme PROXY_PORT=4000 pnpm run start:dev
 
 .PHONY: dev-bff-kubeflow
 dev-bff-kubeflow:
@@ -87,37 +87,37 @@ E2E_BFF_PORT ?= 8080
 
 .PHONY: dev-bff-e2e-mock
 dev-bff-e2e-mock:
-	cd bff && make run PORT=$(E2E_BFF_PORT) MOCK_K8S_CLIENT=true MOCK_HTTP_CLIENT=true DEV_MODE=true DEPLOYMENT_MODE=federated AUTH_METHOD=internal
+	cd bff && make run PORT="$(E2E_BFF_PORT)" MOCK_K8S_CLIENT=true MOCK_HTTP_CLIENT=true DEV_MODE=true DEPLOYMENT_MODE=federated AUTH_METHOD=internal
 
 .PHONY: dev-bff-e2e-cluster
 dev-bff-e2e-cluster:
-	cd bff && make run PORT=$(E2E_BFF_PORT) MOCK_K8S_CLIENT=false MOCK_HTTP_CLIENT=false DEV_MODE=true DEPLOYMENT_MODE=federated DEV_MODE_CLIENT_PORT=8085 AUTH_METHOD=user_token AUTH_TOKEN_HEADER=x-forwarded-access-token AUTH_TOKEN_PREFIX="" INSECURE_SKIP_VERIFY=true
+	cd bff && make run PORT="$(E2E_BFF_PORT)" MOCK_K8S_CLIENT=false MOCK_HTTP_CLIENT=false DEV_MODE=true DEPLOYMENT_MODE=federated DEV_MODE_CLIENT_PORT=8085 AUTH_METHOD=user_token AUTH_TOKEN_HEADER=x-forwarded-access-token AUTH_TOKEN_PREFIX="" INSECURE_SKIP_VERIFY=true
 
 ############ Build ############
 
 .PHONY: docker-build
 docker-build:
-	$(CONTAINER_TOOL) build --build-arg DEPLOYMENT_MODE=kubeflow --build-arg STYLE_THEME=mui-theme -f Dockerfile.workspace -t ${IMG_UI} ../..
+	$(CONTAINER_TOOL) build --build-arg DEPLOYMENT_MODE=kubeflow --build-arg STYLE_THEME=mui-theme -f Dockerfile.workspace -t "${IMG_UI}" ../..
 
 .PHONY: docker-build-standalone
 docker-build-standalone:
-	$(CONTAINER_TOOL) build --build-arg DEPLOYMENT_MODE=standalone --build-arg STYLE_THEME=mui-theme -f Dockerfile.workspace -t ${IMG_UI_STANDALONE} ../..
+	$(CONTAINER_TOOL) build --build-arg DEPLOYMENT_MODE=standalone --build-arg STYLE_THEME=mui-theme -f Dockerfile.workspace -t "${IMG_UI_STANDALONE}" ../..
 
 .PHONY: docker-build-federated
 docker-build-federated:
-	$(CONTAINER_TOOL) build --build-arg DEPLOYMENT_MODE=federated --build-arg STYLE_THEME=patternfly -f Dockerfile.workspace -t ${IMG_UI_FEDERATED} ../..
+	$(CONTAINER_TOOL) build --build-arg DEPLOYMENT_MODE=federated --build-arg STYLE_THEME=patternfly -f Dockerfile.workspace -t "${IMG_UI_FEDERATED}" ../..
 
 .PHONY: docker-buildx
 docker-buildx:
-	docker buildx build --build-arg DEPLOYMENT_MODE=kubeflow --build-arg STYLE_THEME=mui-theme --platform ${PLATFORM} -f Dockerfile.workspace -t ${IMG_UI} --push ../..
+	docker buildx build --build-arg DEPLOYMENT_MODE=kubeflow --build-arg STYLE_THEME=mui-theme --platform "${PLATFORM}" -f Dockerfile.workspace -t "${IMG_UI}" --push ../..
 
 .PHONY: docker-buildx-standalone
 docker-buildx-standalone:
-	docker buildx build --build-arg DEPLOYMENT_MODE=standalone --build-arg STYLE_THEME=mui-theme --platform ${PLATFORM} -f Dockerfile.workspace -t ${IMG_UI_STANDALONE} --push ../..
+	docker buildx build --build-arg DEPLOYMENT_MODE=standalone --build-arg STYLE_THEME=mui-theme --platform "${PLATFORM}" -f Dockerfile.workspace -t "${IMG_UI_STANDALONE}" --push ../..
 
 .PHONY: docker-buildx-federated
 docker-buildx-federated:
-	docker buildx build --build-arg DEPLOYMENT_MODE=federated --build-arg STYLE_THEME=patternfly --platform ${PLATFORM} -f Dockerfile.workspace -t ${IMG_UI_FEDERATED} --push ../..
+	docker buildx build --build-arg DEPLOYMENT_MODE=federated --build-arg STYLE_THEME=patternfly --platform "${PLATFORM}" -f Dockerfile.workspace -t "${IMG_UI_FEDERATED}" --push ../..
 
 ############ Push ############
 
@@ -162,4 +162,4 @@ build: frontend-build bff-build
 ############ Run mocked ########
 .PHONY: run-local-mocked
 run-local-mocked: frontend-build-standalone bff-build
-	rm -r ./bff/static-local-run && cp -r ./frontend/dist/ ./bff/static-local-run/ && cd bff && make run STATIC_ASSETS_DIR=./static-local-run MOCK_K8S_CLIENT=true DEV_MODE=true
+	rm -rf ./bff/static-local-run && cp -r ./frontend/dist/ ./bff/static-local-run/ && cd bff && make run STATIC_ASSETS_DIR=./static-local-run MOCK_K8S_CLIENT=true DEV_MODE=true
