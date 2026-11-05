@@ -86,6 +86,11 @@ function displayDefaultChecklist(
   logger.command('make dev-start-federated');
   logger.blank();
 
+  logger.header('Before the First Release');
+  logger.listItem(`Run ${pc.cyan('/konflux-onboarding')} in odh-dashboard: downstream ${pc.yellow(`Dockerfile.konflux.${kebabCase}`)} copied from a shipped module (current UBI digests, ${pc.green('ubi-minimal-pqc')} runtime)`);
+  logger.listItem(`Register ${pc.green(`rhoai/odh-mod-arch-${kebabCase}-rhel9`)} as a ProdSec pscomponent ${pc.dim('(#forum-aipcc)')}, or the image gets no CVE tracking tickets`);
+  logger.blank();
+
   logger.header('Optional Enhancements');
   logger.listItem(`Configure parent area (e.g., ${pc.cyan('gen-ai-studio')})`);
   logger.listItem(`Add navigation icon in ${pc.yellow(`${pascalCase}NavIcon.ts`)}`);
