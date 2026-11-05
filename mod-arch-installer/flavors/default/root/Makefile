@@ -97,15 +97,15 @@ dev-bff-e2e-cluster:
 
 .PHONY: docker-build
 docker-build:
-	$(CONTAINER_TOOL) build --build-arg DEPLOYMENT_MODE=kubeflow --build-arg STYLE_THEME=mui-theme -f Dockerfile.workspace -t "${IMG_UI}" ../..
+	"$(CONTAINER_TOOL)" build --build-arg DEPLOYMENT_MODE=kubeflow --build-arg STYLE_THEME=mui-theme -f Dockerfile.workspace -t "${IMG_UI}" ../..
 
 .PHONY: docker-build-standalone
 docker-build-standalone:
-	$(CONTAINER_TOOL) build --build-arg DEPLOYMENT_MODE=standalone --build-arg STYLE_THEME=mui-theme -f Dockerfile.workspace -t "${IMG_UI_STANDALONE}" ../..
+	"$(CONTAINER_TOOL)" build --build-arg DEPLOYMENT_MODE=standalone --build-arg STYLE_THEME=mui-theme -f Dockerfile.workspace -t "${IMG_UI_STANDALONE}" ../..
 
 .PHONY: docker-build-federated
 docker-build-federated:
-	$(CONTAINER_TOOL) build --build-arg DEPLOYMENT_MODE=federated --build-arg STYLE_THEME=patternfly -f Dockerfile.workspace -t "${IMG_UI_FEDERATED}" ../..
+	"$(CONTAINER_TOOL)" build --build-arg DEPLOYMENT_MODE=federated --build-arg STYLE_THEME=patternfly -f Dockerfile.workspace -t "${IMG_UI_FEDERATED}" ../..
 
 .PHONY: docker-buildx
 docker-buildx:
@@ -123,15 +123,15 @@ docker-buildx-federated:
 
 .PHONY: docker-push
 docker-push:
-	${CONTAINER_TOOL} push ${IMG_UI}
+	"${CONTAINER_TOOL}" push "${IMG_UI}"
 
 .PHONY: docker-push-standalone
 docker-push-standalone:
-	${CONTAINER_TOOL} push ${IMG_UI_STANDALONE}
+	"${CONTAINER_TOOL}" push "${IMG_UI_STANDALONE}"
 
 .PHONY: docker-push-federated
 docker-push-federated:
-	${CONTAINER_TOOL} push ${IMG_UI_FEDERATED}
+	"${CONTAINER_TOOL}" push "${IMG_UI_FEDERATED}"
 
 ############ Deployment ############
 
