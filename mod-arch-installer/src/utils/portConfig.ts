@@ -58,6 +58,8 @@ export async function applyModulePorts(targetDir: string, ports: ModulePorts): P
   // Makefile recipes and frontend scripts carry the ports inline.
   await rewriteText(path.join(targetDir, 'Makefile'), transform);
   await rewriteText(path.join(targetDir, 'frontend', 'package.json'), transform);
+  // Cypress mock runs read BASE_URL from here; it must match the cypress:server port.
+  await rewriteText(path.join(targetDir, 'frontend', '.env.cypress.mock'), transform);
 
   // Root package.json: scripts inline + the structured module-federation block.
   const rootPackageJsonPath = path.join(targetDir, 'package.json');
