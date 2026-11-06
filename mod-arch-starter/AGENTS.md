@@ -69,12 +69,12 @@ mod-arch-starter/
 │   │   ├── __tests__/           # Test files
 │   │   └── images/              # Image assets
 │   ├── config/
-│   │   ├── webpack.common.js    # Shared webpack config
-│   │   ├── webpack.dev.js       # Development webpack config
-│   │   ├── webpack.prod.js      # Production webpack config
+│   │   ├── rspack.common.js     # Shared rspack config
+│   │   ├── rspack.dev.js        # Development rspack config
+│   │   ├── rspack.prod.js       # Production rspack config
 │   │   └── moduleFederation.js  # Module Federation config
 │   ├── docs/                    # Frontend documentation
-│   ├── package.json             # NPM dependencies and scripts
+│   ├── package.json             # pnpm dependencies and scripts
 │   └── README.md                # Frontend documentation
 ├── manifests/                   # Kubernetes manifests
 │   ├── base/                    # Base Kustomize resources
@@ -244,7 +244,7 @@ cd frontend && pnpm run test:cypress-ci -- --spec "**/testfile.cy.ts"
 - React 18 + TypeScript
 - PatternFly v6 (primary UI framework)
 - Material UI v7 (Kubeflow flavor only)
-- Webpack with Module Federation
+- rspack with Module Federation (`@module-federation/enhanced`; the default flavor uses `OdhFederationPlugin` from `@odh-dashboard/app-config/rspack`)
 - **mod-arch-core** - Always included (core functionality, hooks, context providers)
 - **mod-arch-shared** - Kubeflow flavor only (shared UI components)
 - **mod-arch-kubeflow** - Kubeflow flavor only (MUI theming, Kubeflow-specific utilities)
@@ -398,16 +398,22 @@ make test   # Run tests
 Bootstrap a fresh copy without cloning the repo:
 
 ```bash
-npx mod-arch-installer my-module --flavor kubeflow
+pnpm dlx mod-arch-installer -n my-module --flavor kubeflow
 ```
 
 ### CLI Options
 
-| Flag                           | Description                              | Default  |
-| ------------------------------ | ---------------------------------------- | -------- |
-| `--flavor <kubeflow\|default>` | Kubeflow (MUI) or PatternFly-only flavor | kubeflow |
-| `--skip-install`               | Skip `pnpm install` in frontend          | false    |
-| `--no-git`                     | Skip git initialization                  | false    |
+| Flag                           | Description                                                       | Default         |
+| ------------------------------ | ----------------------------------------------------------------- | --------------- |
+| `-n, --name <module-name>`     | Module name in kebab-case                                         | Prompted        |
+| `--flavor <kubeflow\|default>` | Kubeflow (MUI) or PatternFly-only flavor                          | default         |
+| `--port <port>`                | Frontend dev / Module Federation local port (default flavor only) | 9103 (template) |
+| `--bff-port <port>`            | BFF local development port (default flavor only)                  | 4000 (template) |
+| `--service-port <port>`        | Production service port (default flavor only)                     | 8043 (template) |
+| `--install`                    | Run `pnpm install` in frontend (kubeflow flavor only)             | false           |
+| `--git`                        | Initialize a git repository                                       | false           |
+
+The default flavor is scaffolded from the odh-dashboard `packages/` directory with unique ports, then added to the odh-dashboard `pnpm-workspace.yaml` and installed with `pnpm install` from the odh-dashboard root (the odh-dashboard `/module-onboarding` Claude skill automates this).
 
 ### Flavor Differences
 

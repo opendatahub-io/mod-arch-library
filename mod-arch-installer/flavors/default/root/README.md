@@ -13,8 +13,11 @@ You can check the [contributing guidelines] for more information on how to contr
 Bootstrap a fresh copy of this starter without cloning the repo by using the published CLI:
 
 ```bash
-npx mod-arch-installer my-module --flavor default
+# From the odh-dashboard packages/ directory, with ports unique to this module
+pnpm dlx mod-arch-installer -n my-module --port <frontend-port> --bff-port <bff-port> --service-port <service-port>
 ```
+
+This flavor installs as part of the odh-dashboard pnpm workspace (pnpm 11.22.0): add `packages/my-module/frontend` to the root `pnpm-workspace.yaml` and run `pnpm install` from the odh-dashboard root. The odh-dashboard `/module-onboarding` Claude skill automates scaffolding, port allocation, and host registration.
 
 See [`docs/install.md`](./docs/install.md) for all CLI options and details about the PatternFly-first default flavor.
 

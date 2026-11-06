@@ -12,6 +12,9 @@ interface ReplacementRule {
  * Order matters - more specific patterns should come first.
  */
 const REPLACEMENT_RULES: ReplacementRule[] = [
+  // Dockerfile build arg (bare, unquoted kebab-case)
+  { pattern: /MODULE_NAME=mod-arch\b/g, replacement: (n) => `MODULE_NAME=${n.kebabCase}` },
+
   // Package names (kebab-case)
   { pattern: /mod-arch-ui/g, replacement: (n) => `${n.kebabCase}-ui` },
   { pattern: /mod-arch-module/g, replacement: (n) => `${n.kebabCase}-module` },
@@ -81,8 +84,10 @@ const FILES_TO_PROCESS = [
   'CONTRIBUTING.md',
   'docs/README.md',
   'docs/dev-setup.md',
-  // Root package.json (for default flavor)
+  // Root package.json, Makefile and workspace Dockerfile (for default flavor)
   'package.json',
+  'Makefile',
+  'Dockerfile.workspace',
 ];
 
 /**
@@ -158,6 +163,35 @@ async function renameModArchFiles(targetDir: string, names: ModuleNames): Promis
   }
 }
 
+const TEMPLATE_GO_MODULE = 'github.com/opendatahub-io/mod-arch-library/bff';
+
+/**
+ * Rename the BFF Go module path (go.mod + every import) so each scaffolded module has a unique
+ * module path instead of inheriting the starter's.
+ */
+async function renameGoModule(dir: string, names: ModuleNames): Promise<void> {
+  let entries;
+  try {
+    entries = await readdir(dir, { withFileTypes: true });
+  } catch {
+    return; // No bff directory - skip
+  }
+  const newModule = `github.com/opendatahub-io/${names.kebabCase}/bff`;
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      if (entry.name !== 'vendor' && entry.name !== 'bin' && entry.name !== 'static') {
+        await renameGoModule(fullPath, names);
+      }
+    } else if (entry.name.endsWith('.go') || entry.name.endsWith('.md') || entry.name === 'go.mod' || entry.name === 'Makefile') {
+      const content = await readFile(fullPath, 'utf-8');
+      if (content.includes(TEMPLATE_GO_MODULE)) {
+        await writeFile(fullPath, content.split(TEMPLATE_GO_MODULE).join(newModule), 'utf-8');
+      }
+    }
+  }
+}
+
 /**
  * Replace all hardcoded module names in the target directory.
  */
@@ -180,6 +214,9 @@ export async function replaceModuleNames(targetDir: string, names: ModuleNames):
   } catch {
     // Directory doesn't exist - skip
   }
+
+  // Give the BFF a unique Go module path
+  await renameGoModule(path.join(targetDir, 'bff'), names);
 
   // Rename files containing "mod-arch"
   await renameModArchFiles(targetDir, names);

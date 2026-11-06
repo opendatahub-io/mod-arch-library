@@ -15,7 +15,7 @@ Together these elements form a single module that can either be compiled directl
 
 ## Lifecycle at a glance
 
-1. **Bootstrap** – `npx mod-arch-installer` creates a repo with matching frontend, BFF, and manifests. You choose a flavor (`kubeflow` or `default`) to align dependencies and theming.
+1. **Bootstrap** – `pnpm dlx mod-arch-installer` creates a repo with matching frontend, BFF, and manifests. You choose a flavor (`kubeflow` or `default`) to align dependencies and theming.
 2. **Develop** – Teams iterate locally with the BFF in mock mode and the frontend consuming generated clients. Namespace awareness, feature flags, and shared UI tokens come from the shared packages in this monorepo.
 3. **Publish** – Each release produces container images for the BFF (plus optional static assets) and a `remoteEntry.js` bundle for Module Federation. Kubeflow builds also produce YAML overlays for the OSS dashboard.
 4. **Run** – Operations register the module with either the Kubeflow manifests or the ODH dashboard operator. Observability, auth, and platform settings are injected through config maps, secrets, and environment variables.
@@ -30,7 +30,7 @@ Together these elements form a single module that can either be compiled directl
 
 ### Module Federation responsibilities (federated/RHOAI mode)
 
-- **Remote build** – Webpack emits `remoteEntry.js` plus `mf-manifest` metadata describing exposed routes and widgets. Shared dependencies (React, PatternFly, routing) are declared as singletons to avoid multiple runtimes.
+- **Remote build** – rspack emits `remoteEntry.js` plus `mf-manifest` metadata describing exposed routes and widgets. Shared dependencies (React, PatternFly, routing) are declared as singletons to avoid multiple runtimes; for ODH modules, `OdhFederationPlugin` from `@odh-dashboard/app-config/rspack` applies that shared singleton policy so the module does not maintain its own `shared` map.
 - **Host discovery** – The RHOAI dashboard loads the remote based on configuration (CR or ConfigMap). The host determines when to preload bundles, which extension points to mount, and how to pass navigation/telemetry props.
 - **Extension surface** – Modules expose routed pages, navigation items, dashboards cards, or quick-starts. These React exports follow host-defined interfaces so the shell can compose them at runtime.
 - **Version alignment** – Modules depend on the same `mod-arch-*` libraries that the dashboard consumes, ensuring visual and behavioral consistency during upgrades.

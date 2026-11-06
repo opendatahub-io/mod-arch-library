@@ -351,7 +351,7 @@ REACT_APP_NAMESPACE_SELECTOR=enabled
 EOF
 
 # 4. Start development environment
-npm run dev:upstream
+npm run start:dev
 ```
 
 #### Component Integration
@@ -412,11 +412,11 @@ kubectl apply -f manifests/kubeflow/
 # 2. Port forward for testing
 kubectl port-forward -n kubeflow svc/model-registry 8080:80
 
-# 3. Run integration tests
-npm run test:integration:kubeflow
+# 3. Run unit tests
+npm run test:unit
 
-# 4. Run end-to-end tests
-npm run test:e2e:kubeflow
+# 4. Run Cypress tests
+npm run test:cypress-ci
 ```
 
 ## Downstream Development
@@ -437,41 +437,33 @@ export NODE_ENV=development
 export REACT_APP_MODE=federated
 export REACT_APP_MOCK_MODE=true
 
-# 3. Start dashboard in serverless mode
-npm run start:federated
+# 3. Install workspace dependencies (pnpm 11.22.0) and start the dashboard backend + frontend
+pnpm install
+pnpm run start:dev
 
 # 4. In separate terminal, start your module
 cd packages/model-registry
-npm run start:remote
+make dev-start-federated
 ```
 
 #### Module Development Configuration
 
+Federated modules build with rspack. The dev server port comes from `module-federation.local.port` in the module's `package.json` (set with the installer's `--port` flag), and `OdhFederationPlugin` applies the dashboard's shared singleton policy, so no `shared` map is maintained by hand:
+
 ```javascript
-// webpack.config.js for remote module
-const ModuleFederationPlugin = require('@module-federation/webpack');
+// frontend/config/moduleFederation.js for remote module
+const { OdhFederationPlugin } = require('@odh-dashboard/app-config/rspack');
 
 module.exports = {
-  mode: 'development',
-  devServer: {
-    port: 4001,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-    },
-  },
-  plugins: [
-    new ModuleFederationPlugin({
-      name: 'modelRegistryModule',
-      filename: 'remoteEntry.js',
+  moduleFederationPlugins: [
+    new OdhFederationPlugin({
+      name: 'modelRegistry',
+      isHost: process.env.DEPLOYMENT_MODE === 'standalone',
       exposes: {
-        './ModelRegistryApp': './src/app/ModelRegistryApp',
-        './ModelRegistryRoutes': './src/routes',
+        './extensions': './src/odh/extensions',
+        './extension-points': './src/odh/extension-points',
       },
-      shared: {
-        react: { singleton: true },
-        'react-dom': { singleton: true },
-        '@patternfly/react-core': { singleton: true },
-      },
+      dts: true,
     }),
   ],
 };

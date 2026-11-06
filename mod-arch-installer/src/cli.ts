@@ -6,6 +6,7 @@ import { installStarter } from './installer.js';
 import type { StarterFlavor } from './types.js';
 import { logger } from './utils/logger.js';
 import { isValidKebabCase, transformModuleName } from './utils/nameTransform.js';
+import { parsePort, TEMPLATE_PORTS } from './utils/portConfig.js';
 
 const FLAVORS: StarterFlavor[] = ['kubeflow', 'default'];
 
@@ -16,6 +17,9 @@ interface CliOptions {
   name?: string;
   install?: boolean;
   git?: boolean;
+  port?: string;
+  bffPort?: string;
+  servicePort?: string;
   // Deprecated options (kept for backward compatibility)
   skipInstall?: boolean;
   noGit?: boolean;
@@ -28,6 +32,9 @@ program
   .option('-f, --flavor <flavor>', 'Starter flavor: default (PatternFly-only) or kubeflow (MUI theme)', 'default')
   .option('-n, --name <module-name>', 'Module name in kebab-case (e.g., auto-rag, model-registry)')
   .option('--install', 'Run pnpm install after copying the template (kubeflow flavor only; not supported for the federated default flavor)')
+  .option('--port <port>', `Frontend dev / Module Federation local port (default flavor; template default ${TEMPLATE_PORTS.frontend})`)
+  .option('--bff-port <port>', `BFF local development port (default flavor; template default ${TEMPLATE_PORTS.bff})`)
+  .option('--service-port <port>', `Production service port for module-federation.service.port (default flavor; template default ${TEMPLATE_PORTS.service})`)
   .option('--git', 'Initialize a git repository after copying the template (disabled by default)')
   // Deprecated options (hidden but still functional for backward compatibility)
   .option('--skip-install', '(deprecated: use default behavior) Skip dependency installation', false)
@@ -81,6 +88,22 @@ program
       return;
     }
 
+    let ports: { frontend?: number; bff?: number; service?: number };
+    try {
+      ports = {
+        frontend: options.port !== undefined ? parsePort(options.port, '--port') : undefined,
+        bff: options.bffPort !== undefined ? parsePort(options.bffPort, '--bff-port') : undefined,
+        service: options.servicePort !== undefined ? parsePort(options.servicePort, '--service-port') : undefined,
+      };
+    } catch (error) {
+      logger.error(error instanceof Error ? error.message : String(error));
+      process.exitCode = 1;
+      return;
+    }
+    if (flavor !== 'default' && Object.values(ports).some((p) => p !== undefined)) {
+      logger.warn('--port, --bff-port and --service-port only apply to the default flavor; ignoring them.');
+    }
+
     const moduleNames = transformModuleName(moduleName);
     // Determine target directory:
     // - If base-directory is '.' (default), create folder named after the module
@@ -105,6 +128,7 @@ program
       flavor,
       skipInstall: !options.install, // Skip by default, only install if --install flag is passed
       initializeGit: Boolean(options.git), // Git is now opt-in (disabled by default)
+      ports: flavor === 'default' ? ports : undefined,
     });
   });
 

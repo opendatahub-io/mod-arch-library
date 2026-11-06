@@ -13,10 +13,10 @@ You can check the [contributing guidelines] for more information on how to contr
 Bootstrap a fresh copy of this starter without cloning the repo by using the published CLI:
 
 ```bash
-npx mod-arch-installer -n my-module
+pnpm dlx mod-arch-installer -n my-module
 ```
 
-This creates a `./my-module/` directory with the full starter template (PatternFly-only flavor by default). See [`docs/install.md`](./docs/install.md) for all CLI options, including the Kubeflow flavor with MUI theme support.
+This creates a `./my-module/` directory with the full starter template (PatternFly-only flavor by default). The default flavor is meant to be scaffolded inside the odh-dashboard `packages/` directory with unique `--port`, `--bff-port`, and `--service-port` values; scaffolded modules use pnpm 11.22.0. See [`docs/install.md`](./docs/install.md) for all CLI options, including the Kubeflow flavor with MUI theme support.
 
 ## OpenAPI Specification
 

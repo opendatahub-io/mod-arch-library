@@ -5,23 +5,26 @@ This folder is the entrypoint for anyone building a Modular Architecture module.
 ## How to use this guide
 
 1. **Read the [Overview](./overview.md)** to understand the why: micro-frontends + BFF + module federation.
-2. **Bootstrap the starter** (Kubeflow or default PatternFly flavor) with `npx mod-arch-installer` and skim [`mod-arch-starter/docs/install.md`](../mod-arch-starter/docs/install.md).
+2. **Bootstrap the starter** (Kubeflow or default PatternFly flavor) with `pnpm dlx mod-arch-installer` and skim [`mod-arch-starter/docs/install.md`](../mod-arch-starter/docs/install.md).
 3. **Choose your path** (Kubeflow upstream vs. ODH/RHOAI federated) and follow the linked Golden Path and deployment notes below.
 
 ## Quick start: mod-arch-starter
 
 ```bash
-# Creates ./my-module/ with PatternFly-only flavor (default)
-npx mod-arch-installer -n my-module
+# From odh-dashboard packages/: creates ./my-module/ with PatternFly-only flavor (default)
+pnpm dlx mod-arch-installer -n my-module --port <frontend-port> --bff-port <bff-port> --service-port <service-port>
 
-# Creates ./my-module/ with Kubeflow flavor (MUI theme)
-npx mod-arch-installer -n my-module --flavor kubeflow
+# Creates ./my-module/ with Kubeflow flavor (MUI theme), standalone
+pnpm dlx mod-arch-installer -n my-module --flavor kubeflow --install
 ```
 
 - **Default flavor**: Removes Kubeflow dependencies, keeps PatternFly as the source of truth, and is ready for Module Federation in the RHOAI Dashboard.
 - **Kubeflow flavor**: Includes `mod-arch-kubeflow`, MUI theme provider, and Kubeflow imagery.
 
-After the CLI runs, jump into `my-module/frontend/` and run `npm run start:dev` (or `npm run start:default`), then hook the Go BFF via `make run` under `bff/`.
+Scaffolded modules use pnpm 11.22.0 and Node.js >= 22.
+
+- **Kubeflow flavor**: jump into `my-module/frontend/` and run `pnpm run start:dev`, then hook the Go BFF via `make run` under `bff/`.
+- **Default flavor**: add `packages/my-module/frontend` to the odh-dashboard root `pnpm-workspace.yaml`, run `pnpm install` from the odh-dashboard root, and register the module's area and feature flag as described in [Onboarding a New Modular Architecture Module](./onboard-modular-architecture.md). The odh-dashboard `/module-onboarding` Claude skill automates these steps.
 
 ## Architecture & Module Federation
 
