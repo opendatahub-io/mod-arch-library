@@ -73,7 +73,7 @@
     "@patternfly/react-icons": "^6.6.1",
     "@patternfly/react-styles": "^6.6.1",
     "@patternfly/react-table": "^6.6.2",
-    "core-js": "^3.50.0",
+    "core-js": "^3.51.0",
     "expect": "^29.7.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
