@@ -88,7 +88,7 @@ function displayDefaultChecklist(
 
   logger.header('Before the First Release');
   logger.listItem(`Run ${pc.cyan('/konflux-onboarding')} in odh-dashboard: downstream ${pc.yellow(`Dockerfile.konflux.${kebabCase}`)} copied from a shipped module (current UBI digests, ${pc.green('ubi-minimal-pqc')} runtime)`);
-  logger.listItem(`Register ${pc.green(`rhoai/odh-mod-arch-${kebabCase}-rhel9`)} as a ProdSec pscomponent ${pc.dim('(#forum-aipcc)')}, or the image gets no CVE tracking tickets`);
+  logger.listItem(`Register ${pc.green(`rhoai/odh-mod-arch-${kebabCase}-rhel9`)} as a ProdSec pscomponent with an MR to ${pc.cyan('prodsec/product-definitions')} ${pc.dim('(data/openshift/ps_modules.json; steps in /konflux-onboarding Phase 6)')}, or the image gets no CVE tracking tickets`);
   logger.blank();
 
   logger.header('Optional Enhancements');
